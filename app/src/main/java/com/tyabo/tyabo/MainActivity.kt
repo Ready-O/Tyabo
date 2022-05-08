@@ -10,34 +10,36 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.tyabo.tyabo.navigation.SignInDestination
+import com.tyabo.tyabo.navigation.screens.signInComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
+import org.koin.core.component.KoinComponent
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), KoinComponent {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            TyaboTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+            AppLayout()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
+fun AppLayout() {
     TyaboTheme {
-        Greeting("Android")
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            val navController = rememberNavController()
+            NavHost(
+                navController = navController,
+                startDestination = SignInDestination.route
+            ) {
+                signInComposable()
+            }
+        }
     }
 }

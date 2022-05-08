@@ -64,6 +64,7 @@ dependencies {
     implementation composeDependencies.composeUI
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview
+    implementation composeDependencies.navigationCompose
 
     // Unit test
     testImplementation testDependencies.junit
