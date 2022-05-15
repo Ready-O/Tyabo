@@ -6,11 +6,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tyabo.tyabo.navigation.SignInDestination
+import com.tyabo.tyabo.navigation.scopedNav.scopedComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 
-fun NavGraphBuilder.signInComposable() = composable(
+fun NavGraphBuilder.signInComposable() = scopedComposable<SignInDestination>(
     route = SignInDestination.route
-){
+){ _,_ ->
     Greeting(name = "Android")
 }
 
