@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.tyabo.tyabo.navigation.SignInDestination
+import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.navigation.screens.signInComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 import org.koin.core.component.KoinComponent
@@ -39,6 +40,7 @@ fun AppLayout() {
                 startDestination = SignInDestination.route
             ) {
                 signInComposable()
+                greetingsComposable()
             }
         }
     }

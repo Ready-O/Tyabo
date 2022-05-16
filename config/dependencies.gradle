@@ -23,6 +23,8 @@ ext {
     androidKTXVersion = '1.9.0-alpha02'
     androidLifecycleVersion = '2.4.1'
 
+    //firebase
+    firebaseBomVersion = '30.0.1'
 
     //Common
     timberVersion = '5.0.1'
@@ -63,6 +65,7 @@ ext {
     ]
 
     serviceDependencies = [
+            firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
     ]
 
 

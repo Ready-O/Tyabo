@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -65,6 +66,9 @@ dependencies {
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview
     implementation composeDependencies.navigationCompose
+
+    // Firebase
+    implementation serviceDependencies.firebase
 
     // Unit test
     testImplementation testDependencies.junit

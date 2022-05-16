@@ -5,3 +5,5 @@ sealed class Destination(hostRoute: String) {
 }
 
 object SignInDestination : Destination("signin")
+
+object GreetingDestination : Destination("greeting")
