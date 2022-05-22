@@ -39,7 +39,7 @@ fun AppLayout() {
                 navController = navController,
                 startDestination = SignInDestination.route
             ) {
-                signInComposable()
+                signInComposable(navController = navController)
                 greetingsComposable()
             }
         }

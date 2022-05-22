@@ -1,38 +1,41 @@
 ext {
-    //Android
+    // Android
     tyaboCompileSdkVersion = 32
     tyaboCompileSdkVersion = 32
     tyaboMinSdkVersion = 24
 
-    //App versioning
+    // App versioning
     tyaboVersionCode = 1
     tyaboVersionNameYear = 2022
     tyaboVersionNameMonth = 5
     tyaboVersionNameDay = 8
 
 
-    //Compose
+    // Compose
     composeVersion = '1.2.0-alpha07'
     activityComposeVersion = '1.4.0'
     navigationComposeVersion = '2.5.0-beta01'
 
-    //Dependency injection
+    // Dependency injection
     koinVersion = '3.1.6'
 
-    //AndroidX
+    // AndroidX
     androidKTXVersion = '1.9.0-alpha02'
     androidLifecycleVersion = '2.4.1'
 
-    //firebase
-    firebaseBomVersion = '30.0.1'
+    // Firebase
+    firebaseBomVersion = '30.0.2'
 
-    //Common
+    // Firebase Auth
+    firebaseAuthUiVersion = "7.2.0"
+
+    // Common
     timberVersion = '5.0.1'
 
     // Image Cropper
     imageCropperVersion = "4.2.1"
 
-    //Testing
+    // Testing
     junitVersion = '4.13.2'
     androidJunitVersion = "1.1.3"
     espressoVersion = "3.4.0"
@@ -66,6 +69,7 @@ ext {
 
     serviceDependencies = [
             firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
+            firebaseAuthUi               : "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion",
     ]
 
 

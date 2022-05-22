@@ -10,7 +10,7 @@ val appModule = module {
     scope<SignInDestination>{
         scoped {
             AuthViewModel()
-        } bind Clearable::class
+        }
     }
 }
 
