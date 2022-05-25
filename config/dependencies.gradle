@@ -17,7 +17,6 @@ ext {
     navigationComposeVersion = '2.5.0-beta01'
 
     // Dependency injection
-    koinVersion = '3.1.6'
     hiltVersion = '2.38.1'
     hiltCompiler = '2.38.1'
 
@@ -51,11 +50,6 @@ ext {
             hilt                    : "com.google.dagger:hilt-android:$hiltVersion",
             hiltPlugin              : "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion",
             hiltCompiler            : "com.google.dagger:hilt-android-compiler:$hiltCompiler",
-
-            //koin
-            koinCore                : "io.insert-koin:koin-core:$koinVersion",
-            koinAndroid             : "io.insert-koin:koin-android:$koinVersion",
-            koinCompose             : "io.insert-koin:koin-androidx-compose:$koinVersion",
     ]
 
     uiDependencies = [
@@ -90,6 +84,5 @@ ext {
             junit              : "junit:junit:$junitVersion",
             androidJunit       : "androidx.test.ext:junit:$androidJunitVersion",
             espresso           : "androidx.test.espresso:espresso-core:$espressoVersion",
-            koinTest           : "io.insert-koin:koin-test:$koinVersion",
     ]
 }

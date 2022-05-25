@@ -14,22 +14,21 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.navigation.SignInDestination
-import com.tyabo.tyabo.navigation.scopedNav.scopedComposable
 
-fun NavGraphBuilder.signInComposable(navController: NavHostController) = scopedComposable<SignInDestination>(
+fun NavGraphBuilder.signInComposable(navController: NavHostController) = composable(
     route = SignInDestination.route
-){ _,scope ->
-    val viewModel: AuthViewModel = scope.get()
+){
+    // val viewModel: AuthViewModel = scope.get()
 
     val launchAuth = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract()
     ) { result ->
-        viewModel.onAuthResult(result)
+        // viewModel.onAuthResult(result)
         navController.navigate(GreetingDestination.route)
     }
 
     LaunchedEffect(Unit) {
-        launchAuth.launch(viewModel.getAuthIntent())
+        // launchAuth.launch(viewModel.getAuthIntent())
     }
 }
 

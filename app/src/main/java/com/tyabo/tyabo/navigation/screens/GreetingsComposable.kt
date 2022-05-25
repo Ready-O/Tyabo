@@ -7,12 +7,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.navigation.SignInDestination
-import com.tyabo.tyabo.navigation.scopedNav.scopedComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 
-fun NavGraphBuilder.greetingsComposable() = scopedComposable<GreetingDestination>(
+fun NavGraphBuilder.greetingsComposable() = composable(
     route = GreetingDestination.route
-){ _,_ ->
+){
     Greeting(name = "Android")
 }
 

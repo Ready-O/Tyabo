@@ -59,10 +59,6 @@ dependencies {
     implementation commonDependencies.hilt
     implementation commonDependencies.hiltCompiler
 
-    // Koin
-    implementation commonDependencies.koinCore
-    implementation commonDependencies.koinAndroid
-
     // Lifecycle
     implementation archiDependencies.lifecycleScope
 
@@ -82,7 +78,6 @@ dependencies {
     testImplementation testDependencies.junit
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.espresso
-    androidTestImplementation testDependencies.koinTest
 }
 
 // Allow references to generated code
