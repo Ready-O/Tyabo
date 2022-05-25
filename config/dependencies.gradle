@@ -18,6 +18,8 @@ ext {
 
     // Dependency injection
     koinVersion = '3.1.6'
+    hiltVersion = '2.38.1'
+    hiltCompiler = '2.38.1'
 
     // AndroidX
     androidKTXVersion = '1.9.0-alpha02'
@@ -44,6 +46,11 @@ ext {
     commonDependencies = [
             androidKTX              : "androidx.core:core-ktx:$androidKTXVersion",
             timber                  : "com.jakewharton.timber:timber:$timberVersion",
+
+            // Hilt
+            hilt                    : "com.google.dagger:hilt-android:$hiltVersion",
+            hiltPlugin              : "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion",
+            hiltCompiler            : "com.google.dagger:hilt-android-compiler:$hiltCompiler",
 
             //koin
             koinCore                : "io.insert-koin:koin-core:$koinVersion",

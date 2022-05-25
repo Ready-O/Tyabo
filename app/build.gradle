@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -42,6 +44,7 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += 'META-INF/gradle/incremental.annotation.processors' // Was added after an error with adding hilt
         }
     }
 }
@@ -51,6 +54,10 @@ dependencies {
     // Common
     implementation commonDependencies.androidKTX
     implementation commonDependencies.timber
+
+    // Hilt
+    implementation commonDependencies.hilt
+    implementation commonDependencies.hiltCompiler
 
     // Koin
     implementation commonDependencies.koinCore
@@ -76,4 +83,9 @@ dependencies {
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.espresso
     androidTestImplementation testDependencies.koinTest
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
 }
