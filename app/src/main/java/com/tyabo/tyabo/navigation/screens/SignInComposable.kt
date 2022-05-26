@@ -1,5 +1,6 @@
 package com.tyabo.tyabo.navigation.screens
 
+import android.app.Activity
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,11 +25,17 @@ fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     val launchAuth = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract()
     ) { result ->
-        viewModel.onAuthResult(result)
+        if (result.resultCode == Activity.RESULT_OK) {
+            //navigateToHome()
+        } else {
+
+        }
     }
 
     LaunchedEffect(Unit) {
         launchAuth.launch(viewModel.getAuthIntent())
     }
+
+
 }
 
