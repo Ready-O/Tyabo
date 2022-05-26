@@ -44,7 +44,6 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
-            excludes += 'META-INF/gradle/incremental.annotation.processors' // Was added after an error with adding hilt
         }
     }
 }
@@ -57,7 +56,7 @@ dependencies {
 
     // Hilt
     implementation commonDependencies.hilt
-    implementation commonDependencies.hiltCompiler
+    kapt commonDependencies.hiltCompiler
 
     // Lifecycle
     implementation archiDependencies.lifecycleScope
