@@ -1,8 +1,10 @@
 package com.tyabo.tyabo
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-open class TyaboApp : Application() {
+@HiltAndroidApp
+class TyaboApp : Application() {
     override fun onCreate() {
         super.onCreate()
     }

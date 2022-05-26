@@ -16,7 +16,9 @@ import com.tyabo.tyabo.navigation.SignInDestination
 import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.navigation.screens.signInComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
