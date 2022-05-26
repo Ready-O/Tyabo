@@ -2,5 +2,5 @@ package com.tyabo.tyabo.service
 
 interface UserDataSource {
 
-    fun signIn()
+    fun signIn(): String
 }

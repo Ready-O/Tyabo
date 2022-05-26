@@ -1,6 +1,7 @@
 package com.tyabo.tyabo.repository
 
 import com.tyabo.tyabo.service.UserDataSource
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -8,6 +9,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository
 {
     override fun signIn() {
-        userDataSource.signIn()
+        val name = userDataSource.signIn()
+        Timber.d("yooo $name")
     }
 }

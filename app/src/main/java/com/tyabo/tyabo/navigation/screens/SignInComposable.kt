@@ -1,21 +1,17 @@
 package com.tyabo.tyabo.navigation.screens
 
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.tyabo.features.AuthViewModel
-import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.navigation.SignInDestination
+import timber.log.Timber
 
 fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     route = SignInDestination.route
@@ -25,11 +21,8 @@ fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     val launchAuth = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
             //navigateToHome()
-        } else {
-
-        }
+        viewModel.onAuthResult(result)
     }
 
     LaunchedEffect(Unit) {

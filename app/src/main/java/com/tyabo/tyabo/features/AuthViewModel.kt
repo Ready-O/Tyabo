@@ -1,5 +1,6 @@
 package com.tyabo.tyabo.features
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,7 @@ import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,9 +34,11 @@ class AuthViewModel @Inject constructor(
             .build()
     }
 
-    fun onAuthResultSuccess(result: FirebaseAuthUIAuthenticationResult){
+    fun onAuthResult(result: FirebaseAuthUIAuthenticationResult) {
         viewModelScope.launch{
-            userRepository.signIn()
+            if (result.resultCode == RESULT_OK) {
+                userRepository.signIn()
+            }
         }
 
     }
