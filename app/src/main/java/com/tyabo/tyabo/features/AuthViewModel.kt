@@ -8,8 +8,11 @@ import androidx.navigation.NavHostController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.tyabo.tyabo.navigation.GreetingDestination
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class AuthViewModel: ViewModel(){
+@HiltViewModel
+class AuthViewModel @Inject constructor(): ViewModel(){
 
     fun getAuthIntent(): Intent {
         return AuthUI.getInstance()

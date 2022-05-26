@@ -7,6 +7,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,20 +16,19 @@ import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.navigation.SignInDestination
 
-fun NavGraphBuilder.signInComposable(navController: NavHostController) = composable(
+fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     route = SignInDestination.route
 ){
-    // val viewModel: AuthViewModel = scope.get()
+    val viewModel: AuthViewModel = hiltViewModel()
 
     val launchAuth = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract()
     ) { result ->
-        // viewModel.onAuthResult(result)
-        navController.navigate(GreetingDestination.route)
+        viewModel.onAuthResult(result)
     }
 
     LaunchedEffect(Unit) {
-        // launchAuth.launch(viewModel.getAuthIntent())
+        launchAuth.launch(viewModel.getAuthIntent())
     }
 }
 

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.navigation.SignInDestination
 import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.navigation.screens.signInComposable
@@ -40,7 +41,7 @@ fun AppLayout() {
                 navController = navController,
                 startDestination = SignInDestination.route
             ) {
-                signInComposable(navController = navController)
+                signInComposable(navigateToHome = {navController.navigate(GreetingDestination.route)})
                 greetingsComposable()
             }
         }

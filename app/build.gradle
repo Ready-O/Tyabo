@@ -68,6 +68,7 @@ dependencies {
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview
     implementation composeDependencies.navigationCompose
+    implementation composeDependencies.hiltNavigation
 
     // Firebase
     implementation serviceDependencies.firebase
