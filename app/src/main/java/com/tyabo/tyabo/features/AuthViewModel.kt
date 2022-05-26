@@ -9,6 +9,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.tyabo.tyabo.AppPresenter
 import com.tyabo.tyabo.navigation.GreetingDestination
 import com.tyabo.tyabo.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val appPresenter: AppPresenter
 ): ViewModel(){
 
     fun getAuthIntent(): Intent {
@@ -38,6 +40,10 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch{
             if (result.resultCode == RESULT_OK) {
                 userRepository.signIn()
+                appPresenter.displayAuthSuccess()
+            }
+            else{
+                appPresenter.displayAuthError()
             }
         }
 
