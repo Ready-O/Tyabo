@@ -1,8 +1,10 @@
 package com.tyabo.tyabo.persistence
 
+import com.tyabo.tyabo.data.Token
+
 interface SessionDataStore {
 
-    suspend fun getToken(): String
-    suspend fun setToken(name: String)
+    suspend fun getToken(): Result<Token>
+    suspend fun setToken(token: Token)
 
 }

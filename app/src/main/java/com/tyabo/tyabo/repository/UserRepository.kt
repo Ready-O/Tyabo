@@ -1,6 +1,8 @@
 package com.tyabo.tyabo.repository
 
+import com.google.firebase.auth.FirebaseUser
+
 interface UserRepository {
 
-    fun signIn(): Result<String>
+    fun getFirebaseUser(): Result<FirebaseUser>
 }

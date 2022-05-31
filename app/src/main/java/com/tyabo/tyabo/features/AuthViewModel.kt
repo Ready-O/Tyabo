@@ -1,16 +1,14 @@
 package com.tyabo.tyabo.features
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import androidx.compose.ui.platform.isDebugInspectorInfoEnabled
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.tyabo.tyabo.AppPresenter
-import com.tyabo.tyabo.navigation.GreetingDestination
+import com.tyabo.tyabo.data.Token
 import com.tyabo.tyabo.repository.SessionRepository
 import com.tyabo.tyabo.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +27,23 @@ class AuthViewModel @Inject constructor(
 
     private val _sessionState = MutableStateFlow<SessionState>(SessionState.Loading)
     val sessionState: StateFlow<SessionState> = _sessionState.asStateFlow()
+
+    private val _authState = MutableStateFlow<AuthViewState>(AuthViewState.GetStarted)
+    val authState : StateFlow<AuthViewState> = _authState.asStateFlow()
+
+    fun updateSessionState(){
+        viewModelScope.launch {
+            sessionRepository.checkUserToken().onSuccess { token ->
+                _sessionState.value = SessionState.UserSignedIn(
+                    userId = token.id,
+                    isChef = token.isChef
+                )
+            }
+                .onFailure {
+                    _sessionState.value = SessionState.UserNotSignedIn
+                }
+        }
+    }
 
     fun getAuthIntent(): Intent {
         return AuthUI.getInstance()
@@ -45,33 +59,36 @@ class AuthViewModel @Inject constructor(
     }
 
     fun onAuthResult(result: FirebaseAuthUIAuthenticationResult) {
-            if (result.resultCode == RESULT_OK) {
-                _sessionState.value = SessionState.UserSignedIn
-                viewModelScope.launch {
-                    userRepository.signIn().onSuccess {
-                        sessionRepository.setToken(it)
-                    }
+        if (result.resultCode == RESULT_OK) {
+            viewModelScope.launch {
+                userRepository.getFirebaseUser().onSuccess {
+                    val username = it.displayName ?: "anonymous"
+                    _authState.value = AuthViewState.SelectType(it.uid,username)
                 }
             }
-            else{
-                appPresenter.displayAuthError()
-            }
+        }
+        else{
+            appPresenter.displayAuthError()
+        }
     }
 
-    fun updateSessionSate(){
+    fun onUserTypeSelect(userId: String, isChef: Boolean){
         viewModelScope.launch {
-           if (sessionRepository.checkUserToken()){
-               _sessionState.value = SessionState.UserSignedIn
-           }
-            else{
-                _sessionState.value = SessionState.UserNotSignedIn
-           }
+            sessionRepository.setToken(
+                Token(id = userId, isChef = isChef)
+            )
+            _sessionState.value = SessionState.UserSignedIn(userId = userId, isChef = isChef)
         }
     }
 
     sealed class SessionState {
-        object UserSignedIn : SessionState()
+        data class UserSignedIn(val userId: String, val isChef: Boolean) : SessionState()
         object UserNotSignedIn : SessionState()
         object Loading : SessionState()
+    }
+
+    sealed class AuthViewState  {
+        object GetStarted : AuthViewState()
+        data class SelectType(val id: String, val name: String) : AuthViewState()
     }
 }

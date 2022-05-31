@@ -1,6 +1,5 @@
 package com.tyabo.tyabo.navigation.screens
 
-import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -14,7 +13,6 @@ import androidx.navigation.compose.composable
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.SignInDestination
-import timber.log.Timber
 
 fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     route = SignInDestination.route
@@ -30,7 +28,7 @@ fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     }
 
     LaunchedEffect(Unit){
-        viewModel.updateSessionSate()
+        viewModel.updateSessionState()
     }
 
     when(sessionState) {

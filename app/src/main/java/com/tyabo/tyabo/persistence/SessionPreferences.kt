@@ -5,8 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.google.firebase.auth.FirebaseAuth
-import com.tyabo.tyabo.service.UserDataSource
+import com.tyabo.tyabo.data.Token
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -19,18 +18,22 @@ class SessionPreferences @Inject constructor(
 
     private val dataStore = context.sessionPreferences
 
-    override suspend fun getToken(): String {
+    override suspend fun getToken(): Result<Token> {
         val preferences = dataStore.data.first()
-        return preferences[KEY_ID] ?: ""
+        val id = preferences[KEY_ID] ?: return Result.failure(Exception())
+        val isChef = preferences[KEY_ACCOUNT_CHEF] ?: return Result.failure(Exception())
+        return Result.success(Token(id = id, isChef = isChef))
     }
 
-    override suspend fun setToken(name: String) {
+    override suspend fun setToken(token: Token) {
         dataStore.edit {
-            it[KEY_ID] = name
+            it[KEY_ID] = token.id
+            it[KEY_ACCOUNT_CHEF] = token.isChef
         }
     }
 
     companion object {
         val KEY_ID = stringPreferencesKey("id")
+        val KEY_ACCOUNT_CHEF = booleanPreferencesKey("is_chef")
     }
 }

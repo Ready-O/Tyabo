@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.GreetingDestination
+import com.tyabo.tyabo.navigation.screens.AuthScreen
 import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,25 +35,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             val sessionState by viewModel.sessionState.collectAsState()
 
-            val launchAuth = rememberLauncherForActivityResult(
-                contract = FirebaseAuthUIActivityResultContract()
-            ) { result ->
-                viewModel.onAuthResult(result)
-            }
             LaunchedEffect(Unit){
-                viewModel.updateSessionSate()
+                viewModel.updateSessionState()
             }
             when(sessionState) {
                 AuthViewModel.SessionState.UserNotSignedIn -> {
-                    Button(onClick = {launchAuth.launch(viewModel.getAuthIntent())}){
-                        Text(text = "login")
-                    }
+                    AuthScreen(viewModel)
                 }
                 AuthViewModel.SessionState.Loading -> {
                     CircularProgressIndicator()
                 }
-                AuthViewModel.SessionState.UserSignedIn -> {
-                    MainAppLayout(appPresenter = appPresenter)
+                is AuthViewModel.SessionState.UserSignedIn -> {
+                    val state = sessionState as AuthViewModel.SessionState.UserSignedIn
+                    Column() {
+                        Text(text = "id ${state.userId} - chef ${state.isChef}")
+                        MainAppLayout(appPresenter = appPresenter)
+                    }
                 }
             }
         }
