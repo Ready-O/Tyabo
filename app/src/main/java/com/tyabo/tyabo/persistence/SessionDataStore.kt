@@ -1,6 +1,6 @@
 package com.tyabo.tyabo.persistence
 
-import com.tyabo.tyabo.data.Token
+import com.tyabo.data.Token
 
 interface SessionDataStore {
 

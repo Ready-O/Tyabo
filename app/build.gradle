@@ -81,6 +81,8 @@ dependencies {
     testImplementation testDependencies.junit
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.espresso
+
+    implementation project(':data')
 }
 
 // Allow references to generated code

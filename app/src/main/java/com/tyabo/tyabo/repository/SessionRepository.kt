@@ -1,6 +1,6 @@
 package com.tyabo.tyabo.repository
 
-import com.tyabo.tyabo.data.Token
+import com.tyabo.data.Token
 
 interface SessionRepository {
 

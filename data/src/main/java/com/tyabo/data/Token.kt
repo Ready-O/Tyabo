@@ -1,3 +1,3 @@
-package com.tyabo.tyabo.data
+package com.tyabo.data
 
 data class Token(val id: String, val isChef: Boolean)
