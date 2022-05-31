@@ -23,6 +23,7 @@ ext {
     // AndroidX
     androidKTXVersion = '1.9.0-alpha02'
     androidLifecycleVersion = '2.4.1'
+    dataStoreVersion = '1.0.0'
 
     // Firebase
     firebaseBomVersion = '30.0.2'
@@ -56,6 +57,7 @@ ext {
 
     archiDependencies = [
             lifecycleScope    : "androidx.lifecycle:lifecycle-runtime-ktx:$androidLifecycleVersion",
+            dataStore         : "androidx.datastore:datastore-preferences:$dataStoreVersion",
     ]
 
     composeDependencies = [
