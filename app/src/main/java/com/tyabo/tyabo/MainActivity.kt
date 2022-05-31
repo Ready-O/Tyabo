@@ -2,22 +2,22 @@ package com.tyabo.tyabo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.GreetingDestination
-import com.tyabo.tyabo.navigation.SignInDestination
 import com.tyabo.tyabo.navigation.screens.greetingsComposable
-import com.tyabo.tyabo.navigation.screens.signInComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -26,17 +26,40 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject lateinit var appPresenter: AppPresenter
+    private val viewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppLayout(appPresenter = appPresenter)
+            val sessionState by viewModel.sessionState.collectAsState()
+
+            val launchAuth = rememberLauncherForActivityResult(
+                contract = FirebaseAuthUIActivityResultContract()
+            ) { result ->
+                viewModel.onAuthResult(result)
+            }
+            LaunchedEffect(Unit){
+                viewModel.updateSessionSate()
+            }
+            when(sessionState) {
+                AuthViewModel.SessionState.UserNotSignedIn -> {
+                    Button(onClick = {launchAuth.launch(viewModel.getAuthIntent())}){
+                        Text(text = "login")
+                    }
+                }
+                AuthViewModel.SessionState.Loading -> {
+                    CircularProgressIndicator()
+                }
+                AuthViewModel.SessionState.UserSignedIn -> {
+                    MainAppLayout(appPresenter = appPresenter)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun AppLayout(appPresenter: AppPresenter) {
+fun MainAppLayout(appPresenter: AppPresenter) {
 
     val bannerViewState by appPresenter.bannerViewState.collectAsState()
 
@@ -48,9 +71,8 @@ fun AppLayout(appPresenter: AppPresenter) {
             val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = SignInDestination.route
+                startDestination = GreetingDestination.route
             ) {
-                signInComposable(navigateToHome = {navController.navigate(GreetingDestination.route)})
                 greetingsComposable()
             }
             BannerLayout(bannerViewState)

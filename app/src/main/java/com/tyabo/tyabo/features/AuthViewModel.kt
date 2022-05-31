@@ -44,9 +44,8 @@ class AuthViewModel @Inject constructor(
             .build()
     }
 
-    fun onAuthResult(result: FirebaseAuthUIAuthenticationResult, navigateToHome: () -> Unit ) {
+    fun onAuthResult(result: FirebaseAuthUIAuthenticationResult) {
             if (result.resultCode == RESULT_OK) {
-                navigateToHome()
                 _sessionState.value = SessionState.UserSignedIn
                 viewModelScope.launch {
                     userRepository.signIn().onSuccess {

@@ -26,7 +26,7 @@ fun NavGraphBuilder.signInComposable(navigateToHome: () -> Unit ) = composable(
     val launchAuth = rememberLauncherForActivityResult(
         contract = FirebaseAuthUIActivityResultContract()
     ) { result ->
-        viewModel.onAuthResult(result, navigateToHome)
+        viewModel.onAuthResult(result)
     }
 
     LaunchedEffect(Unit){
