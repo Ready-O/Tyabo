@@ -2,5 +2,5 @@ package com.tyabo.tyabo.repository
 
 interface UserRepository {
 
-    fun signIn()
+    fun signIn(): Result<String>
 }

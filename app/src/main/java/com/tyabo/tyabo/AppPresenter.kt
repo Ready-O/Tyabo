@@ -8,10 +8,10 @@ class AppPresenter {
     private val _bannerViewState = MutableStateFlow<BannerViewState?>(null)
     val bannerViewState = _bannerViewState.asStateFlow()
 
-    fun displayAuthSuccess(){
+    fun displayAuthSuccess(name: String){
         _bannerViewState.tryEmit(
             BannerViewState.Default(
-                message = "Auth success"
+                message = "Auth success $name"
             )
         )
     }

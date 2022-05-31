@@ -8,8 +8,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource
 ) : UserRepository
 {
-    override fun signIn() {
-        val name = userDataSource.signIn()
-        Timber.d("yooo $name")
+    override fun signIn(): Result<String> {
+        return userDataSource.signIn()
     }
 }
