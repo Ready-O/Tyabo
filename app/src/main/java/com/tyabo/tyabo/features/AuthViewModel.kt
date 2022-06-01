@@ -8,8 +8,8 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.tyabo.tyabo.AppPresenter
 import com.tyabo.data.Token
-import com.tyabo.tyabo.repository.SessionRepository
-import com.tyabo.tyabo.repository.UserRepository
+import com.tyabo.repository.interfaces.SessionRepository
+import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -61,8 +61,7 @@ class AuthViewModel @Inject constructor(
         if (result.resultCode == RESULT_OK) {
             viewModelScope.launch {
                 userRepository.getFirebaseUser().onSuccess {
-                    val username = it.displayName ?: "anonymous"
-                    _authState.value = AuthViewState.SelectType(it.uid,username)
+                    _authState.value = AuthViewState.SelectType(it.id,it.name)
                 }
             }
         }

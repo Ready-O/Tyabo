@@ -16,3 +16,6 @@ rootProject.name = "Tyabo"
 include ':app'
 include ':data'
 include ':design-system'
+include ':repository'
+include ':service'
+include ':persistence'
