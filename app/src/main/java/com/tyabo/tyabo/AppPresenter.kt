@@ -19,7 +19,7 @@ class AppPresenter {
     fun displayAuthError(){
         _bannerViewState.tryEmit(
             BannerViewState.Error(
-                message = "Auth Error"
+                message = "Authentication failed"
             )
         )
     }

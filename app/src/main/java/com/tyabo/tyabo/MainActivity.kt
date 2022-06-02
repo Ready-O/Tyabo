@@ -34,13 +34,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val sessionState by viewModel.sessionState.collectAsState()
+            val bannerViewState by appPresenter.bannerViewState.collectAsState()
 
             LaunchedEffect(Unit){
                 viewModel.updateSessionState()
             }
             when(sessionState) {
                 AuthViewModel.SessionState.UserNotSignedIn -> {
-                    AuthScreen(viewModel)
+                    Column() {
+                        AuthScreen(viewModel)
+                        BannerLayout(bannerViewState)
+                    }
                 }
                 AuthViewModel.SessionState.Loading -> {
                     CircularProgressIndicator()
@@ -52,7 +56,7 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = viewModel::signOut) {
                             Text(text = "Logout")
                         }
-                        MainAppLayout(appPresenter = appPresenter)
+                        MainAppLayout(bannerViewState = bannerViewState)
                     }
                 }
             }
@@ -61,9 +65,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainAppLayout(appPresenter: AppPresenter) {
-
-    val bannerViewState by appPresenter.bannerViewState.collectAsState()
+fun MainAppLayout(bannerViewState: BannerViewState?) {
 
     TyaboTheme {
         Surface(

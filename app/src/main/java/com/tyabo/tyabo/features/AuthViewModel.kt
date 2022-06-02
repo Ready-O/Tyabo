@@ -91,6 +91,7 @@ class AuthViewModel @Inject constructor(
     fun signOut(){
         viewModelScope.launch {
             sessionRepository.signOut()
+            _authState.value = AuthViewState.GetStarted
             _sessionState.value = SessionState.UserNotSignedIn
         }
     }
