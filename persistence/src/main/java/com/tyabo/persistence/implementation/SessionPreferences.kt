@@ -33,6 +33,10 @@ class SessionPreferences @Inject constructor(
         }
     }
 
+    override suspend fun clearToken() {
+        dataStore.edit { it.clear() }
+    }
+
     companion object {
         val KEY_ID = stringPreferencesKey("id")
         val KEY_ACCOUNT_CHEF = booleanPreferencesKey("is_chef")

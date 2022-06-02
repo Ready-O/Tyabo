@@ -6,4 +6,5 @@ interface SessionRepository {
 
     suspend fun checkUserToken(): Result<Token>
     suspend fun setToken(token: Token)
+    suspend fun signOut()
 }

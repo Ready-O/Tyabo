@@ -79,6 +79,12 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun signOut(){
+        viewModelScope.launch {
+            sessionRepository.signOut()
+            _sessionState.value = SessionState.UserNotSignedIn
+        }
+    }
     sealed class SessionState {
         data class UserSignedIn(val userId: String, val isChef: Boolean) : SessionState()
         object UserNotSignedIn : SessionState()

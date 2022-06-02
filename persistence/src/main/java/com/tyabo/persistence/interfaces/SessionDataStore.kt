@@ -6,5 +6,6 @@ interface SessionDataStore {
 
     suspend fun getToken(): Result<Token>
     suspend fun setToken(token: Token)
+    suspend fun clearToken()
 
 }

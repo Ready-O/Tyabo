@@ -1,8 +1,8 @@
 package com.tyabo.service.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.tyabo.service.interfaces.UserDataSource
-import com.tyabo.service.UserDataSourceImpl
+import com.tyabo.service.interfaces.FirebaseAuthDataSource
+import com.tyabo.service.FirebaseAuthDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -15,9 +15,9 @@ import javax.inject.Singleton
 interface ServiceModule {
 
     @Binds
-    fun bindsUserDataSource(
-        userDataSource: UserDataSourceImpl
-    ): UserDataSource
+    fun bindsFirebaseAuthDataSource(
+        firebaseAuthDataSource: FirebaseAuthDataSourceImpl
+    ): FirebaseAuthDataSource
 
     companion object {
         @Provides

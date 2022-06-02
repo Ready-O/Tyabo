@@ -3,7 +3,8 @@ package com.tyabo.service.interfaces
 
 import com.tyabo.data.FirebaseUser
 
-interface UserDataSource {
+interface FirebaseAuthDataSource {
 
     fun getFirebaseUser(): Result<FirebaseUser>
+    fun signOut()
 }
