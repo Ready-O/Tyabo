@@ -61,7 +61,12 @@ class AuthViewModel @Inject constructor(
         if (result.resultCode == RESULT_OK) {
             viewModelScope.launch {
                 userRepository.getFirebaseUser().onSuccess {
-                    _authState.value = AuthViewState.SelectType(it.id,it.name)
+                    if (result.idpResponse!!.isNewUser){
+                        _authState.value = AuthViewState.SelectType(it.id,it.name)
+                    }
+                    else{
+                        authFinish(userId = it.id, isChef = false)
+                    }
                 }
             }
         }
@@ -72,11 +77,15 @@ class AuthViewModel @Inject constructor(
 
     fun onUserTypeSelect(userId: String, isChef: Boolean){
         viewModelScope.launch {
-            sessionRepository.setToken(
-                Token(id = userId, isChef = isChef)
-            )
-            _sessionState.value = SessionState.UserSignedIn(userId = userId, isChef = isChef)
+            authFinish(userId = userId, isChef = isChef)
         }
+    }
+
+    private suspend fun authFinish(userId: String, isChef: Boolean){
+        sessionRepository.setToken(
+            Token(id = userId, isChef = isChef)
+        )
+        _sessionState.value = SessionState.UserSignedIn(userId = userId, isChef = isChef)
     }
 
     fun signOut(){
@@ -85,6 +94,7 @@ class AuthViewModel @Inject constructor(
             _sessionState.value = SessionState.UserNotSignedIn
         }
     }
+
     sealed class SessionState {
         data class UserSignedIn(val userId: String, val isChef: Boolean) : SessionState()
         object UserNotSignedIn : SessionState()
