@@ -39,6 +39,9 @@ fun AuthScreen(viewModel: AuthViewModel) {
                     Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = true) }){
                         Text(text = "Chef")
                     }
+                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = true) }){
+                        Text(text = "Restaurant")
+                    }
                     Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = false) }){
                         Text(text = "Client")
                     }
