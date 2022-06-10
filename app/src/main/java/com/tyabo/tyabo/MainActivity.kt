@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
             }
             when(sessionState) {
                 AuthViewModel.SessionState.UserNotSignedIn -> {
-                    Column() {
+                    Surface() {
                         AuthScreen(viewModel)
                         BannerLayout(bannerViewState)
                     }
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                 is AuthViewModel.SessionState.UserSignedIn -> {
                     val state = sessionState as AuthViewModel.SessionState.UserSignedIn
                     Column() {
-                        Text(text = "id ${state.userId} - chef ${state.isChef}")
+                        Text(text = "id ${state.userId} - chef ${state.userType}")
                         Button(onClick = viewModel::signOut) {
                             Text(text = "Logout")
                         }

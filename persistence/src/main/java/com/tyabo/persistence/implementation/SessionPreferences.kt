@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.tyabo.data.Token
+import com.tyabo.data.UserType
 import com.tyabo.persistence.interfaces.SessionDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -23,13 +24,37 @@ class SessionPreferences @Inject constructor(
         val preferences = dataStore.data.first()
         val id = preferences[KEY_ID] ?: return Result.failure(Exception())
         val isChef = preferences[KEY_ACCOUNT_CHEF] ?: return Result.failure(Exception())
-        return Result.success(Token(id = id, isChef = isChef))
+        val isRestaurant = preferences[KEY_ACCOUNT_RESTAURANT] ?: return Result.failure(Exception())
+        val userType =
+            if (isRestaurant) {
+                UserType.Restaurant
+            }
+            else if(!isChef){
+                UserType.Client
+            }
+            else{
+                UserType.Chef
+            }
+        return Result.success(Token(id = id, userType = userType))
     }
 
     override suspend fun setToken(token: Token) {
         dataStore.edit {
             it[KEY_ID] = token.id
-            it[KEY_ACCOUNT_CHEF] = token.isChef
+            when(token.userType){
+                UserType.Chef -> {
+                    it[KEY_ACCOUNT_CHEF] = true
+                    it[KEY_ACCOUNT_RESTAURANT] = false
+                }
+                UserType.Restaurant -> {
+                    it[KEY_ACCOUNT_CHEF] = true
+                    it[KEY_ACCOUNT_RESTAURANT] = true
+                }
+                UserType.Client -> {
+                    it[KEY_ACCOUNT_CHEF] = false
+                    it[KEY_ACCOUNT_RESTAURANT] = false
+                }
+            }
         }
     }
 
@@ -40,5 +65,6 @@ class SessionPreferences @Inject constructor(
     companion object {
         val KEY_ID = stringPreferencesKey("id")
         val KEY_ACCOUNT_CHEF = booleanPreferencesKey("is_chef")
+        val KEY_ACCOUNT_RESTAURANT = booleanPreferencesKey("is_restaurant")
     }
 }

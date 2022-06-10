@@ -8,6 +8,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.tyabo.tyabo.AppPresenter
 import com.tyabo.data.Token
+import com.tyabo.data.UserType
 import com.tyabo.repository.interfaces.SessionRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +36,7 @@ class AuthViewModel @Inject constructor(
             sessionRepository.checkUserToken().onSuccess { token ->
                 _sessionState.value = SessionState.UserSignedIn(
                     userId = token.id,
-                    isChef = token.isChef
+                    userType = token.userType
                 )
             }
                 .onFailure {
@@ -60,12 +61,12 @@ class AuthViewModel @Inject constructor(
     fun onAuthResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
             viewModelScope.launch {
-                userRepository.getFirebaseUser().onSuccess {
+                userRepository.getFirebaseUser().onSuccess { user ->
                     if (result.idpResponse!!.isNewUser){
-                        _authState.value = AuthViewState.SelectType(it.id,it.name)
+                        _authState.value = AuthViewState.SelectType(user.id, user.name)
                     }
                     else{
-                        authFinish(userId = it.id, isChef = false)
+                        authFinish(userId = user.id, userType = UserType.Chef)
                     }
                 }
             }
@@ -76,16 +77,16 @@ class AuthViewModel @Inject constructor(
     }
 
     fun onUserTypeSelect(userId: String, isChef: Boolean){
+    fun onUserTypeSelect(userId: String, name: String, userType: UserType){
         viewModelScope.launch {
             authFinish(userId = userId, isChef = isChef)
+            authFinish(userId = userId, userType = userType)
         }
     }
 
-    private suspend fun authFinish(userId: String, isChef: Boolean){
-        sessionRepository.setToken(
-            Token(id = userId, isChef = isChef)
-        )
-        _sessionState.value = SessionState.UserSignedIn(userId = userId, isChef = isChef)
+    private suspend fun authFinish(userId: String, userType: UserType){
+        sessionRepository.setToken(Token(id = userId, userType = userType))
+        _sessionState.value = SessionState.UserSignedIn(userId = userId, userType = userType)
     }
 
     fun signOut(){
@@ -97,7 +98,7 @@ class AuthViewModel @Inject constructor(
     }
 
     sealed class SessionState {
-        data class UserSignedIn(val userId: String, val isChef: Boolean) : SessionState()
+        data class UserSignedIn(val userId: String, val userType: UserType) : SessionState()
         object UserNotSignedIn : SessionState()
         object Loading : SessionState()
     }

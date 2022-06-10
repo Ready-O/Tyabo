@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.tyabo.data.UserType
 import com.tyabo.tyabo.features.AuthViewModel
 
 @Composable
@@ -34,15 +35,16 @@ fun AuthScreen(viewModel: AuthViewModel) {
         is AuthViewModel.AuthViewState.SelectType -> {
             val state = authState as AuthViewModel.AuthViewState.SelectType
             Column() {
-                Text(text = "Welcome ${state.name}")
+                val name = state.name
+                Text(text = "Welcome $name")
                 Row() {
-                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = true) }){
+                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, name = name, userType = UserType.Chef) }){
                         Text(text = "Chef")
                     }
-                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = true) }){
+                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, name = name, userType = UserType.Restaurant) }){
                         Text(text = "Restaurant")
                     }
-                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, isChef = false) }){
+                    Button(onClick = { viewModel.onUserTypeSelect(userId = state.id, name = name, userType = UserType.Client) }){
                         Text(text = "Client")
                     }
                 }
