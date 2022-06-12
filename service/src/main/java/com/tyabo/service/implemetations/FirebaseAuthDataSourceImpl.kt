@@ -1,4 +1,4 @@
-package com.tyabo.service
+package com.tyabo.service.implemetations
 
 import com.google.firebase.auth.AdditionalUserInfo
 import com.google.firebase.auth.FirebaseAuth

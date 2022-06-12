@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,8 +67,16 @@ class AuthViewModel @Inject constructor(
                         _authState.value = AuthViewState.SelectType(user.id, user.name)
                     }
                     else{
-                        authFinish(userId = user.id, userType = UserType.Chef)
+                        userRepository.checkUserType(user.id)
+                            .onSuccess {
+                                authFinish(userId = user.id, userType = it)
+                            }
+                            .onFailure {
+                                Timber.e("User Id in Firebase Auth but not in Firestore ")
+                            }
                     }
+                }.onFailure {
+                    appPresenter.displayAuthError()
                 }
             }
         }
@@ -76,10 +85,9 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun onUserTypeSelect(userId: String, isChef: Boolean){
     fun onUserTypeSelect(userId: String, name: String, userType: UserType){
         viewModelScope.launch {
-            authFinish(userId = userId, isChef = isChef)
+            userRepository.addUser(userId = userId, name = name, userType = userType)
             authFinish(userId = userId, userType = userType)
         }
     }

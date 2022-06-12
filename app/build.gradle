@@ -81,6 +81,7 @@ dependencies {
     implementation serviceDependencies.firebase
     implementation serviceDependencies.firebaseAuthUi
     implementation serviceDependencies.firestore
+    implementation serviceDependencies.playServicesCoroutines
 
     // Unit test
     testImplementation testDependencies.junit

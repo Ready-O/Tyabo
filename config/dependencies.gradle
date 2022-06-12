@@ -30,7 +30,10 @@ ext {
     // Firebase Auth
     firebaseAuthUiVersion = "7.2.0"
 
-    // Common
+    // Coroutine
+    kotlinCoroutinesVersion = '1.6.0'
+
+    // Timber
     timberVersion = '5.0.1'
 
     // Image Cropper
@@ -72,7 +75,10 @@ ext {
     serviceDependencies = [
             firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
             firebaseAuthUi               : "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion",
-            firestore                    : "com.google.firebase:firebase-firestore-ktx"
+            firestore                    : "com.google.firebase:firebase-firestore-ktx",
+
+            // await
+            playServicesCoroutines  : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinCoroutinesVersion",
     ]
 
 
