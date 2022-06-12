@@ -10,7 +10,6 @@ ext {
     tyaboVersionNameMonth = 5
     tyaboVersionNameDay = 8
 
-
     // Compose
     composeVersion = '1.2.0-alpha07'
     activityComposeVersion = '1.4.0'
@@ -73,6 +72,7 @@ ext {
     serviceDependencies = [
             firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
             firebaseAuthUi               : "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion",
+            firestore                    : "com.google.firebase:firebase-firestore-ktx"
     ]
 
 

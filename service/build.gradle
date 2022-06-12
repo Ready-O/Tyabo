@@ -46,6 +46,7 @@ dependencies {
     // Firebase
     implementation serviceDependencies.firebase
     implementation serviceDependencies.firebaseAuthUi
+    implementation serviceDependencies.firestore
 
     // Unit test
     testImplementation testDependencies.junit
