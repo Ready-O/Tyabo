@@ -34,6 +34,7 @@ android {
 dependencies {
 
     implementation project(':data')
+    implementation project(':common')
 
     // Common
     implementation commonDependencies.androidKTX

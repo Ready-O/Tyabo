@@ -33,28 +33,21 @@ android {
 
 dependencies {
 
-    implementation project(':data')
-    implementation project(':common')
-
     // Common
     implementation commonDependencies.androidKTX
     implementation commonDependencies.timber
+
+    // Lifecycle
+    implementation archiDependencies.lifecycleScope
 
     // Hilt
     implementation commonDependencies.hilt
     kapt commonDependencies.hiltCompiler
 
-    // Firebase
-    implementation serviceDependencies.firebase
-    implementation serviceDependencies.firebaseAuthUi
-    implementation serviceDependencies.firestore
-    implementation serviceDependencies.playServicesCoroutines
-
     // Unit test
     testImplementation testDependencies.junit
     androidTestImplementation testDependencies.androidJunit
     androidTestImplementation testDependencies.espresso
-
 }
 
 // Allow references to generated code
