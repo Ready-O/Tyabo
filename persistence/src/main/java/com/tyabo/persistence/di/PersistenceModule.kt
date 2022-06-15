@@ -1,6 +1,7 @@
 package com.tyabo.persistence.di
 
 import com.tyabo.data.Chef
+import com.tyabo.data.UserType
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.persistence.cache.InMemoryChefCacheImpl
 import com.tyabo.persistence.cache.InMemoryUserCache
@@ -12,6 +13,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,6 +24,7 @@ interface PersistenceModule {
         sessionDataStore: SessionPreferences
     ): SessionDataStore
 
+    /*
     @Binds
     fun bindsUserCache(
         inMemoryUserCache: InMemoryUserCacheImpl
@@ -31,5 +34,17 @@ interface PersistenceModule {
     fun bindsChefCache(
         inMemoryChefCache: InMemoryChefCacheImpl
     ): InMemoryChefCache
+
+     */
+
+    companion object{
+        @Provides
+        fun provideUserCache(): InMemoryUserCache = InMemoryUserCacheImpl(cachedUserId = "", cachedUserType = null)
+
+        @Provides
+        fun provideChefCache(): InMemoryChefCache = InMemoryChefCacheImpl(chefMap = LinkedHashMap<String, Chef>())
+
+    }
+
 
 }

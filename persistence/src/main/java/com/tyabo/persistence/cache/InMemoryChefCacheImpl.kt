@@ -4,9 +4,8 @@ import com.tyabo.data.Chef
 import javax.inject.Inject
 
 class InMemoryChefCacheImpl @Inject constructor(
+    private val chefMap: LinkedHashMap<String, Chef>
 ) : InMemoryChefCache {
-
-    private val chefMap = LinkedHashMap<String, Chef>()
 
     override fun updateChef(chef: Chef) {
         chefMap[chef.id] = chef
