@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.tyabo.common.FlowResult
 import com.tyabo.tyabo.AppPresenter
 import com.tyabo.data.Token
 import com.tyabo.data.UserType
@@ -15,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -68,13 +70,12 @@ class AuthViewModel @Inject constructor(
                         _authState.value = AuthViewState.SelectType(user.id, user.name)
                     }
                     else{
-                        userRepository.checkUserType(user.id)
-                            .onSuccess {
-                                authFinish(userId = user.id, userType = it)
+                        userRepository.checkUserType(user.id).collectLatest { userTypeResult ->
+                            when (userTypeResult){
+                                is FlowResult.Success -> authFinish(userId = user.id, userType = userTypeResult.data)
+                                else -> Timber.e("User Id in Firebase Auth but not in Firestore ")
                             }
-                            .onFailure {
-                                Timber.e("User Id in Firebase Auth but not in Firestore ")
-                            }
+                        }
                     }
                 }.onFailure {
                     appPresenter.displayAuthError()
