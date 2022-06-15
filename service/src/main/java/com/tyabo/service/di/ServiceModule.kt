@@ -6,10 +6,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tyabo.service.di.CollectionReferences.CHEFS
+import com.tyabo.service.di.CollectionReferences.CLIENTS
+import com.tyabo.service.di.CollectionReferences.RESTAURANTS
 import com.tyabo.service.implemetations.ChefDataSourceImpl
+import com.tyabo.service.implemetations.ClientDataSourceImpl
 import com.tyabo.service.interfaces.FirebaseAuthDataSource
 import com.tyabo.service.implemetations.FirebaseAuthDataSourceImpl
+import com.tyabo.service.implemetations.RestaurantDataSourceImpl
 import com.tyabo.service.interfaces.ChefDataSource
+import com.tyabo.service.interfaces.ClientDataSource
+import com.tyabo.service.interfaces.RestaurantDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -41,10 +47,20 @@ interface ServiceModule {
 
         @Provides
         @Singleton
+        fun providesClientDataSource(
+            firestore: FirebaseFirestore
+        ): ClientDataSource = ClientDataSourceImpl(firestore.collection(CLIENTS))
+
+        @Provides
+        @Singleton
         fun providesChefDataSource(
             firestore: FirebaseFirestore
         ): ChefDataSource = ChefDataSourceImpl(firestore.collection(CHEFS))
 
-
+        @Provides
+        @Singleton
+        fun providesRestaurantDataSource(
+            firestore: FirebaseFirestore
+        ): RestaurantDataSource = RestaurantDataSourceImpl(firestore.collection(RESTAURANTS))
     }
 }

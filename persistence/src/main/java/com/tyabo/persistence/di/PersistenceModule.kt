@@ -1,11 +1,10 @@
 package com.tyabo.persistence.di
 
 import com.tyabo.data.Chef
+import com.tyabo.data.Client
+import com.tyabo.data.Restaurant
 import com.tyabo.data.UserType
-import com.tyabo.persistence.cache.InMemoryChefCache
-import com.tyabo.persistence.cache.InMemoryChefCacheImpl
-import com.tyabo.persistence.cache.InMemoryUserCache
-import com.tyabo.persistence.cache.InMemoryUserCacheImpl
+import com.tyabo.persistence.cache.*
 import com.tyabo.persistence.datastore.SessionDataStore
 import com.tyabo.persistence.datastore.SessionPreferences
 import dagger.Binds
@@ -44,7 +43,16 @@ interface PersistenceModule {
 
         @Provides
         @Singleton
+        fun provideClientCache(): InMemoryClientCache = InMemoryClientCacheImpl(clientMap = LinkedHashMap<String, Client>())
+
+        @Provides
+        @Singleton
         fun provideChefCache(): InMemoryChefCache = InMemoryChefCacheImpl(chefMap = LinkedHashMap<String, Chef>())
+
+        @Provides
+        @Singleton
+        fun provideRestaurantCache(): InMemoryRestaurantCache =
+            InMemoryRestaurantCacheImpl(restaurantMap = LinkedHashMap<String, Restaurant>())
 
     }
 

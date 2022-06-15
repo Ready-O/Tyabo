@@ -1,11 +1,7 @@
 package com.tyabo.repository.di
 
-import com.tyabo.repository.implementation.ChefRepositoryImpl
-import com.tyabo.repository.interfaces.SessionRepository
-import com.tyabo.repository.implementation.SessionRepositoryImpl
-import com.tyabo.repository.interfaces.UserRepository
-import com.tyabo.repository.implementation.UserRepositoryImpl
-import com.tyabo.repository.interfaces.ChefRepository
+import com.tyabo.repository.implementation.*
+import com.tyabo.repository.interfaces.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,12 +17,23 @@ interface RepositoryModule {
     ): UserRepository
 
     @Binds
+    fun bindsSessionRepository(
+        sessionRepository: SessionRepositoryImpl
+    ): SessionRepository
+
+    @Binds
+    fun bindsClientRepository(
+        clientRepository: ClientRepositoryImpl
+    ): ClientRepository
+
+    @Binds
     fun bindsChefRepository(
         chefRepository: ChefRepositoryImpl
     ): ChefRepository
 
     @Binds
-    fun bindsSessionRepository(
-        sessionRepository: SessionRepositoryImpl
-    ): SessionRepository
+    fun bindsRestaurantRepository(
+        restaurantRepository: RestaurantRepositoryImpl
+    ): RestaurantRepository
+
 }
