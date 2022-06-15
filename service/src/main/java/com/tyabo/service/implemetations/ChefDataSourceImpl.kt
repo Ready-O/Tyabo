@@ -23,7 +23,7 @@ class ChefDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getChef(chefId: String): Result<Chef> {
+    override suspend fun fetchChef(chefId: String): Result<Chef> {
         val snapshot = firestore.collection("chefs").document(chefId).get().await()
         val chef = snapshot?.toObject(RemoteChef::class.java)
         return if (chef == null) {

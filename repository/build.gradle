@@ -42,6 +42,9 @@ dependencies {
     implementation commonDependencies.androidKTX
     implementation commonDependencies.timber
 
+    // Lifecycle
+    implementation archiDependencies.lifecycleScope
+
     // Hilt
     implementation commonDependencies.hilt
     kapt commonDependencies.hiltCompiler

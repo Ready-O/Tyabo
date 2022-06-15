@@ -35,6 +35,7 @@ class AuthViewModel @Inject constructor(
     fun updateSessionState(){
         viewModelScope.launch {
             sessionRepository.checkUserToken().onSuccess { token ->
+                userRepository.checkUserType(userId = token.id)
                 _sessionState.value = SessionState.UserSignedIn(
                     userId = token.id,
                     userType = token.userType

@@ -1,7 +1,7 @@
 package com.tyabo.repository.implementation
 
 import com.tyabo.data.Token
-import com.tyabo.persistence.interfaces.SessionDataStore
+import com.tyabo.persistence.datastore.SessionDataStore
 import com.tyabo.repository.interfaces.SessionRepository
 import com.tyabo.service.interfaces.FirebaseAuthDataSource
 import javax.inject.Inject

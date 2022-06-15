@@ -1,4 +1,4 @@
-package com.tyabo.persistence.interfaces
+package com.tyabo.persistence.datastore
 
 import com.tyabo.data.Token
 

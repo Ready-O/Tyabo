@@ -1,4 +1,4 @@
-package com.tyabo.persistence.implementation
+package com.tyabo.persistence.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.tyabo.data.Token
 import com.tyabo.data.UserType
-import com.tyabo.persistence.interfaces.SessionDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
