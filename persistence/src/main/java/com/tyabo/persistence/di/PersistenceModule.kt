@@ -39,9 +39,11 @@ interface PersistenceModule {
 
     companion object{
         @Provides
+        @Singleton
         fun provideUserCache(): InMemoryUserCache = InMemoryUserCacheImpl(cachedUserId = "", cachedUserType = null)
 
         @Provides
+        @Singleton
         fun provideChefCache(): InMemoryChefCache = InMemoryChefCacheImpl(chefMap = LinkedHashMap<String, Chef>())
 
     }

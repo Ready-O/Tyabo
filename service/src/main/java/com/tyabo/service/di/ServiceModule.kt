@@ -1,9 +1,11 @@
 package com.tyabo.service.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.tyabo.service.di.CollectionReferences.CHEFS
 import com.tyabo.service.implemetations.ChefDataSourceImpl
 import com.tyabo.service.interfaces.FirebaseAuthDataSource
 import com.tyabo.service.implemetations.FirebaseAuthDataSourceImpl
@@ -24,11 +26,6 @@ interface ServiceModule {
         firebaseAuthDataSource: FirebaseAuthDataSourceImpl
     ): FirebaseAuthDataSource
 
-    @Binds
-    fun bindsChefDataSource(
-        chefDataSource: ChefDataSourceImpl
-    ): ChefDataSource
-
     companion object {
         @Provides
         @Singleton
@@ -41,5 +38,13 @@ interface ServiceModule {
         fun providesFirestore(): FirebaseFirestore {
             return Firebase.firestore
         }
+
+        @Provides
+        @Singleton
+        fun providesChefDataSource(
+            firestore: FirebaseFirestore
+        ): ChefDataSource = ChefDataSourceImpl(firestore.collection(CHEFS))
+
+
     }
 }
