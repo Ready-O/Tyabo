@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.tyabo.common.FlowResult
+import com.tyabo.common.UiResult
 import com.tyabo.tyabo.AppPresenter
 import com.tyabo.data.Token
 import com.tyabo.data.UserType
@@ -71,10 +71,12 @@ class AuthViewModel @Inject constructor(
                     }
                     else{
                         userRepository.checkUserType(user.id).collectLatest { userTypeResult ->
-                            when (userTypeResult){
-                                is FlowResult.Success -> authFinish(userId = user.id, userType = userTypeResult.data)
-                                else -> Timber.e("User Id in Firebase Auth but not in Firestore ")
+                            userTypeResult.onSuccess { userType ->
+                                authFinish(userId = user.id, userType = userType)
                             }
+                                .onFailure {
+                                    Timber.e("User Id in Firebase Auth but not in Firestore")
+                                }
                         }
                     }
                 }.onFailure {

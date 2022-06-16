@@ -1,6 +1,6 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.FlowResult
+import com.tyabo.common.UiResult
 import com.tyabo.data.Restaurant
 import com.tyabo.persistence.cache.InMemoryRestaurantCache
 import com.tyabo.repository.interfaces.RestaurantRepository
@@ -24,18 +24,17 @@ class RestaurantRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getRestaurant(restaurantId: String): Flow<FlowResult<Restaurant>> = flow {
-        emit(FlowResult.Loading)
+    override fun getRestaurant(restaurantId: String): Flow<Result<Restaurant>> = flow {
         restaurantCache.getRestaurant(restaurantId).onSuccess {
-            emit(FlowResult.Success(it))
+            emit(Result.success(it))
         }
             .onFailure {
                 restaurantDataSource.fetchRestaurant(restaurantId).onSuccess { restaurant ->
                     restaurantCache.updateRestaurant(restaurant)
-                    emit(FlowResult.Success(restaurant))
+                    emit(Result.success(restaurant))
                 }
                     .onFailure {
-                        emit(FlowResult.Failure(Exception()))
+                        emit(Result.failure<Restaurant>(Exception()))
                     }
             }
     }.flowOn(ioDispatcher)

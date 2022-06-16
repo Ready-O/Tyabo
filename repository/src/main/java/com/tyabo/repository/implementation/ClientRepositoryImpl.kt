@@ -1,6 +1,6 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.FlowResult
+import com.tyabo.common.UiResult
 import com.tyabo.data.Client
 import com.tyabo.persistence.cache.InMemoryClientCache
 import com.tyabo.repository.interfaces.ClientRepository
@@ -19,24 +19,25 @@ class ClientRepositoryImpl @Inject constructor(
 ) : ClientRepository {
 
     override suspend fun addClient(client: Client) {
-        withContext(ioDispatcher){
+        withContext(ioDispatcher) {
             clientDataSource.addClient(client)
         }
     }
 
-    override suspend fun getClient(clientId: String): Flow<FlowResult<Client>> = flow {
-        emit(FlowResult.Loading)
-        clientCache.getClient(clientId).onSuccess {
-            emit(FlowResult.Success(it))
-        }
-        .onFailure {
-            clientDataSource.fetchClient(clientId).onSuccess { client ->
-                clientCache.updateClient(client)
-                emit(FlowResult.Success(client))
+    override fun getClient(clientId: String): Flow<Result<Client>> = flow {
+        clientCache.getClient(clientId)
+            .onSuccess {
+                emit(Result.success(it))
             }
-                .onFailure {
-                    emit(FlowResult.Failure(Exception()))
-                }
-        }
+            .onFailure {
+                clientDataSource.fetchClient(clientId)
+                    .onSuccess { client ->
+                        clientCache.updateClient(client)
+                        emit(Result.success(client))
+                    }
+                    .onFailure {
+                        emit(Result.failure<Client>(Exception()))
+                    }
+            }
     }.flowOn(ioDispatcher)
 }

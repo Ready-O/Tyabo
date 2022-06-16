@@ -1,6 +1,6 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.FlowResult
+import com.tyabo.common.UiResult
 import com.tyabo.data.Chef
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
@@ -24,19 +24,20 @@ class ChefRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getChef(chefId: String): Flow<FlowResult<Chef>> = flow {
-        emit(FlowResult.Loading)
-        chefCache.getChef(chefId).onSuccess {
-            emit(FlowResult.Success(it))
-        }
-        .onFailure {
-            chefDataSource.fetchChef(chefId).onSuccess { chef ->
-                chefCache.updateChef(chef)
-                emit(FlowResult.Success(chef))
+    override fun getChef(chefId: String): Flow<Result<Chef>> = flow {
+        chefCache.getChef(chefId)
+            .onSuccess {
+                emit(Result.success(it))
             }
-                .onFailure {
-                    emit(FlowResult.Failure(Exception()))
-                }
-        }
+            .onFailure {
+                chefDataSource.fetchChef(chefId)
+                    .onSuccess { chef ->
+                        chefCache.updateChef(chef)
+                        emit(Result.success(chef))
+                    }
+                    .onFailure {
+                        emit(Result.failure<Chef>(Exception()))
+                    }
+            }
     }.flowOn(ioDispatcher)
 }
