@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services' //https://stackoverflow.com/questions/40081539/default-firebaseapp-is-not-initialized
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
