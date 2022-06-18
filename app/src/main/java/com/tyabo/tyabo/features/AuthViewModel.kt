@@ -109,14 +109,14 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    sealed class SessionState {
-        data class UserSignedIn(val userId: String, val userType: UserType) : SessionState()
-        object UserNotSignedIn : SessionState()
-        object Loading : SessionState()
+    sealed interface SessionState {
+        data class UserSignedIn(val userId: String, val userType: UserType) : SessionState
+        object UserNotSignedIn : SessionState
+        object Loading : SessionState
     }
 
-    sealed class AuthViewState  {
-        object GetStarted : AuthViewState()
-        data class SelectType(val id: String, val name: String) : AuthViewState()
+    sealed interface AuthViewState  {
+        object GetStarted : AuthViewState
+        data class SelectType(val id: String, val name: String) : AuthViewState
     }
 }
