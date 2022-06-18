@@ -16,8 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.tyabo.data.UserType
 import com.tyabo.tyabo.features.AuthViewModel
 import com.tyabo.tyabo.navigation.GreetingDestination
+import com.tyabo.tyabo.navigation.chef.ChefNavHost
 import com.tyabo.tyabo.navigation.screens.AuthScreen
 import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
@@ -56,7 +58,7 @@ class MainActivity : ComponentActivity() {
                         Button(onClick = viewModel::signOut) {
                             Text(text = "Logout")
                         }
-                        MainAppLayout(bannerViewState = bannerViewState)
+                        MainAppLayout(bannerViewState = bannerViewState, userType = state.userType)
                     }
                 }
             }
@@ -65,7 +67,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainAppLayout(bannerViewState: BannerViewState?) {
+fun MainAppLayout(userType: UserType, bannerViewState: BannerViewState?) {
 
     TyaboTheme {
         Surface(
@@ -73,11 +75,8 @@ fun MainAppLayout(bannerViewState: BannerViewState?) {
             color = MaterialTheme.colors.background
         ) {
             val navController = rememberNavController()
-            NavHost(
-                navController = navController,
-                startDestination = GreetingDestination.route
-            ) {
-                greetingsComposable()
+            when(userType){
+                UserType.Chef -> ChefNavHost(navController = navController)
             }
             BannerLayout(bannerViewState)
         }
