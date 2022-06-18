@@ -1,7 +1,6 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
@@ -10,16 +9,11 @@ android {
     compileSdk tyaboCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.tyabo.tyabo"
         minSdk tyaboMinSdkVersion
         targetSdk tyaboCompileSdkVersion
-        versionCode tyaboVersionCode
-        versionName "${tyaboVersionNameYear}.${tyaboVersionNameMonth}.${tyaboVersionNameDay}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -33,18 +27,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = '1.8'
     }
     buildFeatures {
         compose true
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-    }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
     }
 }
 
@@ -53,10 +42,6 @@ dependencies {
     implementation project(':data')
     implementation project(':common')
     implementation project(':repository')
-    implementation project(':service')
-
-    implementation project(':chef-catalog')
-    implementation project(':chef-editmenu')
 
     // Common
     implementation commonDependencies.androidKTX
@@ -77,15 +62,6 @@ dependencies {
     implementation composeDependencies.composeToolingPreview
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
-
-    // DataStore
-    implementation archiDependencies.dataStore
-
-    // Firebase
-    implementation serviceDependencies.firebase
-    implementation serviceDependencies.firebaseAuthUi
-    implementation serviceDependencies.firestore
-    implementation serviceDependencies.playServicesCoroutines
 
     // Unit test
     testImplementation testDependencies.junit

@@ -9,8 +9,8 @@ object ChefCatalogDestination : ChefDestination {
     override val route = "chef_catalog_route"
 }
 
-fun NavGraphBuilder.chefCatalogComposable(navigateToAddMenu: () -> Unit ) = composable(
+fun NavGraphBuilder.chefCatalogComposable(navigateToEditMenu: () -> Unit ) = composable(
     route = ChefCatalogDestination.route
 ){
-    ChefCatalogScreen(navigateToAddMenu = navigateToAddMenu)
+    ChefCatalogScreen(navigateToEditMenu = navigateToEditMenu)
 }

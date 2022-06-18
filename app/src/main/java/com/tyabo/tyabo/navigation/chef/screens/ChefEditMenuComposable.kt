@@ -2,13 +2,15 @@ package com.tyabo.tyabo.navigation.chef.screens
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.tyabo.chef.editmenu.ChefEditMenuScreen
 import com.tyabo.tyabo.navigation.chef.ChefDestination
 
-object ChefAddMenuDestination : ChefDestination {
+object ChefEditMenuDestination : ChefDestination {
     override val route = "chef_add_menu_route"
 }
 
-fun NavGraphBuilder.chefAddMenuComposable() = composable(
-    route = ChefAddMenuDestination.route
+fun NavGraphBuilder.chefEditMenuComposable() = composable(
+    route = ChefEditMenuDestination.route
 ){
+    ChefEditMenuScreen()
 }

@@ -10,9 +10,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun ChefCatalogScreen(
     modifier: Modifier = Modifier,
     viewModel: ChefCatalogViewModel = hiltViewModel(),
-    navigateToAddMenu: () -> Unit
+    navigateToEditMenu: () -> Unit
 ) {
-    Button(onClick = navigateToAddMenu) {
+    Button(onClick = navigateToEditMenu) {
         Text(text = "Add Menu")
     }
 }
