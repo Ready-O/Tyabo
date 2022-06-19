@@ -8,14 +8,8 @@ import com.google.firebase.ktx.Firebase
 import com.tyabo.service.di.CollectionReferences.CHEFS
 import com.tyabo.service.di.CollectionReferences.CLIENTS
 import com.tyabo.service.di.CollectionReferences.RESTAURANTS
-import com.tyabo.service.implemetations.ChefDataSourceImpl
-import com.tyabo.service.implemetations.ClientDataSourceImpl
-import com.tyabo.service.interfaces.FirebaseAuthDataSource
-import com.tyabo.service.implemetations.FirebaseAuthDataSourceImpl
-import com.tyabo.service.implemetations.RestaurantDataSourceImpl
-import com.tyabo.service.interfaces.ChefDataSource
-import com.tyabo.service.interfaces.ClientDataSource
-import com.tyabo.service.interfaces.RestaurantDataSource
+import com.tyabo.service.implemetations.*
+import com.tyabo.service.interfaces.*
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,6 +25,11 @@ interface ServiceModule {
     fun bindsFirebaseAuthDataSource(
         firebaseAuthDataSource: FirebaseAuthDataSourceImpl
     ): FirebaseAuthDataSource
+
+    @Binds
+    fun bindsMenuDataSource(
+        menuDataSource: MenuDataSourceImpl
+    ): MenuDataSource
 
     companion object {
         @Provides
