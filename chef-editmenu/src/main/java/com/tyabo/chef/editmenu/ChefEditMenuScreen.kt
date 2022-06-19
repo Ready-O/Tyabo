@@ -21,29 +21,61 @@ fun ChefEditMenuScreen(
 
     when(state){
         EditMenuViewState.Loading -> CircularProgressIndicator()
+
+        is EditMenuViewState.Ready -> {
+            val editState = state as EditMenuViewState.Ready
+            editMenuScreen(
+                name = editState.name,
+                numberPersons = editState.numberPersons,
+                description = editState.description,
+                price = editState.price,
+                viewModel
+            )
+        }
+
         is EditMenuViewState.Edit -> {
             val editState = state as EditMenuViewState.Edit
-            Column() {
-                Row(){
-                    Text("Nom : ")
-                    TextField(value = editState.name, onValueChange = viewModel::onNameUpdate)
-                }
-                Row(){
-                    Text("Nombre de personnes : ")
-                    TextField(value = editState.numberPersons, onValueChange = viewModel::onNumberPersonsUpdate)
-                }
-                Row(){
-                    Text("Description : ")
-                    TextField(value = editState.description, onValueChange = viewModel::onDescriptionUpdate)
-                }
-                Row(){
-                    Text("Prix : ")
-                    TextField(value = editState.price.toString(), onValueChange = {})
-                }
-                Button(onClick = {}){
-                    Text("Valider")
-                }
-            }
+            editMenuScreen(
+                name = editState.name,
+                numberPersons = editState.numberPersons,
+                description = editState.description,
+                price = editState.price,
+                viewModel
+            )
+        }
+    }
+}
+
+@Composable
+private fun editMenuScreen(
+    name: String,
+    numberPersons: String,
+    description: String,
+    price: Long,
+    viewModel: ChefEditMenuViewModel
+) {
+    Column() {
+        Row() {
+            Text("Nom : ")
+            TextField(value = name, onValueChange = viewModel::onNameUpdate)
+        }
+        Row() {
+            Text("Nombre de personnes : ")
+            TextField(
+                value = numberPersons,
+                onValueChange = viewModel::onNumberPersonsUpdate
+            )
+        }
+        Row() {
+            Text("Description : ")
+            TextField(value = description, onValueChange = viewModel::onDescriptionUpdate)
+        }
+        Row() {
+            Text("Prix : ")
+            TextField(value = price.toString(), onValueChange = {})
+        }
+        Button(onClick = {}) {
+            Text("Valider")
         }
     }
 }
