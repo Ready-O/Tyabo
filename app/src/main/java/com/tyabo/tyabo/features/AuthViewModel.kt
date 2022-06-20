@@ -37,11 +37,14 @@ class AuthViewModel @Inject constructor(
     fun updateSessionState(){
         viewModelScope.launch {
             sessionRepository.checkUserToken().onSuccess { token ->
-                userRepository.checkUserType(userId = token.id)
-                _sessionState.value = SessionState.UserSignedIn(
-                    userId = token.id,
-                    userType = token.userType
-                )
+                userRepository.checkUserType(userId = token.id).collectLatest { userTypeResult ->
+                    userTypeResult.onSuccess { userType ->
+                        _sessionState.value = SessionState.UserSignedIn(
+                            userId = token.id,
+                            userType = userType
+                        )
+                    }
+                }
             }
                 .onFailure {
                     _sessionState.value = SessionState.UserNotSignedIn
