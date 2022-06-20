@@ -20,7 +20,9 @@ class ClientRepositoryImpl @Inject constructor(
 
     override suspend fun addClient(client: Client) {
         withContext(ioDispatcher) {
-            clientDataSource.addClient(client)
+            clientDataSource.addClient(client).onSuccess {
+                clientCache.updateClient(client)
+            }
         }
     }
 

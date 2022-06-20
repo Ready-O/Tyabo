@@ -1,7 +1,6 @@
 package com.tyabo.service.implemetations
 
 import com.google.firebase.firestore.CollectionReference
-import com.tyabo.data.Chef
 import com.tyabo.data.Restaurant
 import com.tyabo.service.interfaces.RestaurantDataSource
 import kotlinx.coroutines.tasks.await
@@ -12,12 +11,13 @@ class RestaurantDataSourceImpl @Inject constructor(
     private val restaurantsCollection: CollectionReference
 ) : RestaurantDataSource {
 
-    override fun addRestaurant(restaurant: Restaurant) {
-        try {
+    override fun addRestaurant(restaurant: Restaurant): Result<Unit> {
+        return try {
             restaurantsCollection.document(restaurant.id).set(restaurant)
+            Result.success(Unit)
         }
         catch (e: Exception){
-
+            Result.failure(e)
         }
     }
 

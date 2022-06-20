@@ -4,6 +4,6 @@ import com.tyabo.data.Chef
 
 interface ChefDataSource {
 
-    fun addChef(chef: Chef)
+    fun addChef(chef: Chef): Result<Unit>
     suspend fun fetchChef(chefId: String): Result<Chef>
 }

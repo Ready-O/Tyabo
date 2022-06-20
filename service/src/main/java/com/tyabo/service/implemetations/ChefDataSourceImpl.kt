@@ -1,13 +1,9 @@
 package com.tyabo.service.implemetations
 
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 import com.tyabo.data.Chef
 import com.tyabo.service.interfaces.ChefDataSource
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
-import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -15,12 +11,13 @@ class ChefDataSourceImpl @Inject constructor(
     private val chefsCollection: CollectionReference
 ) : ChefDataSource {
 
-    override fun addChef(chef: Chef) {
-        try {
+    override fun addChef(chef: Chef): Result<Unit> {
+        return try {
             chefsCollection.document(chef.id).set(chef)
+            Result.success(Unit)
         }
         catch (e: Exception){
-
+            Result.failure(e)
         }
     }
 

@@ -19,6 +19,14 @@ class UserRepositoryImpl @Inject constructor(
     private val restaurantRepository: RestaurantRepository
 ) : UserRepository
 {
+    override fun getUserId(): Result<String> {
+        return userCache.getUserId()
+    }
+
+    override fun getUserType(): Result<UserType> {
+        return userCache.getUserType()
+    }
+
     override fun getFirebaseUser(): Result<FirebaseUser> {
         return userDataSource.getFirebaseUser()
     }
@@ -37,12 +45,15 @@ class UserRepositoryImpl @Inject constructor(
 
             when {
                 clientResult.isSuccess -> {
+                    userCache.updateUser(userId = userId, userType = UserType.Client)
                     Result.success(UserType.Client)
                 }
                 chefResult.isSuccess -> {
+                    userCache.updateUser(userId = userId, userType = UserType.Chef)
                     Result.success(UserType.Chef)
                 }
                 restaurantResult.isSuccess -> {
+                    userCache.updateUser(userId = userId, userType = UserType.Restaurant)
                     Result.success(UserType.Restaurant)
                 }
                 else -> {
@@ -53,6 +64,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addUser(userId: String, name: String, userType: UserType) {
+        userCache.updateUser(userId = userId, userType = userType)
         when(userType){
             UserType.Client -> clientRepository.addClient(Client(id = userId, name = name))
             UserType.Chef -> chefRepository.addChef(Chef(id = userId, name = name))

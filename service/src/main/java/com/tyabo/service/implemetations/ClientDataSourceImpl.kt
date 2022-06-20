@@ -11,12 +11,13 @@ class ClientDataSourceImpl @Inject constructor(
     private val clientsCollection: CollectionReference
 ) : ClientDataSource {
 
-    override fun addClient(client: Client) {
-        try {
+    override fun addClient(client: Client): Result<Unit> {
+        return try {
             clientsCollection.document(client.id).set(client)
+            Result.success(Unit)
         }
         catch (e: Exception){
-
+            Result.failure(e)
         }
     }
 

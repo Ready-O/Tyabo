@@ -1,6 +1,5 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.UiResult
 import com.tyabo.data.Restaurant
 import com.tyabo.persistence.cache.InMemoryRestaurantCache
 import com.tyabo.repository.interfaces.RestaurantRepository
@@ -20,7 +19,9 @@ class RestaurantRepositoryImpl @Inject constructor(
 
     override suspend fun addRestaurant(restaurant: Restaurant) {
         withContext(ioDispatcher){
-            restaurantDataSource.addRestaurant(restaurant)
+            restaurantDataSource.addRestaurant(restaurant).onSuccess {
+                restaurantCache.updateRestaurant(restaurant)
+            }
         }
     }
 
