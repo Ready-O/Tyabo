@@ -22,12 +22,17 @@ class RestaurantDataSourceImpl @Inject constructor(
     }
 
     override suspend fun fetchRestaurant(restaurantId: String): Result<Restaurant> {
-        val snapshot = restaurantsCollection.document(restaurantId).get().await()
-        val restaurant = snapshot?.toObject(RemoteRestaurant::class.java)
-        return if (restaurant == null) {
+        return try {
+            val snapshot = restaurantsCollection.document(restaurantId).get().await()
+            val restaurant = snapshot?.toObject(RemoteRestaurant::class.java)
+            return if (restaurant == null) {
+                Result.failure(Exception())
+            } else {
+                Result.success(restaurant.toRestaurant())
+            }
+        }
+        catch (e: Exception){
             Result.failure(Exception())
-        } else {
-            Result.success(restaurant.toRestaurant())
         }
     }
 

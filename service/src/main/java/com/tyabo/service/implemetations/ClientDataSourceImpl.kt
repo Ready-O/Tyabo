@@ -22,12 +22,17 @@ class ClientDataSourceImpl @Inject constructor(
     }
 
     override suspend fun fetchClient(clientId: String): Result<Client> {
-        val snapshot = clientsCollection.document(clientId).get().await()
-        val client = snapshot?.toObject(RemoteClient::class.java)
-        return if (client == null) {
+        return try {
+            val snapshot = clientsCollection.document(clientId).get().await()
+            val client = snapshot?.toObject(RemoteClient::class.java)
+            return if (client == null) {
+                Result.failure(Exception())
+            } else {
+                Result.success(client.toClient())
+            }
+        }
+        catch (e: Exception){
             Result.failure(Exception())
-        } else {
-            Result.success(client.toClient())
         }
     }
 
