@@ -1,18 +1,25 @@
 package com.tyabo.chef.editmenu
 
-import android.widget.EditText
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
+import com.tyabo.data.Menu
+import com.tyabo.repository.interfaces.ChefRepository
+import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import kotlin.time.Duration
 
 
 @HiltViewModel
-class ChefEditMenuViewModel @Inject constructor(): ViewModel(){
+class ChefEditMenuViewModel @Inject constructor(
+    private val userRepository: UserRepository,
+    private val chefRepository: ChefRepository
+) : ViewModel(){
 
 
     val ff: Flow<UiResult<EditMenuViewState>> = flow {
@@ -75,9 +82,23 @@ class ChefEditMenuViewModel @Inject constructor(): ViewModel(){
         }
     }
 
-    fun onCtaClicked(){
+    fun onCtaClicked(name: String, numberPersons: String, description: String) {
         viewModelScope.launch{
-
+            val generatedId = UUID.randomUUID().toString()
+            val menu = Menu(
+                id = generatedId,
+                name = name,
+                numberPersons = numberPersons,
+                description = description
+            )
+            userRepository.getUserId().onSuccess { userId ->
+                chefRepository.addMenu(
+                    menu = menu,
+                    userId = userId
+                )
+            }.onFailure{
+                Timber.e("morty")
+            }
         }
     }
 

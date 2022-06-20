@@ -5,5 +5,5 @@ import com.tyabo.data.UserType
 
 interface MenuDataSource {
 
-    fun addMenu(menu: Menu, userType: UserType, userId: String): Result<Unit>
+    suspend fun addMenu(menu: Menu, userType: UserType, userId: String): Result<Unit>
 }

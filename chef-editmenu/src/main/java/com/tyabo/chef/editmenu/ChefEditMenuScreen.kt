@@ -74,7 +74,13 @@ private fun editMenuScreen(
             Text("Prix : ")
             TextField(value = price.toString(), onValueChange = {})
         }
-        Button(onClick = {}) {
+        Button(onClick = {
+            viewModel.onCtaClicked(
+                name = name,
+                numberPersons = numberPersons,
+                description = description
+            )
+        }) {
             Text("Valider")
         }
     }
