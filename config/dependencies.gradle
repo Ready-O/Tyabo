@@ -14,6 +14,7 @@ ext {
     composeVersion = '1.2.0-alpha07'
     activityComposeVersion = '1.4.0'
     navigationComposeVersion = '2.5.0-beta01'
+    coilVersion = '1.4.0'
 
     // Dependency injection
     hiltVersion = '2.38.1'
@@ -69,7 +70,8 @@ ext {
             composeMaterial          : "androidx.compose.material:material:$composeVersion",
             activityCompose          : "androidx.activity:activity-compose:$activityComposeVersion",
             navigationCompose        : "androidx.navigation:navigation-compose:$navigationComposeVersion",
-            hiltNavigation           : "androidx.hilt:hilt-navigation-compose:$hiltNavigation"
+            hiltNavigation           : "androidx.hilt:hilt-navigation-compose:$hiltNavigation",
+            coil                     : "io.coil-kt:coil-compose:$coilVersion",
     ]
 
     serviceDependencies = [

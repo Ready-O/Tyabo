@@ -54,7 +54,9 @@ dependencies {
     implementation project(':common')
     implementation project(':repository')
     implementation project(':service')
+    implementation project(':design-system')
 
+    // Features
     implementation project(':chef-catalog')
     implementation project(':chef-editmenu')
 
@@ -77,6 +79,7 @@ dependencies {
     implementation composeDependencies.composeToolingPreview
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
+    implementation composeDependencies.coil
 
     // DataStore
     implementation archiDependencies.dataStore

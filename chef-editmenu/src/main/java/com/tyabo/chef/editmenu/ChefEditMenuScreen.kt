@@ -1,17 +1,23 @@
 package com.tyabo.chef.editmenu
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.data.NumberPersons
+import com.tyabo.designsystem.MenuPicture
 
 @Composable
 fun ChefEditMenuScreen(
@@ -56,6 +62,11 @@ private fun editMenuScreen(
     viewModel: ChefEditMenuViewModel
 ) {
     Column() {
+        Box(
+            modifier = Modifier.background(Color.DarkGray)
+        ){
+            MenuPicture(modifier = Modifier.size(150.dp), url = "", menuname = name)
+        }
         Row() {
             Text("Nom : ")
             TextField(value = name, onValueChange = viewModel::onNameUpdate)

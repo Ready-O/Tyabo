@@ -15,10 +15,10 @@ dependencyResolutionManagement {
 rootProject.name = "Tyabo"
 include ':app'
 include ':data'
-include ':design-system'
 include ':repository'
 include ':service'
 include ':persistence'
 include ':common'
 include ':chef-catalog'
 include ':chef-editmenu'
+include ':design-system'
