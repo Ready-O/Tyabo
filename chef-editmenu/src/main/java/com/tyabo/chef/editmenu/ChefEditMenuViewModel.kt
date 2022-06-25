@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
 import com.tyabo.data.Menu
+import com.tyabo.data.NumberPersons
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
 
     val ff: Flow<UiResult<EditMenuViewState>> = flow {
-        emit(UiResult.Success(EditMenuViewState.Edit("bro","3","desc",0L)))
+        emit(UiResult.Success(EditMenuViewState.Edit("bro",NumberPersons.ONE,"desc",0L)))
     }
 
     private val _editMenuState = MutableStateFlow<EditMenuViewState>(EditMenuViewState.Loading)
@@ -53,7 +54,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
     private fun editState() = editMenuState.value as? EditMenuViewState.Edit ?: EditMenuViewState.Edit(
         name = "",
-        numberPersons = "",
+        numberPersons = NumberPersons.ONE,
         description = "",
         price = 0L
     )
@@ -64,7 +65,7 @@ class ChefEditMenuViewModel @Inject constructor(
         }
     }
 
-    fun onNumberPersonsUpdate(number: String){
+    fun onNumberPersonsUpdate(number: NumberPersons){
         viewModelScope.launch{
             _editMenuState.value = editState().copy(numberPersons = number)
         }
@@ -82,7 +83,7 @@ class ChefEditMenuViewModel @Inject constructor(
         }
     }
 
-    fun onCtaClicked(name: String, numberPersons: String, description: String) {
+    fun onCtaClicked(name: String, numberPersons: NumberPersons, description: String) {
         viewModelScope.launch{
             val generatedId = UUID.randomUUID().toString()
             val menu = Menu(

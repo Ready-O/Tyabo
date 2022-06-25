@@ -2,15 +2,13 @@ package com.tyabo.chef.editmenu
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tyabo.data.NumberPersons
 
 @Composable
 fun ChefEditMenuScreen(
@@ -49,7 +47,7 @@ fun ChefEditMenuScreen(
 @Composable
 private fun editMenuScreen(
     name: String,
-    numberPersons: String,
+    numberPersons: NumberPersons,
     description: String,
     price: Long,
     viewModel: ChefEditMenuViewModel
@@ -59,12 +57,9 @@ private fun editMenuScreen(
             Text("Nom : ")
             TextField(value = name, onValueChange = viewModel::onNameUpdate)
         }
-        Row() {
+        Column() {
             Text("Nombre de personnes : ")
-            TextField(
-                value = numberPersons,
-                onValueChange = viewModel::onNumberPersonsUpdate
-            )
+            selectNumberPersons(numberPersons, viewModel)
         }
         Row() {
             Text("Description : ")
@@ -82,6 +77,43 @@ private fun editMenuScreen(
             )
         }) {
             Text("Valider")
+        }
+    }
+}
+
+@Composable
+private fun selectNumberPersons(
+    numberPersons: NumberPersons,
+    viewModel: ChefEditMenuViewModel
+) {
+    Row(){
+        Row(){
+            RadioButton(
+                selected = numberPersons == NumberPersons.ONE,
+                onClick = { viewModel.onNumberPersonsUpdate(NumberPersons.ONE) }
+            )
+            Text(text = "One")
+        }
+        Row(){
+            RadioButton(
+                selected = numberPersons == NumberPersons.TWO,
+                onClick = { viewModel.onNumberPersonsUpdate(NumberPersons.TWO) }
+            )
+            Text(text = "Two")
+        }
+        Row(){
+            RadioButton(
+                selected = numberPersons == NumberPersons.THREE,
+                onClick = { viewModel.onNumberPersonsUpdate(NumberPersons.THREE) }
+            )
+            Text(text = "Three")
+        }
+        Row(){
+            RadioButton(
+                selected = numberPersons == NumberPersons.MORE,
+                onClick = { viewModel.onNumberPersonsUpdate(NumberPersons.MORE) }
+            )
+            Text(text = "More")
         }
     }
 }
