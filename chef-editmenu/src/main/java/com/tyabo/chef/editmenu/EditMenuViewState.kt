@@ -10,13 +10,13 @@ interface EditMenuViewState {
         val name: String,
         val numberPersons: NumberPersons,
         val description: String,
-        val price: Long
+        val price: String
     ): EditMenuViewState
 
     data class Edit(
         val name: String,
         val numberPersons: NumberPersons,
         val description: String,
-        val price: Long
+        val price: String
     ): EditMenuViewState
 }

@@ -24,7 +24,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
 
     val ff: Flow<UiResult<EditMenuViewState>> = flow {
-        emit(UiResult.Success(EditMenuViewState.Edit("bro",NumberPersons.ONE,"desc",0L)))
+        emit(UiResult.Success(EditMenuViewState.Edit("bro",NumberPersons.ONE,"desc","0.0")))
     }
 
     private val _editMenuState = MutableStateFlow<EditMenuViewState>(EditMenuViewState.Loading)
@@ -56,7 +56,7 @@ class ChefEditMenuViewModel @Inject constructor(
         name = "",
         numberPersons = NumberPersons.ONE,
         description = "",
-        price = 0L
+        price = "0.0"
     )
 
     fun onNameUpdate(name: String){
@@ -77,20 +77,21 @@ class ChefEditMenuViewModel @Inject constructor(
         }
     }
 
-    fun onPriceUpdate(price: Long){
+    fun onPriceUpdate(price: String){
         viewModelScope.launch{
             _editMenuState.value = editState().copy(price = price)
         }
     }
 
-    fun onCtaClicked(name: String, numberPersons: NumberPersons, description: String) {
+    fun onCtaClicked(name: String, numberPersons: NumberPersons, description: String, price: String) {
         viewModelScope.launch{
             val generatedId = UUID.randomUUID().toString()
             val menu = Menu(
                 id = generatedId,
                 name = name,
                 numberPersons = numberPersons,
-                description = description
+                description = description,
+                price = price.toDouble()
             )
             userRepository.getUserId().onSuccess { userId ->
                 chefRepository.addMenu(

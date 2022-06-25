@@ -2,11 +2,14 @@ package com.tyabo.chef.editmenu
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.data.NumberPersons
 
@@ -26,7 +29,7 @@ fun ChefEditMenuScreen(
                 name = editState.name,
                 numberPersons = editState.numberPersons,
                 description = editState.description,
-                price = editState.price,
+                price = editState.price.toString(),
                 viewModel
             )
         }
@@ -37,7 +40,7 @@ fun ChefEditMenuScreen(
                 name = editState.name,
                 numberPersons = editState.numberPersons,
                 description = editState.description,
-                price = editState.price,
+                price = editState.price.toString(),
                 viewModel
             )
         }
@@ -49,7 +52,7 @@ private fun editMenuScreen(
     name: String,
     numberPersons: NumberPersons,
     description: String,
-    price: Long,
+    price: String,
     viewModel: ChefEditMenuViewModel
 ) {
     Column() {
@@ -67,13 +70,21 @@ private fun editMenuScreen(
         }
         Row() {
             Text("Prix : ")
-            TextField(value = price.toString(), onValueChange = {})
+            TextField(
+                value = price,
+                onValueChange = viewModel::onPriceUpdate,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+            )
         }
         Button(onClick = {
             viewModel.onCtaClicked(
                 name = name,
                 numberPersons = numberPersons,
-                description = description
+                description = description,
+                price = price
             )
         }) {
             Text("Valider")
