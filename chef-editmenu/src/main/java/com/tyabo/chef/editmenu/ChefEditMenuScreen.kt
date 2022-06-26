@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.chef.editmenu.components.EditMenuPicture
 import com.tyabo.data.NumberPersons
-import com.tyabo.designsystem.MenuPicture
 
 @Composable
 fun ChefEditMenuScreen(
@@ -37,6 +36,7 @@ fun ChefEditMenuScreen(
                 numberPersons = editState.numberPersons,
                 description = editState.description,
                 price = editState.price.toString(),
+                menuProfileUrl = editState.menuPictureUrl,
                 viewModel
             )
         }
@@ -48,6 +48,7 @@ fun ChefEditMenuScreen(
                 numberPersons = editState.numberPersons,
                 description = editState.description,
                 price = editState.price.toString(),
+                menuProfileUrl = editState.menuPictureUrl,
                 viewModel
             )
         }
@@ -60,6 +61,7 @@ private fun editMenuScreen(
     numberPersons: NumberPersons,
     description: String,
     price: String,
+    menuProfileUrl: String?,
     viewModel: ChefEditMenuViewModel
 ) {
     Column() {
@@ -68,9 +70,10 @@ private fun editMenuScreen(
         ){
             EditMenuPicture(
                 modifier = Modifier.size(150.dp),
-                menuPictureUrl = "",
+                menuPictureUrl = menuProfileUrl,
                 menuname = name,
-                onClick = {})
+                onClick = viewModel::onPictureUpdate
+            )
         }
         Row() {
             Text("Nom : ")
@@ -100,7 +103,8 @@ private fun editMenuScreen(
                 name = name,
                 numberPersons = numberPersons,
                 description = description,
-                price = price
+                price = price,
+                menuPictureUrl = menuProfileUrl
             )
         }) {
             Text("Valider")
