@@ -82,6 +82,7 @@ ext {
             firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
             firebaseAuthUi               : "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion",
             firestore                    : "com.google.firebase:firebase-firestore-ktx",
+            firebaseStorage                  : "com.google.firebase:firebase-storage-ktx",
 
             // await
             playServicesCoroutines  : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinCoroutinesVersion",

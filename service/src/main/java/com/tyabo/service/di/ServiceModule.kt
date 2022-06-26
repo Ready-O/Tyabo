@@ -5,6 +5,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import com.tyabo.service.di.CollectionReferences.CHEFS
 import com.tyabo.service.di.CollectionReferences.CLIENTS
 import com.tyabo.service.di.CollectionReferences.RESTAURANTS
@@ -31,6 +34,11 @@ interface ServiceModule {
         menuDataSource: MenuDataSourceImpl
     ): MenuDataSource
 
+    @Binds
+    fun bindsMenuUploadSource(
+        menuUploadSource: MenuUploadSourceImpl
+    ): MenuUploadSource
+
     companion object {
         @Provides
         @Singleton
@@ -42,6 +50,12 @@ interface ServiceModule {
         @Singleton
         fun providesFirestore(): FirebaseFirestore {
             return Firebase.firestore
+        }
+
+        @Provides
+        @Singleton
+        fun providesStorageRef(): StorageReference {
+            return Firebase.storage.reference
         }
 
         @Provides

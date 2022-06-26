@@ -93,6 +93,7 @@ dependencies {
     implementation serviceDependencies.firebaseAuthUi
     implementation serviceDependencies.firestore
     implementation serviceDependencies.playServicesCoroutines
+    implementation serviceDependencies.firebaseStorage
 
     // Unit test
     testImplementation testDependencies.junit

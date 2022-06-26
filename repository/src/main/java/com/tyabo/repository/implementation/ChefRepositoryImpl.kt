@@ -24,7 +24,6 @@ class ChefRepositoryImpl @Inject constructor(
 
     override suspend fun addChef(chef: Chef) {
         withContext(ioDispatcher){
-            chefDataSource.addChef(chef)
             chefDataSource.addChef(chef).onSuccess {
                 chefCache.updateChef(chef)
             }
