@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tyabo.chef.editmenu.components.EditMenuPicture
 import com.tyabo.data.NumberPersons
 import com.tyabo.designsystem.MenuPicture
 
@@ -65,7 +66,11 @@ private fun editMenuScreen(
         Box(
             modifier = Modifier.background(Color.DarkGray)
         ){
-            MenuPicture(modifier = Modifier.size(150.dp), url = "", menuname = name)
+            EditMenuPicture(
+                modifier = Modifier.size(150.dp),
+                menuPictureUrl = "",
+                menuname = name,
+                onClick = {})
         }
         Row() {
             Text("Nom : ")

@@ -77,9 +77,13 @@ dependencies {
     implementation composeDependencies.composeUI
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview
+    implementation uiDependencies.materialDesign
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
     implementation composeDependencies.coil
+
+    // Image Cropper
+    implementation imageCropperDependencies.imageCropper
 
     // DataStore
     implementation archiDependencies.dataStore

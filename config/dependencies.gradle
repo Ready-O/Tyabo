@@ -16,6 +16,9 @@ ext {
     navigationComposeVersion = '2.5.0-beta01'
     coilVersion = '1.4.0'
 
+    // Material
+    androidMaterialVersion = '1.5.0'
+
     // Dependency injection
     hiltVersion = '2.38.1'
     hiltNavigation = '1.0.0'
@@ -56,6 +59,7 @@ ext {
     ]
 
     uiDependencies = [
+            materialDesign          : "com.google.android.material:material:$androidMaterialVersion",
     ]
 
     archiDependencies = [
@@ -85,6 +89,7 @@ ext {
 
 
     imageCropperDependencies = [
+            imageCropper           :"com.github.CanHub:Android-Image-Cropper:$imageCropperVersion"
     ]
 
     debugDependencies = [
