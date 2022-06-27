@@ -6,6 +6,7 @@ import com.tyabo.data.UserType
 import com.tyabo.service.di.CollectionReferences
 import com.tyabo.service.interfaces.MenuUploadSource
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -13,23 +14,29 @@ class MenuUploadSourceImpl@Inject constructor(
     private val storageRef: StorageReference
 ) : MenuUploadSource {
 
-    override suspend fun uploadMenuPicture(menuId: String, pictureUrl: String, userType: UserType): Result<String> {
+    override suspend fun uploadMenuPicture(
+        userId: String,
+        menuId: String,
+        pictureUrl: String,
+        userType: UserType
+    ): Result<String> {
         return try {
             val path = when (userType){
                 UserType.Chef ->
-                    "${CollectionReferences.CHEFS}/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
+                    "${CollectionReferences.CHEFS}/$userId/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
                 UserType.Restaurant ->
-                    "${CollectionReferences.RESTAURANTS}/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
+                    "${CollectionReferences.RESTAURANTS}/$userId/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
                 UserType.Client -> return Result.failure<String>(Exception())
             }
 
             val uri = Uri.parse(pictureUrl)
 
             val storageTask = storageRef.child(path).putFile(uri).await()
-            val downloadUrl = storageTask.task.result.toString()
+            val downloadUrl = storageRef.child(path).downloadUrl.await().toString()
             Result.success(downloadUrl)
         }
         catch (e: Exception){
+            Timber.e("morty upload $e")
             Result.failure(e)
         }
     }

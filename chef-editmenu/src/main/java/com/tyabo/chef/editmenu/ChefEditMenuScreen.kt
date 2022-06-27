@@ -35,7 +35,7 @@ fun ChefEditMenuScreen(
                 name = editState.name,
                 numberPersons = editState.numberPersons,
                 description = editState.description,
-                price = editState.price.toString(),
+                price = editState.price,
                 menuProfileUrl = editState.menuPictureUrl,
                 viewModel
             )
@@ -47,7 +47,7 @@ fun ChefEditMenuScreen(
                 name = editState.name,
                 numberPersons = editState.numberPersons,
                 description = editState.description,
-                price = editState.price.toString(),
+                price = editState.price,
                 menuProfileUrl = editState.menuPictureUrl,
                 viewModel
             )
