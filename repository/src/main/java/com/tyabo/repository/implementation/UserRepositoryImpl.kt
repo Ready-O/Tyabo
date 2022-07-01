@@ -67,7 +67,7 @@ class UserRepositoryImpl @Inject constructor(
         userCache.updateUser(userId = userId, userType = userType)
         when(userType){
             UserType.Client -> clientRepository.addClient(Client(id = userId, name = name))
-            UserType.Chef -> chefRepository.addChef(Chef(id = userId, name = name))
+            UserType.Chef -> chefRepository.addChef(Chef(id = userId, name = name, catalogOrder = mutableListOf()))
             UserType.Restaurant -> restaurantRepository.addRestaurant(
                 Restaurant(id = userId, name = name)
             )

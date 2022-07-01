@@ -1,10 +1,10 @@
 package com.tyabo.service.implemetations
 
 import com.google.firebase.firestore.CollectionReference
+import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
 import com.tyabo.service.interfaces.ChefDataSource
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class ChefDataSourceImpl @Inject constructor(
     private val chefsCollection: CollectionReference
 ) : ChefDataSource {
 
-    override fun addChef(chef: Chef): Result<Unit> {
+    override fun updateChef(chef: Chef): Result<Unit> {
         return try {
             chefsCollection.document(chef.id).set(chef)
             Result.success(Unit)
@@ -39,12 +39,14 @@ class ChefDataSourceImpl @Inject constructor(
 
     private data class RemoteChef(
         var id: String = "",
-        var name: String = ""
+        var name: String = "",
+        var catalogOrder: List<CatalogOrder> = mutableListOf()
     )
 
     private fun RemoteChef.toChef() = Chef(
         id = this.id,
-        name = this.name
+        name = this.name,
+        catalogOrder = this.catalogOrder
     )
 
 }

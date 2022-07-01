@@ -1,6 +1,7 @@
 package com.tyabo.repository.implementation
 
 import com.tyabo.common.UiResult
+import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
 import com.tyabo.data.Menu
 import com.tyabo.data.UserType
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 class ChefRepositoryImpl @Inject constructor(
@@ -27,7 +27,7 @@ class ChefRepositoryImpl @Inject constructor(
 
     override suspend fun addChef(chef: Chef) {
         withContext(ioDispatcher){
-            chefDataSource.addChef(chef).onSuccess {
+            chefDataSource.updateChef(chef).onSuccess {
                 chefCache.updateChef(chef)
             }
         }
@@ -63,12 +63,13 @@ class ChefRepositoryImpl @Inject constructor(
                     )
                         .onSuccess {
                             chefCache.updateMenu(chefId = userId, menu = newMenu)
-                        }
-                        .onFailure {
-                            Timber.e("morty firestore")
+                            chefCache.getChef(userId).onSuccess { chef ->
+                                val updatedOrder = chef.catalogOrder.toMutableList()
+                                updatedOrder.add(index = 0, element = CatalogOrder(id = menu.id))
+                                updateChefCatalogOrder(chef = chef, updatedOrder)
+                            }
                         }
                 }
-                .onFailure { Timber.e("morty upload") }
         }
     }
 
@@ -111,4 +112,25 @@ class ChefRepositoryImpl @Inject constructor(
                     }
             }
     }.flowOn(ioDispatcher)
+
+    override suspend fun updateCatalogOrder(
+        chefId: String,
+        catalogOrder: MutableList<CatalogOrder>
+    ) {
+        withContext(ioDispatcher){
+            chefCache.getChef(chefId).onSuccess {
+                updateChefCatalogOrder(it, catalogOrder)
+            }
+        }
+    }
+
+    private suspend fun updateChefCatalogOrder(
+        chef: Chef,
+        catalogOrder: MutableList<CatalogOrder>
+    ){
+        val updatedChef = chef.copy(catalogOrder = catalogOrder)
+        chefDataSource.updateChef(updatedChef).onSuccess {
+            chefCache.updateChef(updatedChef)
+        }
+    }
 }

@@ -1,3 +1,3 @@
 package com.tyabo.data
 
-data class Chef(val id: String, val name: String)
+data class Chef(val id: String, val name: String, val catalogOrder: List<CatalogOrder>)
