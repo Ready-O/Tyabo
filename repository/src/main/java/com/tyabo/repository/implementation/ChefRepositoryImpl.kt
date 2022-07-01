@@ -52,7 +52,6 @@ class ChefRepositoryImpl @Inject constructor(
 
     override suspend fun addMenu(menu: Menu, userId: String) {
         withContext(ioDispatcher){
-            chefCache.updateMenu(chefId = userId, menu = menu)
             uploadMenuPicture(chefId = userId, menuId = menu.id, menuPictureUrl = menu.menuPictureUrl)
                 .onSuccess { downloadUrl ->
                     val newMenu = menu.copy(menuPictureUrl = downloadUrl)
@@ -68,6 +67,13 @@ class ChefRepositoryImpl @Inject constructor(
                                 updatedOrder.add(index = 0, element = CatalogOrder(id = menu.id))
                                 updateChefCatalogOrder(chef = chef, updatedOrder)
                             }
+                        }
+                        .onFailure {
+                            menuUploadSource.deleteMenuPicture(
+                                userId = userId,
+                                menuId = menu.id,
+                                userType = UserType.Chef
+                            )
                         }
                 }
         }

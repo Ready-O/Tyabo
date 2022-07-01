@@ -9,4 +9,10 @@ interface MenuUploadSource {
         pictureUrl: String,
         userType: UserType
     ): Result<String>
+
+    suspend fun deleteMenuPicture(
+        userId: String,
+        menuId: String,
+        userType: UserType
+    )
 }

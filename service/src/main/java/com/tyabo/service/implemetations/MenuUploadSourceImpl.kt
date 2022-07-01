@@ -36,8 +36,23 @@ class MenuUploadSourceImpl@Inject constructor(
             Result.success(downloadUrl)
         }
         catch (e: Exception){
-            Timber.e("morty upload $e")
             Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteMenuPicture(userId: String, menuId: String, userType: UserType) {
+        try {
+            val path = when (userType){
+                UserType.Chef ->
+                    "${CollectionReferences.CHEFS}/$userId/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
+                UserType.Restaurant ->
+                    "${CollectionReferences.RESTAURANTS}/$userId/${CollectionReferences.MENUS}/${MENUS_PICTURES}/$menuId.jpg"
+                UserType.Client -> return
+            }
+
+            val storageTask = storageRef.child(path).delete().await()
+        }
+        catch (e: Exception){
         }
     }
 
