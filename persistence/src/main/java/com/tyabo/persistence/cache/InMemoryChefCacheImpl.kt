@@ -28,4 +28,10 @@ class InMemoryChefCacheImpl @Inject constructor(
         val chefMap = menuMap[chefId]
         chefMap?.remove(menuId)
     }
+
+    override fun getMenus(chefId: String): Result<List<Menu>> {
+        val menuMap = menuMap[chefId]!!
+        val menus = menuMap.values.toList()
+        return if (menus.isEmpty()) Result.failure(NoSuchElementException()) else Result.success(menus)
+    }
 }

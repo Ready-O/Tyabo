@@ -10,4 +10,5 @@ interface ChefRepository {
     suspend fun addChef(chef: Chef)
     fun getChef(chefId: String): Flow<Result<Chef>>
     suspend fun addMenu(menu: Menu, userId: String)
+    fun getMenus(chefId: String): Flow<UiResult<List<Menu>>>
 }

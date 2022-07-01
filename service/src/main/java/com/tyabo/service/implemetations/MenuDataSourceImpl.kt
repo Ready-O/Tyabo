@@ -3,6 +3,7 @@ package com.tyabo.service.implemetations
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tyabo.data.Menu
+import com.tyabo.data.NumberPersons
 import com.tyabo.data.UserType
 import com.tyabo.service.di.CollectionReferences.CHEFS
 import com.tyabo.service.di.CollectionReferences.MENUS
@@ -31,4 +32,51 @@ class MenuDataSourceImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun fetchMenus(
+        userType: UserType,
+        userId: String,
+        menusIds: List<String>
+    ): Result<List<Menu>> {
+         try {
+            val menuRef: CollectionReference = when (userType){
+                UserType.Chef -> firestore.collection("$CHEFS/$userId/$MENUS")
+                UserType.Restaurant -> firestore.collection("$RESTAURANTS/$userId/$MENUS")
+                UserType.Client -> return Result.failure(Exception())
+            }
+            val fetchedMenus: MutableList<Menu> = mutableListOf()
+            menusIds.forEach { menuId ->
+                val menuSnapshot = menuRef.document(menuId).get().await()
+                val remoteMenu = menuSnapshot.toObject(RemoteMenu::class.java)
+                if (remoteMenu == null){
+                    return Result.failure(Exception())
+                }
+                else {
+                    fetchedMenus.add(remoteMenu.toMenu())
+                }
+            }
+            return Result.success(fetchedMenus)
+        }
+        catch (e: Exception){
+            return Result.failure(e)
+        }
+    }
+
+    private data class RemoteMenu(
+        var id: String = "",
+        var name: String = "",
+        var numberPersons: NumberPersons = NumberPersons.ONE,
+        var description: String = "",
+        var price: Double = 0.0,
+        var menuPictureUrl: String? = ""
+    )
+
+    private fun RemoteMenu.toMenu() = Menu(
+        id = this.id,
+        name = this.name,
+        numberPersons = this.numberPersons,
+        description = this.description,
+        price = this.price,
+        menuPictureUrl = this.menuPictureUrl
+    )
 }
