@@ -19,11 +19,11 @@ class UserRepositoryImpl @Inject constructor(
     private val restaurantRepository: RestaurantRepository
 ) : UserRepository
 {
-    override fun getUserId(): Result<String> {
+    override fun getUserId(): String {
         return userCache.getUserId()
     }
 
-    override fun getUserType(): Result<UserType> {
+    override fun getUserType(): UserType {
         return userCache.getUserType()
     }
 

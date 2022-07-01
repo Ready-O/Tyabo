@@ -107,14 +107,10 @@ class ChefEditMenuViewModel @Inject constructor(
                 price = price.toDouble(),
                 menuPictureUrl = menuPictureUrl
             )
-            userRepository.getUserId().onSuccess { userId ->
-                chefRepository.addMenu(
-                    menu = menu,
-                    userId = userId
-                )
-            }.onFailure{
-                Timber.e("morty")
-            }
+            chefRepository.addMenu(
+                menu = menu,
+                userId = userRepository.getUserId()
+            )
         }
     }
 

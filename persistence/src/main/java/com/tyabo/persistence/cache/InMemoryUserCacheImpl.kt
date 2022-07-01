@@ -13,11 +13,11 @@ class InMemoryUserCacheImpl @Inject constructor(
         cachedUserType = userType
     }
 
-    override fun getUserId(): Result<String> {
-        return if (cachedUserType != null) Result.success(cachedUserId) else Result.failure(NoSuchElementException())
+    override fun getUserId(): String {
+        return cachedUserId
     }
 
-    override fun getUserType(): Result<UserType> {
-        return if (cachedUserType != null) Result.success(cachedUserType!!) else Result.failure(NoSuchElementException())
+    override fun getUserType(): UserType {
+        return cachedUserType!!
     }
 }

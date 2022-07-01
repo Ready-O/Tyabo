@@ -6,7 +6,7 @@ interface InMemoryUserCache {
 
     fun updateUser(userId: String, userType: UserType)
 
-    fun getUserId(): Result<String>
+    fun getUserId(): String
 
-    fun getUserType(): Result<UserType>
+    fun getUserType(): UserType
 }
