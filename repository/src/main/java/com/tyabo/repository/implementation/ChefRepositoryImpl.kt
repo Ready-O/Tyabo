@@ -98,24 +98,22 @@ class ChefRepositoryImpl @Inject constructor(
 
     override fun getMenus(chefId: String): Flow<UiResult<List<Menu>>> = flow {
         emit(UiResult.Loading)
-        val list = mutableListOf<String>(
-            "600290c0-50c1-4afc-87d8-eea1ec7733de",
-            "3a296847-69b3-4fff-9fe6-88a19196392a",
-            "40c39b5f-26b7-473f-89b3-4394a94945a4"
-        )
         chefCache.getMenus(chefId)
             .onSuccess { emit(UiResult.Success(it)) }
             .onFailure {
-                menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, menusIds = list)
-                    .onSuccess {  menus ->
-                        menus.forEach {
-                            chefCache.updateMenu(chefId = chefId, menu = it)
+                chefCache.getChef(chefId).onSuccess { chef ->
+                    val firstMenus = chef.catalogOrder.take(3)
+                    menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, catalogToFetch = firstMenus)
+                        .onSuccess {  menus ->
+                            menus.forEach {
+                                chefCache.updateMenu(chefId = chefId, menu = it)
+                            }
+                            emit(UiResult.Success(menus))
                         }
-                        emit(UiResult.Success(menus))
-                    }
-                    .onFailure {
-                        emit(UiResult.Failure(Exception()))
-                    }
+                        .onFailure {
+                            emit(UiResult.Failure(Exception()))
+                        }
+                }
             }
     }.flowOn(ioDispatcher)
 

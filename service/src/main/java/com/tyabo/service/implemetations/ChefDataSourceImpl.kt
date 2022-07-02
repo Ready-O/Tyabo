@@ -1,10 +1,12 @@
 package com.tyabo.service.implemetations
 
+import android.app.RemoteAction
 import com.google.firebase.firestore.CollectionReference
 import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
 import com.tyabo.service.interfaces.ChefDataSource
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -40,13 +42,24 @@ class ChefDataSourceImpl @Inject constructor(
     private data class RemoteChef(
         var id: String = "",
         var name: String = "",
-        var catalogOrder: List<CatalogOrder> = mutableListOf()
+        var catalogOrder: List<RemoteCatalog> = mutableListOf()
     )
 
     private fun RemoteChef.toChef() = Chef(
         id = this.id,
         name = this.name,
-        catalogOrder = this.catalogOrder
+        catalogOrder = this.catalogOrder.toCatalog()
     )
 
+    private data class RemoteCatalog(
+        var id: String = ""
+    )
+
+    private fun List<RemoteCatalog>.toCatalog(): List<CatalogOrder> {
+        val list = mutableListOf<CatalogOrder>()
+        this.forEach {
+            list.add(CatalogOrder(it.id))
+        }
+        return list
+    }
 }

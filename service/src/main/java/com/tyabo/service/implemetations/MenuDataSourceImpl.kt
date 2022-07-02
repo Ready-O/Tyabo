@@ -2,6 +2,7 @@ package com.tyabo.service.implemetations
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Menu
 import com.tyabo.data.NumberPersons
 import com.tyabo.data.UserType
@@ -10,7 +11,6 @@ import com.tyabo.service.di.CollectionReferences.MENUS
 import com.tyabo.service.di.CollectionReferences.RESTAURANTS
 import com.tyabo.service.interfaces.MenuDataSource
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 
@@ -36,7 +36,7 @@ class MenuDataSourceImpl @Inject constructor(
     override suspend fun fetchMenus(
         userType: UserType,
         userId: String,
-        menusIds: List<String>
+        catalogToFetch: List<CatalogOrder>
     ): Result<List<Menu>> {
          try {
             val menuRef: CollectionReference = when (userType){
@@ -45,8 +45,8 @@ class MenuDataSourceImpl @Inject constructor(
                 UserType.Client -> return Result.failure(Exception())
             }
             val fetchedMenus: MutableList<Menu> = mutableListOf()
-            menusIds.forEach { menuId ->
-                val menuSnapshot = menuRef.document(menuId).get().await()
+            catalogToFetch.forEach { element ->
+                val menuSnapshot = menuRef.document(element.id).get().await()
                 val remoteMenu = menuSnapshot.toObject(RemoteMenu::class.java)
                 if (remoteMenu == null){
                     return Result.failure(Exception())
