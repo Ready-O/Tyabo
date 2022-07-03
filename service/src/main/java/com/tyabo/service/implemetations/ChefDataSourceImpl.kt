@@ -2,6 +2,7 @@ package com.tyabo.service.implemetations
 
 import android.app.RemoteAction
 import com.google.firebase.firestore.CollectionReference
+import com.tyabo.data.CatalogItemType
 import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
 import com.tyabo.service.interfaces.ChefDataSource
@@ -52,13 +53,17 @@ class ChefDataSourceImpl @Inject constructor(
     )
 
     private data class RemoteCatalog(
-        var id: String = ""
+        var id: String = "",
+        var catalogItemType: CatalogItemType = CatalogItemType.COLLECTION
     )
 
     private fun List<RemoteCatalog>.toCatalog(): List<CatalogOrder> {
         val list = mutableListOf<CatalogOrder>()
         this.forEach {
-            list.add(CatalogOrder(it.id))
+            list.add(CatalogOrder(
+                id = it.id,
+                catalogItemType = it.catalogItemType
+            ))
         }
         return list
     }

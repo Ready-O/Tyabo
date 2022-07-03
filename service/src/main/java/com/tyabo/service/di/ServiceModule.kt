@@ -39,6 +39,11 @@ interface ServiceModule {
         menuUploadSource: MenuUploadSourceImpl
     ): MenuUploadSource
 
+    @Binds
+    fun bindsCollectionDataSource(
+        collectionDataSource: CollectionDataSourceImpl
+    ): CollectionDataSource
+
     companion object {
         @Provides
         @Singleton

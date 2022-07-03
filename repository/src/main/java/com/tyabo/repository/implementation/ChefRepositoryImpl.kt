@@ -1,13 +1,12 @@
 package com.tyabo.repository.implementation
 
 import com.tyabo.common.UiResult
-import com.tyabo.data.CatalogOrder
-import com.tyabo.data.Chef
-import com.tyabo.data.Menu
-import com.tyabo.data.UserType
+import com.tyabo.data.*
+import com.tyabo.data.Collection
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.service.interfaces.ChefDataSource
+import com.tyabo.service.interfaces.CollectionDataSource
 import com.tyabo.service.interfaces.MenuDataSource
 import com.tyabo.service.interfaces.MenuUploadSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 
 class ChefRepositoryImpl @Inject constructor(
@@ -22,6 +22,7 @@ class ChefRepositoryImpl @Inject constructor(
     private val chefDataSource: ChefDataSource,
     private val menuDataSource: MenuDataSource,
     private val menuUploadSource: MenuUploadSource,
+    private val collectionDataSource: CollectionDataSource,
     private val ioDispatcher: CoroutineDispatcher
 ) : ChefRepository {
 
@@ -64,7 +65,10 @@ class ChefRepositoryImpl @Inject constructor(
                             chefCache.updateMenu(chefId = userId, menu = newMenu)
                             chefCache.getChef(userId).onSuccess { chef ->
                                 val updatedOrder = chef.catalogOrder.toMutableList()
-                                updatedOrder.add(index = 0, element = CatalogOrder(id = menu.id))
+                                updatedOrder.add(
+                                    index = 0,
+                                    element = CatalogOrder(id = menu.id, catalogItemType = CatalogItemType.MENU)
+                                )
                                 updateChefCatalogOrder(chef = chef, updatedOrder)
                             }
                         }
@@ -116,6 +120,28 @@ class ChefRepositoryImpl @Inject constructor(
                 }
             }
     }.flowOn(ioDispatcher)
+
+    override suspend fun addCollection(collectionName: String, userId: String) {
+        withContext(ioDispatcher){
+            val generatedId = UUID.randomUUID().toString()
+            val collection = Collection(id = generatedId, name = collectionName)
+            collectionDataSource.addCollection(
+                collection = collection,
+                userType = UserType.Chef,
+                userId = userId
+            ).onSuccess {
+                chefCache.updateCollection(chefId = userId, collection = collection)
+                chefCache.getChef(userId).onSuccess { chef ->
+                    val updatedOrder = chef.catalogOrder.toMutableList()
+                    updatedOrder.add(
+                        index = 0,
+                        element = CatalogOrder(id = collection.id, catalogItemType = CatalogItemType.COLLECTION)
+                    )
+                    updateChefCatalogOrder(chef = chef, updatedOrder)
+                }
+            }
+        }
+    }
 
     override suspend fun updateCatalogOrder(
         chefId: String,

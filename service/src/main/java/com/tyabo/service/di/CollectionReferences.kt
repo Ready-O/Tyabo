@@ -6,4 +6,5 @@ object CollectionReferences {
     const val CLIENTS = "clients"
     const val RESTAURANTS = "restaurants"
     const val MENUS = "menus"
+    const val COLLECTIONS = "collections"
 }
