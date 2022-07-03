@@ -27,7 +27,7 @@ class ChefRepositoryImpl @Inject constructor(
     override suspend fun addChef(userId: String, name: String) {
         withContext(ioDispatcher){
             val generatedId = UUID.randomUUID().toString()
-            val chef = Chef(id = userId, name = name, catalogOrder = mutableListOf(), catalogOrderId = generatedId)
+            val chef = Chef(id = userId, name = name, catalogOrderId = generatedId)
             chefDataSource.updateChef(chef).onSuccess {
                 catalogOrderDataSource.updateCatalogOrder(
                     catalogOrderId = chef.catalogOrderId,
@@ -71,12 +71,16 @@ class ChefRepositoryImpl @Inject constructor(
                         .onSuccess {
                             chefCache.updateMenu(chefId = userId, menu = newMenu)
                             chefCache.getChef(userId).onSuccess { chef ->
-                                val updatedOrder = chef.catalogOrder.toMutableList()
+                                val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
                                 updatedOrder.add(
                                     index = 0,
                                     element = CatalogOrder(id = menu.id, catalogItemType = CatalogItemType.MENU)
                                 )
-                                updateChefCatalogOrder(chef = chef, updatedOrder)
+                                updateChefCatalogOrder(
+                                    catalogOrderId = chef.catalogOrderId,
+                                    catalogOrder = updatedOrder,
+                                    chefId = chef.id
+                                )
                             }
                         }
                         .onFailure {
@@ -112,19 +116,22 @@ class ChefRepositoryImpl @Inject constructor(
         chefCache.getMenus(chefId)
             .onSuccess { emit(UiResult.Success(it)) }
             .onFailure {
-                chefCache.getChef(chefId).onSuccess { chef ->
-                    val firstMenus = chef.catalogOrder.take(3)
-                    menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, catalogToFetch = firstMenus)
-                        .onSuccess {  menus ->
-                            menus.forEach {
-                                chefCache.updateMenu(chefId = chefId, menu = it)
-                            }
-                            emit(UiResult.Success(menus))
-                        }
-                        .onFailure {
-                            emit(UiResult.Failure(Exception()))
-                        }
+                val menusToFetch = mutableListOf<String>()
+                chefCache.getOrder(chefId).forEach {
+                    if(it.catalogItemType == CatalogItemType.MENU){
+                        menusToFetch.add(it.id)
+                    }
                 }
+                menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, menusIds = menusToFetch)
+                    .onSuccess {  menus ->
+                        menus.forEach {
+                            chefCache.updateMenu(chefId = chefId, menu = it)
+                        }
+                        emit(UiResult.Success(menus))
+                    }
+                    .onFailure {
+                        emit(UiResult.Failure(Exception()))
+                    }
             }
     }.flowOn(ioDispatcher)
 
@@ -139,12 +146,16 @@ class ChefRepositoryImpl @Inject constructor(
             ).onSuccess {
                 chefCache.updateCollection(chefId = userId, collection = collection)
                 chefCache.getChef(userId).onSuccess { chef ->
-                    val updatedOrder = chef.catalogOrder.toMutableList()
+                    val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
                     updatedOrder.add(
                         index = 0,
                         element = CatalogOrder(id = collection.id, catalogItemType = CatalogItemType.COLLECTION)
                     )
-                    updateChefCatalogOrder(chef = chef, updatedOrder)
+                    updateChefCatalogOrder(
+                        catalogOrderId = chef.catalogOrderId,
+                        catalogOrder = updatedOrder,
+                        chefId = chef.id
+                    )
                 }
             }
         }
@@ -152,22 +163,53 @@ class ChefRepositoryImpl @Inject constructor(
 
     override suspend fun updateCatalogOrder(
         chefId: String,
-        catalogOrder: MutableList<CatalogOrder>
+        catalogOrder: List<CatalogOrder>
     ) {
         withContext(ioDispatcher){
             chefCache.getChef(chefId).onSuccess {
-                updateChefCatalogOrder(it, catalogOrder)
+                updateChefCatalogOrder(
+                    catalogOrderId = it.catalogOrderId,
+                    catalogOrder = catalogOrder,
+                    chefId = it.id
+                )
             }
         }
     }
 
     private suspend fun updateChefCatalogOrder(
-        chef: Chef,
-        catalogOrder: MutableList<CatalogOrder>
+        catalogOrderId: String,
+        catalogOrder: List<CatalogOrder>,
+        chefId: String
     ){
-        val updatedChef = chef.copy(catalogOrder = catalogOrder)
-        chefDataSource.updateChef(updatedChef).onSuccess {
-            chefCache.updateChef(updatedChef)
+        catalogOrderDataSource.updateCatalogOrder(
+            catalogOrderId = catalogOrderId,
+            catalogOrder = catalogOrder,
+            userType = UserType.Chef,
+            userId = chefId
+        ).onSuccess {
+            chefCache.updateOrder(chefId = chefId, order = catalogOrder)
         }
     }
+
+    // Cache will contain only the catalog elements to display
+    override fun getCatalogOrder(chefId: String, count: Long): Flow<List<CatalogOrder>> = flow<List<CatalogOrder>> {
+        val list = chefCache.getOrder(chefId)
+        if (list.isNotEmpty()) {
+            emit(list)
+        }
+        else{
+            chefCache.getChef(chefId).onSuccess { chef ->
+                catalogOrderDataSource.fetchCatalogOrder(
+                    catalogOrderId = chef.catalogOrderId,
+                    userType = UserType.Chef,
+                    userId = chef.id
+                ).onSuccess { list ->
+                    chefCache.updateOrder(chefId = chef.id, order = list.take(count.toInt()))
+                    emit(list.take(count.toInt()))
+                }.onFailure {
+                    emit(listOf())
+                }
+            }
+        }
+    }.flowOn(ioDispatcher)
 }

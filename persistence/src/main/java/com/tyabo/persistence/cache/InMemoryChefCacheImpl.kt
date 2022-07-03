@@ -53,4 +53,10 @@ class InMemoryChefCacheImpl @Inject constructor(
         val collections = collectionMap.values.toList()
         return if (collections.isEmpty()) Result.failure(NoSuchElementException()) else Result.success(collections)
     }
+
+    override fun updateOrder(chefId: String, order: List<CatalogOrder>) {
+        catalogOrder[chefId] = order
+    }
+
+    override fun getOrder(chefId: String): List<CatalogOrder> = catalogOrder[chefId]!!
 }
