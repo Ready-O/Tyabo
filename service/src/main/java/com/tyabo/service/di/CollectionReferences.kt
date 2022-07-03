@@ -7,4 +7,5 @@ object CollectionReferences {
     const val RESTAURANTS = "restaurants"
     const val MENUS = "menus"
     const val COLLECTIONS = "collections"
+    const val ORDER = "catalog_order"
 }

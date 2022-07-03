@@ -1,5 +1,6 @@
 package com.tyabo.persistence.cache
 
+import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
 import com.tyabo.data.Collection
 import com.tyabo.data.Menu
@@ -8,7 +9,8 @@ import javax.inject.Inject
 class InMemoryChefCacheImpl @Inject constructor(
     private val chefMap: LinkedHashMap<String,Chef>,
     private val menuMap: LinkedHashMap<String,LinkedHashMap<String, Menu>>,
-    private val collectionMap: LinkedHashMap<String,LinkedHashMap<String, Collection>>
+    private val collectionMap: LinkedHashMap<String,LinkedHashMap<String, Collection>>,
+    private val catalogOrder: LinkedHashMap<String, List<CatalogOrder>>
 ) : InMemoryChefCache {
 
     override fun updateChef(chef: Chef) {
@@ -16,6 +18,7 @@ class InMemoryChefCacheImpl @Inject constructor(
         if (menuMap[chef.id] == null) {
             menuMap[chef.id] = LinkedHashMap<String, Menu>()
             collectionMap[chef.id] = LinkedHashMap<String, Collection>()
+            catalogOrder[chef.id] = listOf()
         }
     }
 

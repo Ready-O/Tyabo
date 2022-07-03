@@ -5,6 +5,8 @@ import com.google.firebase.firestore.CollectionReference
 import com.tyabo.data.CatalogItemType
 import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Chef
+import com.tyabo.data.UserType
+import com.tyabo.service.di.CollectionReferences
 import com.tyabo.service.interfaces.ChefDataSource
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -43,13 +45,15 @@ class ChefDataSourceImpl @Inject constructor(
     private data class RemoteChef(
         var id: String = "",
         var name: String = "",
-        var catalogOrder: List<RemoteCatalog> = mutableListOf()
+        var catalogOrder: List<RemoteCatalog> = mutableListOf(),
+        var catalogOrderId: String = ""
     )
 
     private fun RemoteChef.toChef() = Chef(
         id = this.id,
         name = this.name,
-        catalogOrder = this.catalogOrder.toCatalog()
+        catalogOrder = this.catalogOrder.toCatalog(),
+        catalogOrderId = this.catalogOrderId
     )
 
     private data class RemoteCatalog(

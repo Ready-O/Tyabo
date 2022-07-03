@@ -5,10 +5,7 @@ import com.tyabo.data.*
 import com.tyabo.data.Collection
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
-import com.tyabo.service.interfaces.ChefDataSource
-import com.tyabo.service.interfaces.CollectionDataSource
-import com.tyabo.service.interfaces.MenuDataSource
-import com.tyabo.service.interfaces.MenuUploadSource
+import com.tyabo.service.interfaces.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -20,16 +17,26 @@ import javax.inject.Inject
 class ChefRepositoryImpl @Inject constructor(
     private val chefCache: InMemoryChefCache,
     private val chefDataSource: ChefDataSource,
+    private val catalogOrderDataSource: CatalogOrderDataSource,
     private val menuDataSource: MenuDataSource,
     private val menuUploadSource: MenuUploadSource,
     private val collectionDataSource: CollectionDataSource,
     private val ioDispatcher: CoroutineDispatcher
 ) : ChefRepository {
 
-    override suspend fun addChef(chef: Chef) {
+    override suspend fun addChef(userId: String, name: String) {
         withContext(ioDispatcher){
+            val generatedId = UUID.randomUUID().toString()
+            val chef = Chef(id = userId, name = name, catalogOrder = mutableListOf(), catalogOrderId = generatedId)
             chefDataSource.updateChef(chef).onSuccess {
-                chefCache.updateChef(chef)
+                catalogOrderDataSource.updateCatalogOrder(
+                    catalogOrderId = chef.catalogOrderId,
+                    catalogOrder = listOf(),
+                    userType = UserType.Chef,
+                    userId = chef.id
+                ).onSuccess {
+                    chefCache.updateChef(chef)
+                }
             }
         }
     }

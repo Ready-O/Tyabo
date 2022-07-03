@@ -44,6 +44,11 @@ interface ServiceModule {
         collectionDataSource: CollectionDataSourceImpl
     ): CollectionDataSource
 
+    @Binds
+    fun bindsCatalogOrderDataSource(
+        catalogOrderDataSource: CatalogOrderDataSourceImpl
+    ): CatalogOrderDataSource
+
     companion object {
         @Provides
         @Singleton

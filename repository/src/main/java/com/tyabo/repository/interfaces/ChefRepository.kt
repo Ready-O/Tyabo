@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChefRepository {
 
-    suspend fun addChef(chef: Chef)
+    suspend fun addChef(userId: String, name: String)
     fun getChef(chefId: String): Flow<Result<Chef>>
     suspend fun addMenu(menu: Menu, userId: String)
     fun getMenus(chefId: String): Flow<UiResult<List<Menu>>>
