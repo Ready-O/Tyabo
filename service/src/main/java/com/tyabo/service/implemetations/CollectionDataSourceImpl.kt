@@ -2,7 +2,6 @@ package com.tyabo.service.implemetations
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Collection
 import com.tyabo.data.UserType
 import com.tyabo.service.di.CollectionReferences.CHEFS
@@ -39,7 +38,7 @@ class CollectionDataSourceImpl @Inject constructor(
     override suspend fun fetchCollections(
         userType: UserType,
         userId: String,
-        catalogToFetch: List<CatalogOrder>
+        collectionsIds: List<String>
     ): Result<List<Collection>> {
          try {
             val collectionRef: CollectionReference = when (userType){
@@ -48,8 +47,8 @@ class CollectionDataSourceImpl @Inject constructor(
                 UserType.Client -> return Result.failure(Exception())
             }
             val fetchedCollections: MutableList<Collection> = mutableListOf()
-            catalogToFetch.forEach { element ->
-                val collectionSnapshot = collectionRef.document(element.id).get().await()
+            collectionsIds.forEach { id ->
+                val collectionSnapshot = collectionRef.document(id).get().await()
                 val remoteCollection = collectionSnapshot.toObject(RemoteCollection::class.java)
                 if (remoteCollection == null){
                     return Result.failure(Exception())

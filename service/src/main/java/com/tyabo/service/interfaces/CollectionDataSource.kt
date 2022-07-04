@@ -7,5 +7,5 @@ import com.tyabo.data.UserType
 
 interface CollectionDataSource {
     suspend fun addCollection(collection: Collection, userType: UserType, userId: String): Result<Unit>
-    suspend fun fetchCollections(userType: UserType, userId: String, catalogToFetch: List<CatalogOrder>): Result<List<Collection>>
+    suspend fun fetchCollections(userType: UserType, userId: String, collectionsIds: List<String>): Result<List<Collection>>
 }

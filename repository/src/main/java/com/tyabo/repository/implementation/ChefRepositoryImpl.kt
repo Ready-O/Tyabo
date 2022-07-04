@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -71,18 +70,11 @@ class ChefRepositoryImpl @Inject constructor(
                     )
                         .onSuccess {
                             chefCache.updateMenu(chefId = userId, menu = newMenu)
-                            chefCache.getChef(userId).onSuccess { chef ->
-                                val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
-                                updatedOrder.add(
-                                    index = 0,
-                                    element = CatalogOrder(id = menu.id, catalogItemType = CatalogItemType.MENU)
-                                )
-                                updateChefCatalogOrder(
-                                    catalogOrderId = chef.catalogOrderId,
-                                    catalogOrder = updatedOrder,
-                                    chefId = chef.id
-                                )
-                            }
+                            addNewItemOrder(
+                                userId = userId,
+                                itemId = menu.id,
+                                itemType = CatalogItemType.MENU
+                            )
                         }
                         .onFailure {
                             menuUploadSource.deleteMenuPicture(
@@ -140,21 +132,35 @@ class ChefRepositoryImpl @Inject constructor(
                 userId = userId
             ).onSuccess {
                 chefCache.updateCollection(chefId = userId, collection = collection)
-                chefCache.getChef(userId).onSuccess { chef ->
-                    val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
-                    updatedOrder.add(
-                        index = 0,
-                        element = CatalogOrder(id = collection.id, catalogItemType = CatalogItemType.COLLECTION)
-                    )
-                    updateChefCatalogOrder(
-                        catalogOrderId = chef.catalogOrderId,
-                        catalogOrder = updatedOrder,
-                        chefId = chef.id
-                    )
-                }
+                addNewItemOrder(
+                    userId = userId,
+                    itemId = collection.id,
+                    itemType = CatalogItemType.COLLECTION
+                )
             }
         }
     }
+
+    override fun getCollections(
+        chefId: String,
+        collectionsIds: List<String>
+    ): Flow<UiResult<List<Collection>>> = flow {
+        emit(UiResult.Loading)
+        chefCache.getCollections(chefId)
+            .onSuccess { emit(UiResult.Success(it)) }
+            .onFailure {
+                collectionDataSource.fetchCollections(userType = UserType.Chef, userId = chefId, collectionsIds = collectionsIds)
+                    .onSuccess {  collections ->
+                        collections.forEach {
+                            chefCache.updateCollection(chefId = chefId, collection = it)
+                        }
+                        emit(UiResult.Success(collections))
+                    }
+                    .onFailure {
+                        emit(UiResult.Failure(Exception()))
+                    }
+            }
+    }.flowOn(ioDispatcher)
 
     override suspend fun updateCatalogOrder(
         chefId: String,
@@ -183,6 +189,28 @@ class ChefRepositoryImpl @Inject constructor(
             userId = chefId
         ).onSuccess {
             chefCache.updateOrder(chefId = chefId, order = catalogOrder)
+        }
+    }
+
+    private suspend fun addNewItemOrder(
+        userId: String,
+        itemId: String,
+        itemType: CatalogItemType
+    ) {
+        chefCache.getChef(userId).onSuccess { chef ->
+            val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
+            updatedOrder.add(
+                index = 0,
+                element = CatalogOrder(
+                    id = itemId,
+                    catalogItemType = itemType
+                )
+            )
+            updateChefCatalogOrder(
+                catalogOrderId = chef.catalogOrderId,
+                catalogOrder = updatedOrder,
+                chefId = chef.id
+            )
         }
     }
 
