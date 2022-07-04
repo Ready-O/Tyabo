@@ -62,7 +62,7 @@ class CatalogOrderDataSourceImpl @Inject constructor(
     }
 
     private data class RemoteList(
-        val catalogOrder: List<RemoteCatalog>
+        var catalogOrder: List<RemoteCatalog> = listOf()
     )
 
     private data class RemoteCatalog(

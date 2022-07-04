@@ -11,7 +11,7 @@ interface ChefRepository {
     suspend fun addChef(userId: String, name: String)
     fun getChef(chefId: String): Flow<Result<Chef>>
     suspend fun addMenu(menu: Menu, userId: String)
-    fun getMenus(chefId: String): Flow<UiResult<List<Menu>>>
+    fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>>
     suspend fun addCollection(collectionName: String, userId: String)
     suspend fun updateCatalogOrder(chefId: String, catalogOrder: List<CatalogOrder>)
     fun getCatalogOrder(chefId: String, count: Long = DEFAULT_COUNT): Flow<List<CatalogOrder>>

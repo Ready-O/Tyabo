@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -111,18 +112,12 @@ class ChefRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getMenus(chefId: String): Flow<UiResult<List<Menu>>> = flow {
+    override fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>> = flow {
         emit(UiResult.Loading)
         chefCache.getMenus(chefId)
             .onSuccess { emit(UiResult.Success(it)) }
             .onFailure {
-                val menusToFetch = mutableListOf<String>()
-                chefCache.getOrder(chefId).forEach {
-                    if(it.catalogItemType == CatalogItemType.MENU){
-                        menusToFetch.add(it.id)
-                    }
-                }
-                menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, menusIds = menusToFetch)
+                menuDataSource.fetchMenus(userType = UserType.Chef, userId = chefId, menusIds = menusIds)
                     .onSuccess {  menus ->
                         menus.forEach {
                             chefCache.updateMenu(chefId = chefId, menu = it)
