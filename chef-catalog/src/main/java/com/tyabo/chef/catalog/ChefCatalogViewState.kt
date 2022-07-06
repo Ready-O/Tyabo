@@ -1,15 +1,15 @@
 package com.tyabo.chef.catalog
 
-import com.tyabo.data.CatalogOrder
-import com.tyabo.data.Menu
-import com.tyabo.data.NumberPersons
+import kotlinx.coroutines.flow.StateFlow
 
 interface ChefCatalogViewState {
 
-    object Loading: ChefCatalogViewState
+    data class DisplayCollection(
+        val catalogState: StateFlow<ChefCatalogDisplayViewState>
+    ) : ChefCatalogViewState
 
-    data class Catalog(
-        val catalog: List<Menu>,
-        val order: MutableList<CatalogOrder>
-    ): ChefCatalogViewState
+    data class EditCollection(
+        val catalogState: StateFlow<ChefCatalogDisplayViewState>,
+        val collection: String
+    ) : ChefCatalogViewState
 }
