@@ -7,9 +7,7 @@ import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.service.interfaces.*
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
@@ -162,6 +160,9 @@ class ChefRepositoryImpl @Inject constructor(
             }
     }.flowOn(ioDispatcher)
 
+    private val _catalogOrder = MutableStateFlow<List<CatalogOrder>>(listOf())
+    override val catalogOrder: StateFlow<List<CatalogOrder>> = _catalogOrder.asStateFlow()
+
     override suspend fun updateCatalogOrder(
         chefId: String,
         catalogOrder: List<CatalogOrder>
@@ -189,6 +190,7 @@ class ChefRepositoryImpl @Inject constructor(
             userId = chefId
         ).onSuccess {
             chefCache.updateOrder(chefId = chefId, order = catalogOrder)
+            _catalogOrder.value = chefCache.getOrder(chefId)
         }
     }
 
@@ -215,24 +217,30 @@ class ChefRepositoryImpl @Inject constructor(
     }
 
     // Cache will contain only the catalog elements to display
-    override fun getCatalogOrder(chefId: String, count: Long): Flow<List<CatalogOrder>> = flow<List<CatalogOrder>> {
-        val list = chefCache.getOrder(chefId)
-        if (list.isNotEmpty()) {
-            emit(list)
-        }
-        else{
-            chefCache.getChef(chefId).onSuccess { chef ->
-                catalogOrderDataSource.fetchCatalogOrder(
-                    catalogOrderId = chef.catalogOrderId,
-                    userType = UserType.Chef,
-                    userId = chef.id
-                ).onSuccess { list ->
-                    chefCache.updateOrder(chefId = chef.id, order = list.take(count.toInt()))
-                    emit(list.take(count.toInt()))
-                }.onFailure {
-                    emit(listOf())
-                }
+    override suspend fun updateStateCatalogOrder(chefId: String, count: Long) {
+        withContext(ioDispatcher){
+            val list = chefCache.getOrder(chefId)
+            if (list.isNotEmpty()) {
+                _catalogOrder.value = list
+            }
+            else{
+                updateRemoteCatalogOrder(chefId, count)
             }
         }
-    }.flowOn(ioDispatcher)
+    }
+
+    private suspend fun updateRemoteCatalogOrder(chefId: String, count: Long) {
+        chefCache.getChef(chefId).onSuccess { chef ->
+            catalogOrderDataSource.fetchCatalogOrder(
+                catalogOrderId = chef.catalogOrderId,
+                userType = UserType.Chef,
+                userId = chef.id
+            ).onSuccess { list ->
+                chefCache.updateOrder(chefId = chef.id, order = list.take(count.toInt()))
+                _catalogOrder.value = list.take(count.toInt())
+            }.onFailure {
+                _catalogOrder.value = listOf()
+            }
+        }
+    }
 }

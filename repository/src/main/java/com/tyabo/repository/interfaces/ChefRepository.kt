@@ -6,6 +6,8 @@ import com.tyabo.data.Chef
 import com.tyabo.data.Collection
 import com.tyabo.data.Menu
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 interface ChefRepository {
 
@@ -15,8 +17,10 @@ interface ChefRepository {
     fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>>
     suspend fun addCollection(collectionName: String, userId: String)
     fun getCollections(chefId: String, collectionsIds: List<String>): Flow<UiResult<List<Collection>>>
+
+    val catalogOrder: StateFlow<List<CatalogOrder>>
     suspend fun updateCatalogOrder(chefId: String, catalogOrder: List<CatalogOrder>)
-    fun getCatalogOrder(chefId: String, count: Long = DEFAULT_COUNT): Flow<List<CatalogOrder>>
+    suspend fun updateStateCatalogOrder(chefId: String, count: Long = DEFAULT_COUNT)
 
     companion object {
         private const val DEFAULT_COUNT: Long = 10
