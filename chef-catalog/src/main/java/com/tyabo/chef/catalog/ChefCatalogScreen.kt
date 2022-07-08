@@ -1,9 +1,7 @@
 package com.tyabo.chef.catalog
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -12,11 +10,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.data.CatalogItem
-import com.tyabo.data.Collection
-import com.tyabo.data.Menu
-import timber.log.Timber
+import com.tyabo.chef.catalog.components.Catalog
 
 @Composable
 fun ChefCatalogScreen(
@@ -67,26 +64,14 @@ private fun displayCatalog(
                     listToDisplay.add(item)
                 }
             }
-
             Column() {
                 Button(onClick = navigateToEditMenu) {
                     Text(text = "Add Menu")
                 }
-                LazyColumn() {
-                    items(listToDisplay) { item ->
-                        Row() {
-                            when(item){
-                                is CatalogItem.MenuItem -> {
-                                    Text(text = item.name)
-                                    Text(text = item.price.toString())
-                                }
-                                is CatalogItem.CollectionItem -> {
-                                    Text(text = item.name)
-                                }
-                            }
-                        }
-                    }
-                }
+                Catalog(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    itemsList = listToDisplay,
+                )
             }
         }
     }

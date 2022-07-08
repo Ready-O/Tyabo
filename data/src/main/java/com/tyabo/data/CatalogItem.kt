@@ -9,7 +9,7 @@ sealed class CatalogItem {
         val name: String,
         val numberPersons: NumberPersons,
         val description: String,
-        val price: Double,
+        val price: String,
         val menuPictureUrl: String?
     ): CatalogItem()
 
@@ -24,7 +24,7 @@ fun Menu.toMenuItem() = CatalogItem.MenuItem(
     name = this.name,
     numberPersons = this.numberPersons,
     description = this.description,
-    price = this.price,
+    price = this.price.toString(),
     menuPictureUrl = this.menuPictureUrl
 )
 
