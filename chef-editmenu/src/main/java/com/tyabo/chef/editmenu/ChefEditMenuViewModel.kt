@@ -95,7 +95,8 @@ class ChefEditMenuViewModel @Inject constructor(
         numberPersons: NumberPersons,
         description: String,
         price: String,
-        menuPictureUrl: String?
+        menuPictureUrl: String?,
+        navigateUp: () -> Unit
     ) {
         viewModelScope.launch{
             val generatedId = UUID.randomUUID().toString()
@@ -111,6 +112,7 @@ class ChefEditMenuViewModel @Inject constructor(
                 menu = menu,
                 userId = userRepository.getUserId()
             )
+            navigateUp()
         }
     }
 

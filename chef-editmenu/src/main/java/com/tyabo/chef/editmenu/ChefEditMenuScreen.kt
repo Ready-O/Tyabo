@@ -22,6 +22,7 @@ import com.tyabo.data.NumberPersons
 @Composable
 fun ChefEditMenuScreen(
     modifier: Modifier = Modifier,
+    navigateUp: () -> Unit,
     viewModel: ChefEditMenuViewModel = hiltViewModel(),
 ){
     val state by viewModel.editMenuState.collectAsState()
@@ -37,6 +38,7 @@ fun ChefEditMenuScreen(
                 description = editState.description,
                 price = editState.price,
                 menuProfileUrl = editState.menuPictureUrl,
+                navigateUp = navigateUp,
                 viewModel
             )
         }
@@ -49,6 +51,7 @@ fun ChefEditMenuScreen(
                 description = editState.description,
                 price = editState.price,
                 menuProfileUrl = editState.menuPictureUrl,
+                navigateUp = navigateUp,
                 viewModel
             )
         }
@@ -62,6 +65,7 @@ private fun editMenuScreen(
     description: String,
     price: String,
     menuProfileUrl: String?,
+    navigateUp: () -> Unit,
     viewModel: ChefEditMenuViewModel
 ) {
     Column() {
@@ -104,7 +108,8 @@ private fun editMenuScreen(
                 numberPersons = numberPersons,
                 description = description,
                 price = price,
-                menuPictureUrl = menuProfileUrl
+                menuPictureUrl = menuProfileUrl,
+                navigateUp = navigateUp
             )
         }) {
             Text("Valider")

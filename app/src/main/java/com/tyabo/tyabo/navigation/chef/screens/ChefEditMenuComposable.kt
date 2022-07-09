@@ -9,8 +9,8 @@ object ChefEditMenuDestination : ChefDestination {
     override val route = "chef_add_menu_route"
 }
 
-fun NavGraphBuilder.chefEditMenuComposable() = composable(
+fun NavGraphBuilder.chefEditMenuComposable(navigateUp: () -> Unit) = composable(
     route = ChefEditMenuDestination.route
 ){
-    ChefEditMenuScreen()
+    ChefEditMenuScreen(navigateUp = navigateUp)
 }
