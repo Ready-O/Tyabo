@@ -1,6 +1,7 @@
 package com.tyabo.designsystem
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,10 +14,11 @@ import com.tyabo.data.CatalogItem
 @Composable
 fun MenuItem(
     modifier: Modifier = Modifier,
-    menuItem: CatalogItem.MenuItem
+    menuItem: CatalogItem.MenuItem,
+    editMenu: (String) -> Unit
 ){
     Row(
-        modifier = modifier
+        modifier = modifier.clickable { editMenu(menuItem.id) },
     ) {
         Column() {
             Text(

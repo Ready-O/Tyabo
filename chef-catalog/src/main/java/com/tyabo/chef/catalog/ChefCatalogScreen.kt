@@ -19,7 +19,7 @@ import com.tyabo.chef.catalog.components.Catalog
 fun ChefCatalogScreen(
     modifier: Modifier = Modifier,
     viewModel: ChefCatalogViewModel = hiltViewModel(),
-    navigateToEditMenu: () -> Unit
+    navigateToEditMenu: (String?) -> Unit
 ) {
 
     LaunchedEffect(Unit){
@@ -48,11 +48,11 @@ fun ChefCatalogScreen(
 @Composable
 private fun displayCatalog(
     displayState: ChefCatalogDisplayViewState,
-    navigateToEditMenu: () -> Unit
+    navigateToEditMenu: (String?) -> Unit
 ) {
     when (displayState) {
         is ChefCatalogDisplayViewState.Loading -> {
-            Button(onClick = navigateToEditMenu) {
+            Button(onClick = { navigateToEditMenu(null) }) {
                 Text(text = "Add Menu")
             }
         }
@@ -65,12 +65,13 @@ private fun displayCatalog(
                 }
             }
             Column() {
-                Button(onClick = navigateToEditMenu) {
+                Button(onClick = { navigateToEditMenu(null) }) {
                     Text(text = "Add Menu")
                 }
                 Catalog(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     itemsList = listToDisplay,
+                    editMenu = { navigateToEditMenu(it) }
                 )
             }
         }

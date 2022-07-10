@@ -21,7 +21,9 @@ fun ChefNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        chefCatalogComposable(navigateToEditMenu = { navController.navigate(ChefEditMenuDestination.route) })
+        chefCatalogComposable(navigateToEditMenu = {
+            navController.navigate("${ChefEditMenuDestination.route}?menuId=$it")
+        })
         chefEditMenuComposable(navigateUp = navController::navigateUp)
     }
 }

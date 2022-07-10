@@ -19,7 +19,7 @@ fun Catalog(
     modifier: Modifier,
     itemsList: List<CatalogItem>,
     addMenu: () -> Unit = {},
-    editMenu: () -> Unit = {},
+    editMenu: (String) -> Unit = {},
     editCollection: () -> Unit = {}
     ){
     LazyColumn(
@@ -31,7 +31,8 @@ fun Catalog(
                     is CatalogItem.MenuItem -> {
                         MenuItem(
                             modifier = Modifier.padding(vertical = 12.dp),
-                            menuItem = item
+                            menuItem = item,
+                            editMenu = editMenu
                         )
                     }
                     is CatalogItem.CollectionItem -> {
