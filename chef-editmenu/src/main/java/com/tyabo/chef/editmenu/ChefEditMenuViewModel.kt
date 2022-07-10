@@ -118,21 +118,17 @@ class ChefEditMenuViewModel @Inject constructor(
     }
 
     fun onCtaClicked(
-        name: String,
-        numberPersons: NumberPersons,
-        description: String,
-        price: String,
-        menuPictureUrl: String?,
         navigateUp: () -> Unit
     ) {
         viewModelScope.launch{
+            val editState = editMenuState.value as EditMenuViewState.Edit
             val menu = Menu(
                 id = menuId ?: UUID.randomUUID().toString(),
-                name = name,
-                numberPersons = numberPersons,
-                description = description,
-                price = price.toDouble(),
-                menuPictureUrl = menuPictureUrl
+                name = editState.name,
+                numberPersons = editState.numberPersons,
+                description = editState.description,
+                price = editState.price.toDouble(),
+                menuPictureUrl = editState.menuPictureUrl
             )
             chefRepository.editMenu(
                 menu = menu,

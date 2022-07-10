@@ -6,14 +6,6 @@ interface EditMenuViewState {
 
     object Loading: EditMenuViewState
 
-    data class Ready(
-        val name: String,
-        val numberPersons: NumberPersons,
-        val description: String,
-        val price: String,
-        val menuPictureUrl: String?
-    ): EditMenuViewState
-
     data class Edit(
         val name: String,
         val numberPersons: NumberPersons,
