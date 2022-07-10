@@ -1,5 +1,6 @@
 package com.tyabo.chef.editmenu
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
@@ -18,39 +19,65 @@ import kotlin.time.Duration
 
 @HiltViewModel
 class ChefEditMenuViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
     private val chefRepository: ChefRepository
 ) : ViewModel(){
 
+    private val menuId: String? = extractArgId(savedStateHandle)
 
-    val ff: Flow<UiResult<EditMenuViewState>> = flow {
-        emit(UiResult.Success(EditMenuViewState.Edit("bro", NumberPersons.ONE, "desc", "0.0",null)))
-    }
+    private fun extractArgId(savedStateHandle: SavedStateHandle): String?
+        {
+            val arg: String? = savedStateHandle["menuId"]
+            return if (arg == "null") {
+                null
+            } else {
+                arg
+            }
+        }
 
     private val _editMenuState = MutableStateFlow<EditMenuViewState>(EditMenuViewState.Loading)
 
-    val editMenuState = combine (ff, _editMenuState){ fetchResult, actualState ->
-        when(fetchResult){
-            is UiResult.Failure -> {
-                actualState
-            }
-            is UiResult.Success -> {
-                if (actualState is EditMenuViewState.Loading){
-                    val fetchedData = fetchResult.data
-                    _editMenuState.value = fetchedData
-                    actualState
+    val editMenuState = if (menuId != null) {
+        combine(
+            chefRepository.getMenus(chefId = userRepository.getUserId(), menusIds = listOf(menuId)),
+            _editMenuState
+        ) { result, actualState ->
+            when (result){
+                is UiResult.Success -> {
+                    if (actualState is EditMenuViewState.Loading){
+                        val menu = result.data.first()
+                        _editMenuState.value = EditMenuViewState.Edit(
+                            name = menu.name,
+                            numberPersons = menu.numberPersons,
+                            description = menu.description,
+                            price = menu.price.toString(),
+                            menuPictureUrl = menu.menuPictureUrl
+                        )
+                        actualState
+                    }
+                    else {
+                        actualState
+                    }
                 }
-                else {
-                    actualState
-                }
+                else -> EditMenuViewState.Loading
             }
-            is UiResult.Loading -> EditMenuViewState.Loading
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(stopTimeout = Duration.ZERO, replayExpiration = Duration.ZERO),
-        initialValue = EditMenuViewState.Loading
-    )
+        }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = EditMenuViewState.Loading
+        )
+    }
+    else {
+        _editMenuState.value = EditMenuViewState.Edit(
+            "",
+            NumberPersons.ONE,
+            "",
+            "0.0",
+            null
+        )
+        _editMenuState.asStateFlow()
+    }
 
     private fun editState() = editMenuState.value as? EditMenuViewState.Edit ?: EditMenuViewState.Edit(
         name = "",
