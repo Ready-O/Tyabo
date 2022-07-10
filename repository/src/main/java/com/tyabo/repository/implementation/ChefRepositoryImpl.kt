@@ -117,6 +117,7 @@ class ChefRepositoryImpl @Inject constructor(
         )
             .onSuccess {
                 chefCache.updateMenu(chefId = chefId, menu = menu)
+                _catalogOrder.value = chefCache.getOrder(chefId)
             }
     }
 
