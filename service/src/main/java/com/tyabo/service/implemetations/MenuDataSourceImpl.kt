@@ -17,7 +17,7 @@ class MenuDataSourceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : MenuDataSource {
 
-    override suspend fun addMenu(menu: Menu, userType: UserType, userId: String): Result<Unit> {
+    override suspend fun editMenu(menu: Menu, userType: UserType, userId: String): Result<Unit> {
         return try {
             val menuRef: CollectionReference = when (userType){
                 UserType.Chef -> firestore.collection("$CHEFS/$userId/$MENUS")

@@ -11,10 +11,8 @@ import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
-import kotlin.time.Duration
 
 
 @HiltViewModel
@@ -23,6 +21,8 @@ class ChefEditMenuViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val chefRepository: ChefRepository
 ) : ViewModel(){
+
+    private val userId = userRepository.getUserId()
 
     private val menuId: String? = extractArgId(savedStateHandle)
 
@@ -40,13 +40,13 @@ class ChefEditMenuViewModel @Inject constructor(
 
     val editMenuState = if (menuId != null) {
         combine(
-            chefRepository.getMenus(chefId = userRepository.getUserId(), menusIds = listOf(menuId)),
+            chefRepository.getMenus(chefId = userId, menusIds = listOf(menuId)),
             _editMenuState
         ) { result, actualState ->
             when (result){
                 is UiResult.Success -> {
                     if (actualState is EditMenuViewState.Loading){
-                        val menu = result.data.first()
+                        val menu = result.data.first { it.id == menuId }
                         _editMenuState.value = EditMenuViewState.Edit(
                             name = menu.name,
                             numberPersons = menu.numberPersons,
@@ -126,18 +126,17 @@ class ChefEditMenuViewModel @Inject constructor(
         navigateUp: () -> Unit
     ) {
         viewModelScope.launch{
-            val generatedId = UUID.randomUUID().toString()
             val menu = Menu(
-                id = generatedId,
+                id = menuId ?: UUID.randomUUID().toString(),
                 name = name,
                 numberPersons = numberPersons,
                 description = description,
                 price = price.toDouble(),
                 menuPictureUrl = menuPictureUrl
             )
-            chefRepository.addMenu(
+            chefRepository.editMenu(
                 menu = menu,
-                userId = userRepository.getUserId()
+                userId = userId
             )
             navigateUp()
         }

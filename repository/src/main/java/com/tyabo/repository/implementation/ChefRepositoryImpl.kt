@@ -56,23 +56,21 @@ class ChefRepositoryImpl @Inject constructor(
             }
     }.flowOn(ioDispatcher)
 
-    override suspend fun addMenu(menu: Menu, userId: String) {
+    override suspend fun editMenu(menu: Menu, userId: String) {
         withContext(ioDispatcher){
-            uploadMenuPicture(chefId = userId, menuId = menu.id, menuPictureUrl = menu.menuPictureUrl)
-                .onSuccess { downloadUrl ->
-                    val newMenu = menu.copy(menuPictureUrl = downloadUrl)
-                    menuDataSource.addMenu(
-                        menu = newMenu,
-                        userType = UserType.Chef,
-                        userId = userId
-                    )
-                        .onSuccess {
-                            chefCache.updateMenu(chefId = userId, menu = newMenu)
-                            addNewItemOrder(
-                                userId = userId,
-                                itemId = menu.id,
-                                itemType = CatalogItemType.MENU
-                            )
+            val oldMenu = chefCache.getMenus(userId).getOrThrow().find { it.id == menu.id }
+            when {
+                oldMenu == null -> {
+                    uploadMenuPicture(chefId = userId, menuId = menu.id, menuPictureUrl = menu.menuPictureUrl)
+                        .onSuccess { downloadUrl ->
+                            val newMenu = menu.copy(menuPictureUrl = downloadUrl)
+                            updateMenuFirestore(menu = newMenu, chefId = userId).onSuccess {
+                                addNewItemOrder(
+                                    userId = userId,
+                                    itemId = menu.id,
+                                    itemType = CatalogItemType.MENU
+                                )
+                            }
                         }
                         .onFailure {
                             menuUploadSource.deleteMenuPicture(
@@ -82,7 +80,44 @@ class ChefRepositoryImpl @Inject constructor(
                             )
                         }
                 }
+                menu.menuPictureUrl != oldMenu.menuPictureUrl -> {
+                    menuUploadSource.deleteMenuPicture(
+                        userId = userId,
+                        menuId = menu.id,
+                        userType = UserType.Chef
+                    )
+                    uploadMenuPicture(chefId = userId, menuId = menu.id, menuPictureUrl = menu.menuPictureUrl)
+                        .onSuccess { downloadUrl ->
+                            val newMenu = menu.copy(menuPictureUrl = downloadUrl)
+                            updateMenuFirestore(menu = newMenu, chefId = userId)
+                        }
+                        .onFailure {
+                            menuUploadSource.deleteMenuPicture(
+                                userId = userId,
+                                menuId = menu.id,
+                                userType = UserType.Chef
+                            )
+                        }
+                }
+                else -> {
+                    updateMenuFirestore(menu = menu, chefId = userId)
+                }
+            }
         }
+    }
+
+    private suspend fun updateMenuFirestore(
+        menu: Menu,
+        chefId: String,
+    ): Result<Unit> {
+        return menuDataSource.editMenu(
+            menu = menu,
+            userType = UserType.Chef,
+            userId = chefId
+        )
+            .onSuccess {
+                chefCache.updateMenu(chefId = chefId, menu = menu)
+            }
     }
 
     private suspend fun uploadMenuPicture(
