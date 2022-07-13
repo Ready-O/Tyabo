@@ -37,6 +37,10 @@ ext {
     // Coroutine
     kotlinCoroutinesVersion = '1.6.0'
 
+    // Retrofit
+    retrofitVersion = '2.9.0'
+    moshiVersion = '1.13.0'
+
     // Timber
     timberVersion = '5.0.1'
 
@@ -82,7 +86,9 @@ ext {
             firebase                     : "com.google.firebase:firebase-bom:$firebaseBomVersion",
             firebaseAuthUi               : "com.firebaseui:firebase-ui-auth:$firebaseAuthUiVersion",
             firestore                    : "com.google.firebase:firebase-firestore-ktx",
-            firebaseStorage                  : "com.google.firebase:firebase-storage-ktx",
+            firebaseStorage              : "com.google.firebase:firebase-storage-ktx",
+            retrofit                     : "com.squareup.retrofit2:converter-moshi:$retrofitVersion",
+            moshi                        : "com.squareup.moshi:moshi-kotlin:$moshiVersion",
 
             // await
             playServicesCoroutines  : "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlinCoroutinesVersion",

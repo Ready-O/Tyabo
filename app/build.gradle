@@ -95,6 +95,10 @@ dependencies {
     implementation serviceDependencies.playServicesCoroutines
     implementation serviceDependencies.firebaseStorage
 
+    // Retrofit
+    implementation serviceDependencies.retrofit
+    implementation serviceDependencies.moshi
+
     // Unit test
     testImplementation testDependencies.junit
     androidTestImplementation testDependencies.androidJunit
