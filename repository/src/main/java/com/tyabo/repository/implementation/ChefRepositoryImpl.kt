@@ -5,7 +5,8 @@ import com.tyabo.data.*
 import com.tyabo.data.Collection
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
-import com.tyabo.service.interfaces.*
+import com.tyabo.service.firebase.interfaces.*
+import com.tyabo.service.retrofit.MenuVideoDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
@@ -19,6 +20,7 @@ class ChefRepositoryImpl @Inject constructor(
     private val menuDataSource: MenuDataSource,
     private val menuUploadSource: MenuUploadSource,
     private val collectionDataSource: CollectionDataSource,
+    private val menuVideoDataSource: MenuVideoDataSource,
     private val ioDispatcher: CoroutineDispatcher
 ) : ChefRepository {
 
@@ -136,6 +138,10 @@ class ChefRepositoryImpl @Inject constructor(
                 userType = UserType.Chef
             )
         }
+    }
+
+    override suspend fun getVideo(url: String): MenuYoutubeVideo? {
+        return menuVideoDataSource.importVideo(url)
     }
 
     override fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>> = flow {
