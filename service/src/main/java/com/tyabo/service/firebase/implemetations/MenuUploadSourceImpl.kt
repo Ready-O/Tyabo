@@ -1,12 +1,11 @@
-package com.tyabo.service.implemetations
+package com.tyabo.service.firebase.implemetations
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
 import com.tyabo.data.UserType
-import com.tyabo.service.di.CollectionReferences
-import com.tyabo.service.interfaces.MenuUploadSource
+import com.tyabo.service.firebase.di.CollectionReferences
+import com.tyabo.service.firebase.interfaces.MenuUploadSource
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import java.lang.Exception
 import javax.inject.Inject
 

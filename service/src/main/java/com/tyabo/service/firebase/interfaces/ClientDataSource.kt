@@ -1,6 +1,5 @@
-package com.tyabo.service.interfaces
+package com.tyabo.service.firebase.interfaces
 
-import com.tyabo.data.Chef
 import com.tyabo.data.Client
 
 interface ClientDataSource {

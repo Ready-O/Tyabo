@@ -1,4 +1,4 @@
-package com.tyabo.service.di
+package com.tyabo.service.firebase.di
 
 object CollectionReferences {
 

@@ -1,18 +1,16 @@
-package com.tyabo.service.di
+package com.tyabo.service.firebase.di
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.tyabo.service.di.CollectionReferences.CHEFS
-import com.tyabo.service.di.CollectionReferences.CLIENTS
-import com.tyabo.service.di.CollectionReferences.RESTAURANTS
-import com.tyabo.service.implemetations.*
-import com.tyabo.service.interfaces.*
+import com.tyabo.service.firebase.di.CollectionReferences.CHEFS
+import com.tyabo.service.firebase.di.CollectionReferences.CLIENTS
+import com.tyabo.service.firebase.di.CollectionReferences.RESTAURANTS
+import com.tyabo.service.firebase.implemetations.*
+import com.tyabo.service.firebase.interfaces.*
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -22,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface ServiceModule {
+interface FirebaseModule {
 
     @Binds
     fun bindsFirebaseAuthDataSource(

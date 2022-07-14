@@ -3,7 +3,7 @@ package com.tyabo.repository.implementation
 import com.tyabo.data.Restaurant
 import com.tyabo.persistence.cache.InMemoryRestaurantCache
 import com.tyabo.repository.interfaces.RestaurantRepository
-import com.tyabo.service.interfaces.RestaurantDataSource
+import com.tyabo.service.firebase.interfaces.RestaurantDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

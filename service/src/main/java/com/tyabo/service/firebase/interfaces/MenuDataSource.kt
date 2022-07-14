@@ -1,6 +1,5 @@
-package com.tyabo.service.interfaces
+package com.tyabo.service.firebase.interfaces
 
-import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Menu
 import com.tyabo.data.UserType
 

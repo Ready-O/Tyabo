@@ -1,4 +1,4 @@
-package com.tyabo.service.interfaces
+package com.tyabo.service.firebase.interfaces
 
 import com.tyabo.data.Chef
 

@@ -1,10 +1,9 @@
-package com.tyabo.service.implemetations
+package com.tyabo.service.firebase.implemetations
 
-import com.google.firebase.auth.AdditionalUserInfo
 import com.google.firebase.auth.FirebaseAuth
 import com.tyabo.data.FirebaseUser
 
-import com.tyabo.service.interfaces.FirebaseAuthDataSource
+import com.tyabo.service.firebase.interfaces.FirebaseAuthDataSource
 import javax.inject.Inject
 
 class FirebaseAuthDataSourceImpl @Inject constructor(

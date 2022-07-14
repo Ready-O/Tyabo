@@ -1,10 +1,9 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.UiResult
 import com.tyabo.data.Client
 import com.tyabo.persistence.cache.InMemoryClientCache
 import com.tyabo.repository.interfaces.ClientRepository
-import com.tyabo.service.interfaces.ClientDataSource
+import com.tyabo.service.firebase.interfaces.ClientDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

@@ -1,8 +1,8 @@
-package com.tyabo.service.implemetations
+package com.tyabo.service.firebase.implemetations
 
 import com.google.firebase.firestore.CollectionReference
 import com.tyabo.data.Restaurant
-import com.tyabo.service.interfaces.RestaurantDataSource
+import com.tyabo.service.firebase.interfaces.RestaurantDataSource
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject

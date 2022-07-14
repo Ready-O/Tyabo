@@ -1,14 +1,14 @@
-package com.tyabo.service.implemetations
+package com.tyabo.service.firebase.implemetations
 
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tyabo.data.CatalogItemType
 import com.tyabo.data.CatalogOrder
 import com.tyabo.data.UserType
-import com.tyabo.service.di.CollectionReferences.CHEFS
-import com.tyabo.service.di.CollectionReferences.ORDER
-import com.tyabo.service.di.CollectionReferences.RESTAURANTS
-import com.tyabo.service.interfaces.CatalogOrderDataSource
+import com.tyabo.service.firebase.di.CollectionReferences.CHEFS
+import com.tyabo.service.firebase.di.CollectionReferences.ORDER
+import com.tyabo.service.firebase.di.CollectionReferences.RESTAURANTS
+import com.tyabo.service.firebase.interfaces.CatalogOrderDataSource
 import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 import javax.inject.Inject

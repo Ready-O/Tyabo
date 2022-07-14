@@ -6,7 +6,7 @@ import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.ClientRepository
 import com.tyabo.repository.interfaces.RestaurantRepository
 import com.tyabo.repository.interfaces.UserRepository
-import com.tyabo.service.interfaces.FirebaseAuthDataSource
+import com.tyabo.service.firebase.interfaces.FirebaseAuthDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
