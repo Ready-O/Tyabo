@@ -26,15 +26,18 @@ class ChefEditMenuViewModel @Inject constructor(
 
     private val menuId: String? = extractArgId(savedStateHandle)
 
-    private fun extractArgId(savedStateHandle: SavedStateHandle): String?
-        {
-            val arg: String? = savedStateHandle["menuId"]
-            return if (arg == "null") {
-                null
-            } else {
-                arg
-            }
+    private fun extractArgId(savedStateHandle: SavedStateHandle): String? {
+        val arg: String? = savedStateHandle["menuId"]
+        return if (arg == "null") {
+            null
+        } else {
+            arg
         }
+    }
+
+    private val _videoState = MutableStateFlow<YoutubeVideoState>(YoutubeVideoState.Loading)
+
+    val videoState = _videoState.asStateFlow()
 
     private val _editMenuState = MutableStateFlow<EditMenuViewState>(EditMenuViewState.Loading)
 
@@ -52,8 +55,27 @@ class ChefEditMenuViewModel @Inject constructor(
                             numberPersons = menu.numberPersons,
                             description = menu.description,
                             price = menu.price.toString(),
-                            menuPictureUrl = menu.menuPictureUrl
+                            menuPictureUrl = menu.menuPictureUrl,
+                            menuVideoUrl = menu.menuVideoUrl,
                         )
+
+                        val url = menu.menuVideoUrl
+                        if (url != null){
+                            val video = chefRepository.getVideo(url)
+                            if (video != null) {
+                                _videoState.value = YoutubeVideoState.Video(
+                                    title = video.title,
+                                    thumbnailUrl = video.thumbnailUrl,
+                                    videoUrl = video.videoUrl
+                                )
+                            }
+                            else {
+                                _videoState.value = YoutubeVideoState.ExportUrl("")
+                            }
+                        }
+                        else {
+                            _videoState.value = YoutubeVideoState.ExportUrl("")
+                        }
                         actualState
                     }
                     else {
@@ -74,8 +96,10 @@ class ChefEditMenuViewModel @Inject constructor(
             NumberPersons.ONE,
             "",
             "0.0",
-            null
+            null,
+            null,
         )
+        _videoState.value = YoutubeVideoState.ExportUrl("")
         _editMenuState.asStateFlow()
     }
 
@@ -84,7 +108,8 @@ class ChefEditMenuViewModel @Inject constructor(
         numberPersons = NumberPersons.ONE,
         description = "",
         price = "0.0",
-        menuPictureUrl = null
+        menuPictureUrl = null,
+        null,
     )
 
     fun onNameUpdate(name: String){
@@ -117,6 +142,27 @@ class ChefEditMenuViewModel @Inject constructor(
         }
     }
 
+    fun onVideoUrlUpdate(url: String){
+        viewModelScope.launch {
+            _videoState.value = YoutubeVideoState.ExportUrl(url)
+        }
+    }
+
+    fun exportVideoUrl(){
+        viewModelScope.launch {
+            val state = videoState.value as YoutubeVideoState.ExportUrl
+            val video = chefRepository.getVideo(state.url)
+            if (video != null){
+                _videoState.value = YoutubeVideoState.Video(
+                    title = video.title,
+                    thumbnailUrl = video.thumbnailUrl,
+                    videoUrl = video.videoUrl
+                )
+                _editMenuState.value = editState().copy(menuVideoUrl = video.videoUrl)
+            }
+        }
+    }
+
     fun onCtaClicked(
         navigateUp: () -> Unit
     ) {
@@ -128,7 +174,8 @@ class ChefEditMenuViewModel @Inject constructor(
                 numberPersons = editState.numberPersons,
                 description = editState.description,
                 price = editState.price.toDouble(),
-                menuPictureUrl = editState.menuPictureUrl
+                menuPictureUrl = editState.menuPictureUrl,
+                menuVideoUrl = editState.menuVideoUrl
             )
             chefRepository.editMenu(
                 menu = menu,

@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.chef.editmenu.components.EditMenuPicture
 import com.tyabo.chef.editmenu.components.SelectNumberPersons
+import com.tyabo.chef.editmenu.components.VideoScreen
 import com.tyabo.data.NumberPersons
-import kotlin.time.ExperimentalTime
 
 @Composable
 fun ChefEditMenuScreen(
@@ -34,6 +34,7 @@ fun ChefEditMenuScreen(
     when(state){
         EditMenuViewState.Loading -> CircularProgressIndicator()
         is EditMenuViewState.Edit -> {
+            val videoState by viewModel.videoState.collectAsState()
             val editState = state as EditMenuViewState.Edit
             editMenuScreen(
                 name = editState.name,
@@ -46,8 +47,10 @@ fun ChefEditMenuScreen(
                 onNumberPersonsUpdate = viewModel::onNumberPersonsUpdate,
                 onDescriptionUpdate = viewModel::onDescriptionUpdate,
                 onPriceUpdate = viewModel::onPriceUpdate,
-                onCtaClicked = { viewModel.onCtaClicked(navigateUp) }
-            )
+                videoState = videoState,
+                onVideoUrlUpdate = viewModel::onVideoUrlUpdate,
+                exportVideoUrl = viewModel::exportVideoUrl
+            ) { viewModel.onCtaClicked(navigateUp) }
         }
     }
 }
@@ -65,6 +68,9 @@ private fun editMenuScreen(
     onNumberPersonsUpdate: (NumberPersons) -> Unit,
     onDescriptionUpdate: (String) -> Unit,
     onPriceUpdate: (String) -> Unit,
+    videoState: YoutubeVideoState,
+    onVideoUrlUpdate: (String) -> Unit,
+    exportVideoUrl: () -> Unit,
     onCtaClicked: () -> Unit
 ) {
 
@@ -107,6 +113,14 @@ private fun editMenuScreen(
                 ),
             )
         }
+        VideoScreen(
+            videoState = videoState,
+            onUrlUpdate = onVideoUrlUpdate,
+            exportUrl = {
+                keyboardController?.hide()
+                exportVideoUrl()
+            },
+        )
         Button(onClick = {
             keyboardController?.hide()
             onCtaClicked()
