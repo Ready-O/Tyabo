@@ -8,17 +8,24 @@ class MenuVideoDataSourceImpl @Inject constructor(
     private val youtubeApi: YoutubeApi
 ) : MenuVideoDataSource {
 
-    override suspend fun importVideo(youtubeUrl: String): MenuYoutubeVideo? {
+    override suspend fun importVideo(youtubeUrl: String): Result<MenuYoutubeVideo> {
         val url = extractVideoUrl(youtubeUrl)
         return if (url == null) {
-            null
+            Result.failure(Exception())
         } else {
-            val networkInfo = youtubeApi.importTitleAndThumbnail(url)
-            return MenuYoutubeVideo(
-                title = networkInfo.title,
-                thumbnailUrl = networkInfo.thumbnailUrl,
-                videoUrl = url
-            )
+            return try {
+                val networkInfo = youtubeApi.importTitleAndThumbnail(url)
+                Result.success(
+                    MenuYoutubeVideo(
+                    title = networkInfo.title,
+                    thumbnailUrl = networkInfo.thumbnailUrl,
+                    videoUrl = url
+                    )
+                )
+            }
+            catch (e: Exception){
+                Result.failure(e)
+            }
         }
     }
 

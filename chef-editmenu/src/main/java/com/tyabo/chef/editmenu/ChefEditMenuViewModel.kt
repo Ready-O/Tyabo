@@ -61,15 +61,14 @@ class ChefEditMenuViewModel @Inject constructor(
 
                         val url = menu.menuVideoUrl
                         if (url != null){
-                            val video = chefRepository.getVideo(url)
-                            if (video != null) {
+                            chefRepository.getVideo(url).onSuccess {
                                 _videoState.value = YoutubeVideoState.Video(
-                                    title = video.title,
-                                    thumbnailUrl = video.thumbnailUrl,
-                                    videoUrl = video.videoUrl
+                                    title = it.title,
+                                    thumbnailUrl = it.thumbnailUrl,
+                                    videoUrl = it.videoUrl
                                 )
                             }
-                            else {
+                            .onFailure {
                                 _videoState.value = YoutubeVideoState.ExportUrl("")
                             }
                         }
@@ -151,14 +150,13 @@ class ChefEditMenuViewModel @Inject constructor(
     fun exportVideoUrl(){
         viewModelScope.launch {
             val state = videoState.value as YoutubeVideoState.ExportUrl
-            val video = chefRepository.getVideo(state.url)
-            if (video != null){
+            chefRepository.getVideo(state.url).onSuccess {
                 _videoState.value = YoutubeVideoState.Video(
-                    title = video.title,
-                    thumbnailUrl = video.thumbnailUrl,
-                    videoUrl = video.videoUrl
+                    title = it.title,
+                    thumbnailUrl = it.thumbnailUrl,
+                    videoUrl = it.videoUrl
                 )
-                _editMenuState.value = editState().copy(menuVideoUrl = video.videoUrl)
+                _editMenuState.value = editState().copy(menuVideoUrl = it.videoUrl)
             }
         }
     }

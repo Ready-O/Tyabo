@@ -4,5 +4,5 @@ import com.tyabo.data.MenuYoutubeVideo
 
 interface MenuVideoDataSource {
 
-    suspend fun importVideo(youtubeUrl: String): MenuYoutubeVideo?
+    suspend fun importVideo(youtubeUrl: String): Result<MenuYoutubeVideo>
 }

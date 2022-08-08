@@ -140,7 +140,7 @@ class ChefRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getVideo(url: String): MenuYoutubeVideo? {
+    override suspend fun getVideo(url: String): Result<MenuYoutubeVideo> {
         return menuVideoDataSource.importVideo(url)
     }
 
