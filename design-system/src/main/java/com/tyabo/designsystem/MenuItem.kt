@@ -39,10 +39,10 @@ fun MenuItem(
             Box(
                 modifier = Modifier.background(Color.DarkGray)
             ){
-                MenuPicture(
+                TyaboPicture(
                     modifier = Modifier.size(88.dp),
                     url = menuItem.menuPictureUrl,
-                    menuname = menuItem.name
+                    name = menuItem.name
                 )
             }
         }

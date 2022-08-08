@@ -1,6 +1,5 @@
 package com.tyabo.chef.catalog.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,7 +11,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tyabo.data.CatalogItem
 import com.tyabo.designsystem.MenuItem
-import com.tyabo.designsystem.MenuPicture
 
 @Composable
 fun Catalog(
