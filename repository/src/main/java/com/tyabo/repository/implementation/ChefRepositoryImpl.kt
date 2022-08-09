@@ -62,6 +62,7 @@ class ChefRepositoryImpl @Inject constructor(
         withContext(ioDispatcher){
             val oldMenu = chefCache.getMenus(userId).getOrThrow().find { it.id == menu.id }
             when {
+                // New menu
                 oldMenu == null -> {
                     uploadMenuPicture(chefId = userId, menuId = menu.id, menuPictureUrl = menu.menuPictureUrl)
                         .onSuccess { downloadUrl ->
@@ -82,6 +83,7 @@ class ChefRepositoryImpl @Inject constructor(
                             )
                         }
                 }
+                // Picture modified
                 menu.menuPictureUrl != oldMenu.menuPictureUrl -> {
                     menuUploadSource.deleteMenuPicture(
                         userId = userId,
@@ -166,7 +168,7 @@ class ChefRepositoryImpl @Inject constructor(
         withContext(ioDispatcher){
             val generatedId = UUID.randomUUID().toString()
             val collection = Collection(id = generatedId, name = collectionName)
-            collectionDataSource.addCollection(
+            collectionDataSource.editCollection(
                 collection = collection,
                 userType = UserType.Chef,
                 userId = userId
@@ -178,6 +180,25 @@ class ChefRepositoryImpl @Inject constructor(
                     itemType = CatalogItemType.COLLECTION
                 )
             }
+        }
+    }
+
+    override suspend fun editCollection(
+        collectionId: String,
+        collectionName: String,
+        userId: String
+    ) {
+        withContext(ioDispatcher){
+            val collection = Collection(id = collectionId, name = collectionName)
+            collectionDataSource.editCollection(
+                collection = collection,
+                userType = UserType.Chef,
+                userId = userId
+            )
+                .onSuccess {
+                    chefCache.updateCollection(chefId = userId, collection = collection)
+                    _catalogOrder.value = chefCache.getOrder(userId)
+                }
         }
     }
 

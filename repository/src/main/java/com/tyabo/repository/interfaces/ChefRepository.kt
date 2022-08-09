@@ -14,6 +14,7 @@ interface ChefRepository {
     suspend fun getVideo(url: String): Result<MenuYoutubeVideo>
     fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>>
     suspend fun addCollection(collectionName: String, userId: String)
+    suspend fun editCollection(collectionId: String, collectionName: String, userId: String)
     fun getCollections(chefId: String, collectionsIds: List<String>): Flow<UiResult<List<Collection>>>
 
     val catalogOrder: StateFlow<List<CatalogOrder>>

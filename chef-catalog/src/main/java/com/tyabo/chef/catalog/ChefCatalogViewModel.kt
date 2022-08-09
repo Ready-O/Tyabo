@@ -12,6 +12,7 @@ import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,7 +69,7 @@ class ChefCatalogViewModel @Inject constructor(
         )
 
     private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
-        ChefCatalogViewState.EditCollection(catalogState = catalogDisplayState, collection = "")
+        ChefCatalogViewState.DisplayCatalog(catalogState = catalogDisplayState)
     )
 
     val catalogState = _catalogState.asStateFlow()
@@ -84,9 +85,20 @@ class ChefCatalogViewModel @Inject constructor(
         }
     }
 
-    fun onCollectionCtaClick(collectionName: String){
+    fun addNewCollection(collectionName: String){
         viewModelScope.launch{
             chefRepository.addCollection(
+                collectionName = collectionName,
+                userId = userId
+            )
+        }
+    }
+
+    // Edit collection does not change the order value, so new collections are not fetched
+    fun editCollection(collectionId: String, collectionName: String){
+        viewModelScope.launch{
+            chefRepository.editCollection(
+                collectionId = collectionId,
                 collectionName = collectionName,
                 userId = userId
             )

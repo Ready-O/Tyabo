@@ -16,7 +16,7 @@ class CollectionDataSourceImpl @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : CollectionDataSource {
 
-    override suspend fun addCollection(
+    override suspend fun editCollection(
         collection: Collection,
         userType: UserType,
         userId: String

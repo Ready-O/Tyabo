@@ -17,7 +17,7 @@ fun YoutubeVideo(
     val context = LocalContext.current
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
     Column() {
-        TyaboPicture(
+        ClickablePicture(
             url = thumbnailUrl,
             name = title,
             onClick = {

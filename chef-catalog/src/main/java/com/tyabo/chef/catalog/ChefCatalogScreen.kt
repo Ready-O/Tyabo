@@ -29,17 +29,29 @@ fun ChefCatalogScreen(
     val displayState by viewModel.catalogDisplayState.collectAsState()
 
     when (state){
-        is ChefCatalogViewState.DisplayCollection -> {
-            displayCatalog(displayState = displayState, navigateToEditMenu = navigateToEditMenu)
+        is ChefCatalogViewState.DisplayCatalog -> {
+            displayCatalog(displayState = displayState, navigateToEditMenu = navigateToEditMenu,
+                editCollection = { viewModel.editCollection(
+                    collectionId = it.id,
+                    collectionName = it.name
+                ) }
+            )
         }
         is ChefCatalogViewState.EditCollection -> {
             Column() {
                 val collectionState = state as ChefCatalogViewState.EditCollection
                 TextField(value = collectionState.collection, onValueChange = viewModel::onCollectionUpdate)
-                Button(onClick = { viewModel.onCollectionCtaClick(collectionState.collection) }) {
+                Button(onClick = { viewModel.addNewCollection(collectionState.collection) }) {
                     Text(text = "Validate Collection")
                 }
-                displayCatalog(displayState = displayState, navigateToEditMenu = navigateToEditMenu)
+                displayCatalog(
+                    displayState = displayState,
+                    navigateToEditMenu = navigateToEditMenu,
+                    editCollection = { viewModel.editCollection(
+                        collectionId = it.id,
+                        collectionName = it.name
+                    ) }
+                )
             }
         }
     }
@@ -48,7 +60,8 @@ fun ChefCatalogScreen(
 @Composable
 private fun displayCatalog(
     displayState: ChefCatalogDisplayViewState,
-    navigateToEditMenu: (String?) -> Unit
+    navigateToEditMenu: (String?) -> Unit,
+    editCollection: (CatalogItem.CollectionItem) -> Unit
 ) {
     when (displayState) {
         is ChefCatalogDisplayViewState.Loading -> {
@@ -71,7 +84,8 @@ private fun displayCatalog(
                 Catalog(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     itemsList = listToDisplay,
-                    editMenu = { navigateToEditMenu(it) }
+                    clickMenu = { navigateToEditMenu(it) },
+                    editCollection = editCollection
                 )
             }
         }

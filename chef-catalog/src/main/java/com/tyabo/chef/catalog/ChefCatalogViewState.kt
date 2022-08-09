@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ChefCatalogViewState {
 
-    data class DisplayCollection(
+    data class DisplayCatalog(
         val catalogState: StateFlow<ChefCatalogDisplayViewState>
     ) : ChefCatalogViewState
 

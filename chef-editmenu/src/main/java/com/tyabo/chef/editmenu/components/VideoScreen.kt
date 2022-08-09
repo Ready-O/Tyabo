@@ -1,6 +1,5 @@
 package com.tyabo.chef.editmenu.components
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
@@ -8,7 +7,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import com.tyabo.chef.editmenu.YoutubeVideoState
-import com.tyabo.designsystem.TyaboPicture
 import com.tyabo.designsystem.YoutubeVideo
 
 @Composable

@@ -39,7 +39,7 @@ fun MenuItem(
             Box(
                 modifier = Modifier.background(Color.DarkGray)
             ){
-                TyaboPicture(
+                ClickablePicture(
                     modifier = Modifier.size(88.dp),
                     url = menuItem.menuPictureUrl,
                     name = menuItem.name
