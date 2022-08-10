@@ -12,7 +12,6 @@ import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,14 +67,11 @@ class ChefCatalogViewModel @Inject constructor(
             initialValue = ChefCatalogDisplayViewState.Loading
         )
 
-    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
-        ChefCatalogViewState.DisplayCatalog(catalogState = catalogDisplayState)
-    )
+    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(ChefCatalogViewState.DisplayCatalog)
 
     val catalogState = _catalogState.asStateFlow()
 
-    private fun editCollectionState() = catalogState.value as? ChefCatalogViewState.EditCollection ?: ChefCatalogViewState.EditCollection(
-        catalogState = catalogDisplayState,
+    private fun editCollectionState() = catalogState.value as? ChefCatalogViewState.AddCollection ?: ChefCatalogViewState.AddCollection(
         collection = ""
     )
 

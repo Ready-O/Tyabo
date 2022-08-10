@@ -8,6 +8,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -27,11 +28,11 @@ fun Catalog(
     clickMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {}
     ){
-    LazyColumn(
-        modifier = modifier
-    ) {
-        items(itemsList) { item ->
-            Row() {
+        val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
+        LazyColumn(
+            modifier = modifier
+        ) {
+            items(itemsList) { item ->
                 when(item){
                     is CatalogItem.MenuItem -> {
                         MenuItem(
@@ -41,61 +42,71 @@ fun Catalog(
                         )
                     }
                     is CatalogItem.CollectionItem -> {
-                        val editableState = remember { mutableStateOf(false) }
                         val collectionName = remember { mutableStateOf(item.name) }
-                        CollectionItem(
-                            collectionName = collectionName.value,
-                            editable = editableState.value,
-                            switchState = { state -> editableState.value = state },
-                        ) {
-                            collectionName.value = it
-                            editCollection(
-                                CatalogItem.CollectionItem(id = item.id, name = it)
+                        when(collectionToEdit.value){
+                            null -> CollectionItem(
+                                modifier = Modifier.clickable { collectionToEdit.value = item.id },
+                                collectionName = collectionName.value
                             )
+                            item.id -> EditCollectionItem(
+                                collectionName = collectionName.value,
+                                cancel = {
+                                    collectionToEdit.value = null
+                                },
+                                editCollection = {
+                                    collectionName.value = it
+                                    collectionToEdit.value = null
+                                    editCollection(item.copy(name = it))
+                                }
+                            )
+                            else -> CollectionItem(collectionName = collectionName.value)
                         }
                     }
                 }
             }
         }
-    }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CollectionItem(
     modifier: Modifier = Modifier,
     collectionName: String,
-    editable: Boolean,
-    switchState: (Boolean) -> Unit,
+){
+    Text(
+        modifier = modifier,
+        text = collectionName,
+        color = Color.Black,
+        fontSize = 28.sp
+    )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun EditCollectionItem(
+    modifier: Modifier = Modifier,
+    collectionName: String,
+    cancel: () -> Unit,
     editCollection: (String) -> Unit,
 ){
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    if (editable){
-        val name = remember { mutableStateOf(collectionName) }
-        Column() {
-            TextField(value = name.value, onValueChange = { name.value = it })
-            Row{
-                Button(onClick = { switchState(false)}) {
-                    Text("Annuler")
-                }
-                Button(onClick = {
-                    keyboardController?.hide()
-                    editCollection(name.value)
-                    switchState(false)
-                }
-                ) {
-                    Text("Valider")
-                }
+    val name = remember { mutableStateOf(collectionName) }
+    Column() {
+        TextField(value = name.value, onValueChange = { name.value = it })
+        Row{
+            Button(onClick = {
+                keyboardController?.hide()
+                cancel()
+            }) {
+                Text("Annuler")
+            }
+            Button(onClick = {
+                keyboardController?.hide()
+                editCollection(name.value)
+            }
+            ) {
+                Text("Valider")
             }
         }
-    }
-    else{
-        Text(
-            modifier = modifier.clickable { switchState(true) },
-            text = collectionName,
-            color = Color.Black,
-            fontSize = 28.sp
-        )
     }
 }

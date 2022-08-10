@@ -37,9 +37,9 @@ fun ChefCatalogScreen(
                 ) }
             )
         }
-        is ChefCatalogViewState.EditCollection -> {
+        is ChefCatalogViewState.AddCollection -> {
             Column() {
-                val collectionState = state as ChefCatalogViewState.EditCollection
+                val collectionState = state as ChefCatalogViewState.AddCollection
                 TextField(value = collectionState.collection, onValueChange = viewModel::onCollectionUpdate)
                 Button(onClick = { viewModel.addNewCollection(collectionState.collection) }) {
                     Text(text = "Validate Collection")
