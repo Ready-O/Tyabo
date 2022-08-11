@@ -30,12 +30,17 @@ fun ChefCatalogScreen(
 
     when (state){
         is ChefCatalogViewState.DisplayCatalog -> {
-            displayCatalog(displayState = displayState, navigateToEditMenu = navigateToEditMenu,
-                editCollection = { viewModel.editCollection(
+            displayCatalog(
+                displayState = displayState,
+                navigateToEditMenu = navigateToEditMenu,
+                hideMenu = viewModel::hideMenu,
+                unhideMenu = viewModel::unhideMenu
+            ) {
+                viewModel.editCollection(
                     collectionId = it.id,
                     collectionName = it.name
-                ) }
-            )
+                )
+            }
         }
         is ChefCatalogViewState.AddCollection -> {
             Column() {
@@ -47,11 +52,14 @@ fun ChefCatalogScreen(
                 displayCatalog(
                     displayState = displayState,
                     navigateToEditMenu = navigateToEditMenu,
-                    editCollection = { viewModel.editCollection(
+                    hideMenu = viewModel::hideMenu,
+                    unhideMenu = viewModel::unhideMenu
+                ) {
+                    viewModel.editCollection(
                         collectionId = it.id,
                         collectionName = it.name
-                    ) }
-                )
+                    )
+                }
             }
         }
     }
@@ -61,6 +69,8 @@ fun ChefCatalogScreen(
 private fun displayCatalog(
     displayState: ChefCatalogDisplayViewState,
     navigateToEditMenu: (String?) -> Unit,
+    hideMenu: (String) -> Unit,
+    unhideMenu: (String) -> Unit,
     editCollection: (CatalogItem.CollectionItem) -> Unit
 ) {
     when (displayState) {
@@ -85,6 +95,8 @@ private fun displayCatalog(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     itemsList = listToDisplay,
                     clickMenu = { navigateToEditMenu(it) },
+                    hideMenu = hideMenu,
+                    unhideMenu = unhideMenu,
                     editCollection = editCollection
                 )
             }

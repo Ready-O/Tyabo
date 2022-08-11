@@ -71,13 +71,33 @@ class ChefCatalogViewModel @Inject constructor(
 
     val catalogState = _catalogState.asStateFlow()
 
-    private fun editCollectionState() = catalogState.value as? ChefCatalogViewState.AddCollection ?: ChefCatalogViewState.AddCollection(
+    fun hideMenu(menuId: String){
+        viewModelScope.launch{
+            chefRepository.changeHideMenu(
+                menuId = menuId,
+                isHidden = true,
+                userId = userId
+            )
+        }
+    }
+
+    fun unhideMenu(menuId: String){
+        viewModelScope.launch{
+            chefRepository.changeHideMenu(
+                menuId = menuId,
+                isHidden = false,
+                userId = userId
+            )
+        }
+    }
+
+    private fun addCollectionState() = catalogState.value as? ChefCatalogViewState.AddCollection ?: ChefCatalogViewState.AddCollection(
         collection = ""
     )
 
     fun onCollectionUpdate(collectionName: String){
         viewModelScope.launch{
-            _catalogState.value = editCollectionState().copy(collection = collectionName)
+            _catalogState.value = addCollectionState().copy(collection = collectionName)
         }
     }
 

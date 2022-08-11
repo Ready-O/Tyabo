@@ -142,6 +142,16 @@ class ChefRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun changeHideMenu(menuId: String, isHidden: Boolean, userId: String) {
+        withContext(ioDispatcher) {
+            val menu = chefCache.getMenus(userId).getOrThrow().find { it.id == menuId }
+            updateMenuFirestore(
+                menu = menu!!.copy(isHidden = isHidden),
+                chefId = userId
+            )
+        }
+    }
+
     override suspend fun getVideo(url: String): Result<MenuYoutubeVideo> {
         return menuVideoDataSource.importVideo(url)
     }

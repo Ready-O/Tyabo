@@ -10,7 +10,8 @@ sealed class CatalogItem {
         val numberPersons: NumberPersons,
         val description: String,
         val price: String,
-        val menuPictureUrl: String?
+        val menuPictureUrl: String?,
+        val isHidden: Boolean
     ): CatalogItem()
 
     data class CollectionItem(
@@ -25,7 +26,8 @@ fun Menu.toMenuItem() = CatalogItem.MenuItem(
     numberPersons = this.numberPersons,
     description = this.description,
     price = this.price.toString(),
-    menuPictureUrl = this.menuPictureUrl
+    menuPictureUrl = this.menuPictureUrl,
+    isHidden = this.isHidden
 )
 
 fun Collection.toCollectionItem() = CatalogItem.CollectionItem(

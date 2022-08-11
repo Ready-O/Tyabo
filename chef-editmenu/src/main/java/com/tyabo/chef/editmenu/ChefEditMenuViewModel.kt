@@ -173,7 +173,8 @@ class ChefEditMenuViewModel @Inject constructor(
                 description = editState.description,
                 price = editState.price.toDouble(),
                 menuPictureUrl = editState.menuPictureUrl,
-                menuVideoUrl = editState.menuVideoUrl
+                menuVideoUrl = editState.menuVideoUrl,
+                isHidden = false
             )
             chefRepository.editMenu(
                 menu = menu,

@@ -68,7 +68,8 @@ class MenuDataSourceImpl @Inject constructor(
         var description: String = "",
         var price: Double = 0.0,
         var menuPictureUrl: String? = null,
-        var menuVideoUrl: String? = null
+        var menuVideoUrl: String? = null,
+        var isHidden: Boolean = false
     )
 
     private fun RemoteMenu.toMenu() = Menu(
@@ -78,6 +79,7 @@ class MenuDataSourceImpl @Inject constructor(
         description = this.description,
         price = this.price,
         menuPictureUrl = this.menuPictureUrl,
-        menuVideoUrl = this.menuVideoUrl
+        menuVideoUrl = this.menuVideoUrl,
+        isHidden = this.isHidden
     )
 }

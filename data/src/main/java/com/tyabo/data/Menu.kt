@@ -7,7 +7,8 @@ data class Menu(
     val description: String,
     val price: Double,
     val menuPictureUrl: String?,
-    val menuVideoUrl: String?
+    val menuVideoUrl: String?,
+    val isHidden: Boolean
     )
 
 enum class NumberPersons {

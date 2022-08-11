@@ -26,6 +26,8 @@ fun Catalog(
     itemsList: List<CatalogItem>,
     addMenu: () -> Unit = {},
     clickMenu: (String) -> Unit = {},
+    hideMenu: (String) -> Unit = {},
+    unhideMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {}
     ){
         val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
@@ -35,11 +37,28 @@ fun Catalog(
             items(itemsList) { item ->
                 when(item){
                     is CatalogItem.MenuItem -> {
+                        val isHidden = remember { mutableStateOf(item.isHidden) }
                         MenuItem(
                             modifier = Modifier.padding(vertical = 12.dp),
                             menuItem = item,
                             editMenu = clickMenu
                         )
+                        if (isHidden.value){
+                            Button(onClick = {
+                                isHidden.value = false
+                                unhideMenu(item.id)
+                            }) {
+                                Text("Unhide")
+                            }
+                        }
+                        else{
+                            Button(onClick = {
+                                isHidden.value = true
+                                hideMenu(item.id)
+                            }) {
+                                Text("Hide")
+                            }
+                        }
                     }
                     is CatalogItem.CollectionItem -> {
                         val collectionName = remember { mutableStateOf(item.name) }
