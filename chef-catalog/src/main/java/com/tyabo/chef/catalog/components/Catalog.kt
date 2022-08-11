@@ -28,6 +28,7 @@ fun Catalog(
     clickMenu: (String) -> Unit = {},
     hideMenu: (String) -> Unit = {},
     unhideMenu: (String) -> Unit = {},
+    deleteMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {}
     ){
         val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
@@ -37,28 +38,14 @@ fun Catalog(
             items(itemsList) { item ->
                 when(item){
                     is CatalogItem.MenuItem -> {
-                        val isHidden = remember { mutableStateOf(item.isHidden) }
-                        MenuItem(
+                        ChefMenuItem(
                             modifier = Modifier.padding(vertical = 12.dp),
                             menuItem = item,
-                            editMenu = clickMenu
+                            editMenu = clickMenu,
+                            hideMenu = hideMenu,
+                            unhideMenu = unhideMenu,
+                            deleteMenu = deleteMenu
                         )
-                        if (isHidden.value){
-                            Button(onClick = {
-                                isHidden.value = false
-                                unhideMenu(item.id)
-                            }) {
-                                Text("Unhide")
-                            }
-                        }
-                        else{
-                            Button(onClick = {
-                                isHidden.value = true
-                                hideMenu(item.id)
-                            }) {
-                                Text("Hide")
-                            }
-                        }
                     }
                     is CatalogItem.CollectionItem -> {
                         val collectionName = remember { mutableStateOf(item.name) }
@@ -84,6 +71,46 @@ fun Catalog(
                 }
             }
         }
+}
+
+@Composable
+fun ChefMenuItem(
+    modifier: Modifier = Modifier,
+    menuItem: CatalogItem.MenuItem,
+    editMenu: (String) -> Unit,
+    deleteMenu: (String) -> Unit,
+    hideMenu: (String) -> Unit,
+    unhideMenu: (String) -> Unit
+){
+    val isHidden = remember { mutableStateOf(menuItem.isHidden) }
+    Column() {
+        MenuItem(
+            modifier = Modifier,
+            menuItem = menuItem,
+            editMenu = editMenu
+        )
+        Row(){
+            if (isHidden.value){
+                Button(onClick = {
+                    isHidden.value = false
+                    unhideMenu(menuItem.id)
+                }) {
+                    Text("Unhide")
+                }
+            }
+            else{
+                Button(onClick = {
+                    isHidden.value = true
+                    hideMenu(menuItem.id)
+                }) {
+                    Text("Hide")
+                }
+            }
+            Button(onClick = { deleteMenu(menuItem.id) }) {
+                Text(text = "Delete")
+            }
+        }
+    }
 }
 
 @Composable

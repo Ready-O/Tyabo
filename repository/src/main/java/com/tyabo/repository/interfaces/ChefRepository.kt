@@ -12,6 +12,7 @@ interface ChefRepository {
     fun getChef(chefId: String): Flow<Result<Chef>>
     suspend fun editMenu(menu: Menu, userId: String)
     suspend fun changeHideMenu(menuId: String, isHidden: Boolean, userId: String)
+    suspend fun deleteMenu(menuId:String, userId: String)
     suspend fun getVideo(url: String): Result<MenuYoutubeVideo>
     fun getMenus(chefId: String, menusIds: List<String>): Flow<UiResult<List<Menu>>>
     suspend fun addCollection(collectionName: String, userId: String)

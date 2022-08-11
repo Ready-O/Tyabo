@@ -61,6 +61,21 @@ class MenuDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteMenu(menuId: String, userId: String, userType: UserType): Result<Unit> {
+        return try {
+            val menuRef: CollectionReference = when (userType){
+                UserType.Chef -> firestore.collection("$CHEFS/$userId/$MENUS")
+                UserType.Restaurant -> firestore.collection("$RESTAURANTS/$userId/$MENUS")
+                UserType.Client -> return Result.failure<Unit>(Exception())
+            }
+            menuRef.document(menuId).delete().await()
+            Result.success(Unit)
+        }
+        catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
     private data class RemoteMenu(
         var id: String = "",
         var name: String = "",

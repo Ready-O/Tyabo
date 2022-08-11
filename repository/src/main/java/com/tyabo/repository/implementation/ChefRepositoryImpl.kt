@@ -152,6 +152,25 @@ class ChefRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteMenu(menuId: String, userId: String) {
+        withContext(ioDispatcher) {
+            menuDataSource.deleteMenu(
+                menuId = menuId,
+                userId = userId,
+                userType = UserType.Chef
+            ).onSuccess {
+                chefCache.deleteMenu(
+                    chefId = userId,
+                    menuId = menuId
+                )
+                deleteItemOrder(
+                    userId = userId,
+                    itemId = menuId
+                )
+            }
+        }
+    }
+
     override suspend fun getVideo(url: String): Result<MenuYoutubeVideo> {
         return menuVideoDataSource.importVideo(url)
     }
@@ -281,6 +300,21 @@ class ChefRepositoryImpl @Inject constructor(
                     catalogItemType = itemType
                 )
             )
+            updateChefCatalogOrder(
+                catalogOrderId = chef.catalogOrderId,
+                catalogOrder = updatedOrder,
+                chefId = chef.id
+            )
+        }
+    }
+
+    private suspend fun deleteItemOrder(
+        userId: String,
+        itemId: String,
+    ){
+        chefCache.getChef(userId).onSuccess { chef ->
+            val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
+            updatedOrder.removeIf { it.id == itemId }
             updateChefCatalogOrder(
                 catalogOrderId = chef.catalogOrderId,
                 catalogOrder = updatedOrder,

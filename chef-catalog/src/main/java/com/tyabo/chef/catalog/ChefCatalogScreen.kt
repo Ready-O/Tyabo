@@ -34,7 +34,8 @@ fun ChefCatalogScreen(
                 displayState = displayState,
                 navigateToEditMenu = navigateToEditMenu,
                 hideMenu = viewModel::hideMenu,
-                unhideMenu = viewModel::unhideMenu
+                unhideMenu = viewModel::unhideMenu,
+                deleteMenu = viewModel::deleteMenu
             ) {
                 viewModel.editCollection(
                     collectionId = it.id,
@@ -53,7 +54,8 @@ fun ChefCatalogScreen(
                     displayState = displayState,
                     navigateToEditMenu = navigateToEditMenu,
                     hideMenu = viewModel::hideMenu,
-                    unhideMenu = viewModel::unhideMenu
+                    unhideMenu = viewModel::unhideMenu,
+                    deleteMenu = viewModel::deleteMenu
                 ) {
                     viewModel.editCollection(
                         collectionId = it.id,
@@ -71,6 +73,7 @@ private fun displayCatalog(
     navigateToEditMenu: (String?) -> Unit,
     hideMenu: (String) -> Unit,
     unhideMenu: (String) -> Unit,
+    deleteMenu: (String) -> Unit,
     editCollection: (CatalogItem.CollectionItem) -> Unit
 ) {
     when (displayState) {
@@ -97,6 +100,7 @@ private fun displayCatalog(
                     clickMenu = { navigateToEditMenu(it) },
                     hideMenu = hideMenu,
                     unhideMenu = unhideMenu,
+                    deleteMenu = deleteMenu,
                     editCollection = editCollection
                 )
             }

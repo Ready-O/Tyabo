@@ -12,6 +12,7 @@ import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -82,10 +83,19 @@ class ChefCatalogViewModel @Inject constructor(
     }
 
     fun unhideMenu(menuId: String){
-        viewModelScope.launch{
+        viewModelScope.launch {
             chefRepository.changeHideMenu(
                 menuId = menuId,
                 isHidden = false,
+                userId = userId
+            )
+        }
+    }
+
+    fun deleteMenu(menuId: String){
+        viewModelScope.launch{
+            chefRepository.deleteMenu(
+                menuId = menuId,
                 userId = userId
             )
         }
