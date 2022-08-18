@@ -12,6 +12,7 @@ ext {
 
     // Compose
     composeVersion = '1.2.0-alpha07'
+    composeMaterial3Version = "1.0.0-alpha13"
     activityComposeVersion = '1.4.0'
     navigationComposeVersion = '2.5.0-beta01'
     coilVersion = '1.4.0'
@@ -74,8 +75,8 @@ ext {
     composeDependencies = [
             composeUI                : "androidx.compose.ui:ui:$composeVersion",
             composeTooling           : "androidx.compose.ui:ui-tooling:$composeVersion",
-            composeToolingPreview    : "androidx.compose.ui:ui-tooling-preview:$compose_version",
-            composeMaterial          : "androidx.compose.material:material:$composeVersion",
+            composeToolingPreview    : "androidx.compose.ui:ui-tooling-preview:$composeVersion",
+            composeMaterial3         : "androidx.compose.material3:material3:$composeMaterial3Version",
             activityCompose          : "androidx.activity:activity-compose:$activityComposeVersion",
             navigationCompose        : "androidx.navigation:navigation-compose:$navigationComposeVersion",
             hiltNavigation           : "androidx.hilt:hilt-navigation-compose:$hiltNavigation",

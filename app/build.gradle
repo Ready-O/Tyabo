@@ -73,11 +73,10 @@ dependencies {
 
     // Compose
     implementation composeDependencies.activityCompose
-    implementation composeDependencies.composeMaterial
+    implementation composeDependencies.composeMaterial3
     implementation composeDependencies.composeUI
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview
-    implementation uiDependencies.materialDesign
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
     implementation composeDependencies.coil

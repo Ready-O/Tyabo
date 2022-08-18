@@ -57,7 +57,7 @@ dependencies {
 
     // Compose
     implementation composeDependencies.activityCompose
-    implementation composeDependencies.composeMaterial
+    implementation composeDependencies.composeMaterial3
     implementation composeDependencies.composeUI
     implementation composeDependencies.composeTooling
     implementation composeDependencies.composeToolingPreview

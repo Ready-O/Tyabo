@@ -1,12 +1,14 @@
 package com.tyabo.chef.editmenu.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.tyabo.data.NumberPersons
 
 
+@ExperimentalMaterial3Api
 @Composable
 fun SelectNumberPersons(
     numberPersons: NumberPersons,

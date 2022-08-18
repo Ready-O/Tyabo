@@ -1,10 +1,10 @@
 package com.tyabo.chef.editmenu.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import com.tyabo.chef.editmenu.YoutubeVideoState
 import com.tyabo.designsystem.YoutubeVideo

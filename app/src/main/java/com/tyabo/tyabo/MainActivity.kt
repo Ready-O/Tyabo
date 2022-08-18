@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tyabo.data.UserType
 import com.tyabo.tyabo.auth.AuthViewModel
 import com.tyabo.tyabo.navigation.chef.ChefNavHost
-import com.tyabo.tyabo.navigation.screens.AuthScreen
+import com.tyabo.tyabo.auth.AuthScreen
 import com.tyabo.tyabo.ui.AppPresenter
 import com.tyabo.tyabo.ui.BannerViewState
 import com.tyabo.designsystem.theme.TyaboTheme
@@ -72,7 +72,7 @@ class MainActivity : ComponentActivity() {
 fun MainAppLayout(userType: UserType, bannerViewState: BannerViewState?) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colorScheme.background
     ) {
         val navController = rememberNavController()
         when(userType){
