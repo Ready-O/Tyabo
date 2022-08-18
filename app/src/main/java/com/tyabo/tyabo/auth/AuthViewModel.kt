@@ -1,4 +1,4 @@
-package com.tyabo.tyabo.features
+package com.tyabo.tyabo.auth
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.tyabo.common.UiResult
 import com.tyabo.tyabo.AppPresenter
 import com.tyabo.data.Token
 import com.tyabo.data.UserType

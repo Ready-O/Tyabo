@@ -10,7 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.data.UserType
-import com.tyabo.tyabo.features.AuthViewModel
+import com.tyabo.tyabo.auth.AuthViewModel
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel) {

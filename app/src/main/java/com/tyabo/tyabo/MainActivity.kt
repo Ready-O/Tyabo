@@ -2,7 +2,6 @@ package com.tyabo.tyabo
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
@@ -13,15 +12,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.tyabo.data.UserType
-import com.tyabo.tyabo.features.AuthViewModel
-import com.tyabo.tyabo.navigation.GreetingDestination
+import com.tyabo.tyabo.auth.AuthViewModel
 import com.tyabo.tyabo.navigation.chef.ChefNavHost
 import com.tyabo.tyabo.navigation.screens.AuthScreen
-import com.tyabo.tyabo.navigation.screens.greetingsComposable
 import com.tyabo.tyabo.ui.theme.TyaboTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
