@@ -1,6 +1,6 @@
 package com.tyabo.tyabo.di
 
-import com.tyabo.tyabo.AppPresenter
+import com.tyabo.tyabo.ui.AppPresenter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.tyabo.tyabo.AppPresenter
+import com.tyabo.tyabo.ui.AppPresenter
 import com.tyabo.data.Token
 import com.tyabo.data.UserType
 import com.tyabo.repository.interfaces.SessionRepository

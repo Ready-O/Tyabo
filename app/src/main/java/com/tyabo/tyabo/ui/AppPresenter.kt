@@ -1,4 +1,4 @@
-package com.tyabo.tyabo
+package com.tyabo.tyabo.ui
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

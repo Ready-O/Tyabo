@@ -17,7 +17,9 @@ import com.tyabo.data.UserType
 import com.tyabo.tyabo.auth.AuthViewModel
 import com.tyabo.tyabo.navigation.chef.ChefNavHost
 import com.tyabo.tyabo.navigation.screens.AuthScreen
-import com.tyabo.tyabo.ui.theme.TyaboTheme
+import com.tyabo.tyabo.ui.AppPresenter
+import com.tyabo.tyabo.ui.BannerViewState
+import com.tyabo.designsystem.theme.TyaboTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,30 +32,35 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val sessionState by viewModel.sessionState.collectAsState()
-            val bannerViewState by appPresenter.bannerViewState.collectAsState()
+            TyaboTheme {
+                val sessionState by viewModel.sessionState.collectAsState()
+                val bannerViewState by appPresenter.bannerViewState.collectAsState()
 
-            LaunchedEffect(Unit){
-                viewModel.updateSessionState()
-            }
-            when(sessionState) {
-                AuthViewModel.SessionState.UserNotSignedIn -> {
-                    Surface() {
-                        AuthScreen(viewModel)
-                        BannerLayout(bannerViewState)
-                    }
+                LaunchedEffect(Unit) {
+                    viewModel.updateSessionState()
                 }
-                AuthViewModel.SessionState.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is AuthViewModel.SessionState.UserSignedIn -> {
-                    val state = sessionState as AuthViewModel.SessionState.UserSignedIn
-                    Column() {
-                        Text(text = "id ${state.userId} - type ${state.userType}")
-                        Button(onClick = viewModel::signOut) {
-                            Text(text = "Logout")
+                when (sessionState) {
+                    AuthViewModel.SessionState.UserNotSignedIn -> {
+                        Surface() {
+                            AuthScreen(viewModel)
+                            BannerLayout(bannerViewState)
                         }
-                        MainAppLayout(bannerViewState = bannerViewState, userType = state.userType)
+                    }
+                    AuthViewModel.SessionState.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is AuthViewModel.SessionState.UserSignedIn -> {
+                        val state = sessionState as AuthViewModel.SessionState.UserSignedIn
+                        Column() {
+                            Text(text = "id ${state.userId} - type ${state.userType}")
+                            Button(onClick = viewModel::signOut) {
+                                Text(text = "Logout")
+                            }
+                            MainAppLayout(
+                                bannerViewState = bannerViewState,
+                                userType = state.userType
+                            )
+                        }
                     }
                 }
             }
@@ -63,18 +70,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainAppLayout(userType: UserType, bannerViewState: BannerViewState?) {
-
-    TyaboTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colors.background
-        ) {
-            val navController = rememberNavController()
-            when(userType){
-                UserType.Chef -> ChefNavHost(navController = navController)
-            }
-            BannerLayout(bannerViewState)
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        val navController = rememberNavController()
+        when(userType){
+            UserType.Chef -> ChefNavHost(navController = navController)
         }
+        BannerLayout(bannerViewState)
     }
 }
 

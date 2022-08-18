@@ -1,4 +1,4 @@
-package com.tyabo.tyabo
+package com.tyabo.tyabo.ui
 
 sealed class BannerViewState{
     class Default(val message: String): BannerViewState()
