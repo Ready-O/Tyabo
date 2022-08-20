@@ -1,18 +1,18 @@
-package com.tyabo.chef.editmenu.components
+package com.tyabo.designsystem.picture
 
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.options
-import com.tyabo.designsystem.ClickablePicture
 
 @Composable
-fun EditMenuPicture(
+fun EditablePicture(
     modifier: Modifier,
-    menuPictureUrl: String?,
-    menuname: String,
+    pictureUrl: String?,
+    name: String,
     onClick: (String) -> Unit
 ) {
 
@@ -23,11 +23,10 @@ fun EditMenuPicture(
     }
 
     //val confirmButton = stringResource(id = R.string.label_settings_crop_choose)
-    ClickablePicture(
-        modifier = modifier,
-        url = menuPictureUrl,
-        name = menuname,
-        onClick = {
+    StandardPicture(
+        url = pictureUrl,
+        name = name,
+        modifier = modifier.clickable {
             cropImage.launch(
                 options {
                     setImageSource(includeGallery = true, includeCamera = false)
@@ -40,6 +39,6 @@ fun EditMenuPicture(
                     setMaxCropResultSize(maxCropResultWidth = 2500, maxCropResultHeight = 2500)
                 }
             )
-        }
+        },
     )
 }

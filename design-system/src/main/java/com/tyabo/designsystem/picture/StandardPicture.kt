@@ -1,30 +1,26 @@
-package com.tyabo.designsystem
+package com.tyabo.designsystem.picture
 
-import android.text.style.ClickableSpan
-import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import com.tyabo.designsystem.R
 
 @Composable
-fun ClickablePicture(
+fun StandardPicture(
     modifier: Modifier = Modifier,
     url: String?,
     name: String?,
-    onClick: () -> Unit = {}
 ) {
-    val imageModifier = modifier
-        .clickable { onClick() }
 
     val placeholder: @Composable () -> Unit = {
         androidx.compose.foundation.Image(
-            modifier = imageModifier,
+            modifier = modifier,
             painter = painterResource(id = R.drawable.ic_photo),
             contentDescription = name
         )
     }
     Image(
-        modifier = imageModifier,
+        modifier = modifier,
         contentDescription = name,
         url = url,
         placeholder = R.drawable.ic_photo,

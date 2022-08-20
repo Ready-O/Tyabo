@@ -13,25 +13,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tyabo.data.CatalogItem
-import com.tyabo.designsystem.MenuItem
+import com.tyabo.designsystem.CollectionItem
 
 @Composable
 fun Catalog(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     itemsList: List<CatalogItem>,
     addMenu: () -> Unit = {},
-    clickMenu: (String) -> Unit = {},
+    editMenu: (String) -> Unit = {},
     hideMenu: (String) -> Unit = {},
     unhideMenu: (String) -> Unit = {},
     deleteMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {}
     ){
+        val itemToExpand: MutableState<String?> = remember { mutableStateOf(null) }
         val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
+
         LazyColumn(
             modifier = modifier
         ) {
@@ -39,20 +39,27 @@ fun Catalog(
                 when(item){
                     is CatalogItem.MenuItem -> {
                         ChefMenuItem(
-                            modifier = Modifier.padding(vertical = 12.dp),
+                            modifier = Modifier.padding(horizontal = 16.dp,vertical = 12.dp),
                             menuItem = item,
-                            editMenu = clickMenu,
-                            hideMenu = hideMenu,
-                            unhideMenu = unhideMenu,
-                            deleteMenu = deleteMenu
+                            isExpanded = itemToExpand.value == item.id,
+                            editMenu = { editMenu(item.id) },
+                            deleteMenu = { deleteMenu(item.id) },
+                            hideMenu = { hideMenu(item.id) },
+                            unhideMenu = { unhideMenu(item.id) },
+                            onClick = {
+                                switchExpand(itemToExpand, item)
+                            }
                         )
                     }
                     is CatalogItem.CollectionItem -> {
                         val collectionName = remember { mutableStateOf(item.name) }
                         when(collectionToEdit.value){
-                            null -> CollectionItem(
-                                modifier = Modifier.clickable { collectionToEdit.value = item.id },
-                                collectionName = collectionName.value
+                            null -> ChefCollectionItem(
+                                collectionName = collectionName.value,
+                                isExpanded = itemToExpand.value == item.id,
+                                editCollection = { collectionToEdit.value = item.id },
+                                deleteCollection = {},
+                                onClick = { switchExpand(itemToExpand, item) }
                             )
                             item.id -> EditCollectionItem(
                                 collectionName = collectionName.value,
@@ -62,10 +69,17 @@ fun Catalog(
                                 editCollection = {
                                     collectionName.value = it
                                     collectionToEdit.value = null
+                                    itemToExpand.value = null
                                     editCollection(item.copy(name = it))
                                 }
                             )
-                            else -> CollectionItem(collectionName = collectionName.value)
+                            else -> ChefCollectionItem(
+                                collectionName = collectionName.value,
+                                isExpanded = false,
+                                editCollection = {},
+                                deleteCollection = {},
+                                onClick = {}
+                            )
                         }
                     }
                 }
@@ -73,86 +87,13 @@ fun Catalog(
         }
 }
 
-@Composable
-fun ChefMenuItem(
-    modifier: Modifier = Modifier,
-    menuItem: CatalogItem.MenuItem,
-    editMenu: (String) -> Unit,
-    deleteMenu: (String) -> Unit,
-    hideMenu: (String) -> Unit,
-    unhideMenu: (String) -> Unit
-){
-    val isHidden = remember { mutableStateOf(menuItem.isHidden) }
-    Column() {
-        MenuItem(
-            modifier = Modifier,
-            menuItem = menuItem,
-            editMenu = editMenu
-        )
-        Row(){
-            if (isHidden.value){
-                Button(onClick = {
-                    isHidden.value = false
-                    unhideMenu(menuItem.id)
-                }) {
-                    Text("Unhide")
-                }
-            }
-            else{
-                Button(onClick = {
-                    isHidden.value = true
-                    hideMenu(menuItem.id)
-                }) {
-                    Text("Hide")
-                }
-            }
-            Button(onClick = { deleteMenu(menuItem.id) }) {
-                Text(text = "Delete")
-            }
-        }
-    }
-}
-
-@Composable
-fun CollectionItem(
-    modifier: Modifier = Modifier,
-    collectionName: String,
-){
-    Text(
-        modifier = modifier,
-        text = collectionName,
-        color = Color.Black,
-        fontSize = 28.sp
-    )
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun EditCollectionItem(
-    modifier: Modifier = Modifier,
-    collectionName: String,
-    cancel: () -> Unit,
-    editCollection: (String) -> Unit,
-){
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    val name = remember { mutableStateOf(collectionName) }
-    Column() {
-        TextField(value = name.value, onValueChange = { name.value = it })
-        Row{
-            Button(onClick = {
-                keyboardController?.hide()
-                cancel()
-            }) {
-                Text("Annuler")
-            }
-            Button(onClick = {
-                keyboardController?.hide()
-                editCollection(name.value)
-            }
-            ) {
-                Text("Valider")
-            }
-        }
+private fun switchExpand(
+    itemToExpand: MutableState<String?>,
+    item: CatalogItem
+) {
+    if (itemToExpand.value == item.id) {
+        itemToExpand.value = null
+    } else {
+        itemToExpand.value = item.id
     }
 }

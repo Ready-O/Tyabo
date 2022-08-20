@@ -64,9 +64,6 @@ dependencies {
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
 
-    // Image Cropper
-    implementation imageCropperDependencies.imageCropper
-
     // Unit test
     testImplementation testDependencies.junit
     androidTestImplementation testDependencies.androidJunit

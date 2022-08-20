@@ -1,4 +1,4 @@
-package com.tyabo.designsystem
+package com.tyabo.designsystem.picture
 
 import android.graphics.Bitmap
 import androidx.annotation.DrawableRes

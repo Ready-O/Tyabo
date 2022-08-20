@@ -95,9 +95,8 @@ private fun displayCatalog(
                     Text(text = "Add Menu")
                 }
                 Catalog(
-                    modifier = Modifier.padding(horizontal = 16.dp),
                     itemsList = listToDisplay,
-                    clickMenu = { navigateToEditMenu(it) },
+                    editMenu = { navigateToEditMenu(it) },
                     hideMenu = hideMenu,
                     unhideMenu = unhideMenu,
                     deleteMenu = deleteMenu,

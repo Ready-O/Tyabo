@@ -57,6 +57,9 @@ dependencies {
     // Lifecycle
     implementation archiDependencies.lifecycleScope
 
+    // Image Cropper
+    implementation imageCropperDependencies.imageCropper
+
     // Hilt
     implementation commonDependencies.hilt
     kapt commonDependencies.hiltCompiler
