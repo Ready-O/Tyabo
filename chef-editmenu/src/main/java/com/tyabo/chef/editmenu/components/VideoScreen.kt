@@ -7,7 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import com.tyabo.chef.editmenu.YoutubeVideoState
-import com.tyabo.designsystem.YoutubeVideo
+import com.tyabo.designsystem.components.YoutubeVideo
 
 @Composable
 fun VideoScreen(

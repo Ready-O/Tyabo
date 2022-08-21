@@ -1,4 +1,4 @@
-package com.tyabo.designsystem
+package com.tyabo.designsystem.components
 
 import android.content.Intent
 import android.net.Uri

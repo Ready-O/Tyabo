@@ -1,4 +1,4 @@
-package com.tyabo.designsystem
+package com.tyabo.designsystem.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.MaterialTheme
@@ -17,5 +17,6 @@ fun CollectionItem(
     Text(
         text = collectionName,
         style = MaterialTheme.typography.headlineMedium,
+        fontWeight = FontWeight.SemiBold
     )
 }

@@ -1,7 +1,6 @@
-package com.tyabo.designsystem
+package com.tyabo.designsystem.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,18 +16,15 @@ import com.tyabo.designsystem.picture.StandardPicture
 fun MenuItem(
     modifier: Modifier = Modifier,
     menuItem: CatalogItem.MenuItem,
-    onClick: () -> Unit
 ){
     Row(
         modifier = modifier
-            .clickable { onClick() },
     ) {
         Column() {
             Text(
                 modifier = Modifier,
                 text = menuItem.name,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Light
             )
             Text(
                 modifier = Modifier,
