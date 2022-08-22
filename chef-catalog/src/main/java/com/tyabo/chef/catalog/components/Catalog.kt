@@ -23,8 +23,9 @@ fun Catalog(
     itemsList: List<CatalogItem>,
     addMenu: () -> Unit = {},
     editMenu: (String) -> Unit = {},
-    hideMenu: (String) -> Unit = {},
-    unhideMenu: (String) -> Unit = {},
+    moveMenu: (String) -> Unit = {},
+    hideMenu: (CatalogItem.MenuItem) -> Unit = {},
+    unhideMenu: (CatalogItem.MenuItem) -> Unit = {},
     deleteMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {}
     ){
@@ -42,9 +43,10 @@ fun Catalog(
                             menuItem = item,
                             isExpanded = itemToExpand.value == item.id,
                             editMenu = { editMenu(item.id) },
+                            moveMenu = { moveMenu(item.id) },
                             deleteMenu = { deleteMenu(item.id) },
-                            hideMenu = { hideMenu(item.id) },
-                            unhideMenu = { unhideMenu(item.id) },
+                            hideMenu = { hideMenu(item) },
+                            unhideMenu = { unhideMenu(item) },
                             onClick = {
                                 switchExpand(itemToExpand, item)
                             }
@@ -71,29 +73,27 @@ fun Catalog(
                         }
                     }
                     is CatalogItem.CollectionItem -> {
-                        val collectionName = remember { mutableStateOf(item.name) }
                         when(collectionToEdit.value){
                             null -> ChefCollectionItem(
-                                collectionName = collectionName.value,
+                                collectionName = item.name,
                                 isExpanded = itemToExpand.value == item.id,
                                 editCollection = { collectionToEdit.value = item.id },
                                 deleteCollection = {},
                                 onClick = { switchExpand(itemToExpand, item) }
                             )
                             item.id -> EditCollectionItem(
-                                collectionName = collectionName.value,
+                                collectionName = item.name,
                                 cancel = {
                                     collectionToEdit.value = null
                                 },
                                 editCollection = {
-                                    collectionName.value = it
                                     collectionToEdit.value = null
                                     itemToExpand.value = null
                                     editCollection(item.copy(name = it))
                                 }
                             )
                             else -> ChefCollectionItem(
-                                collectionName = collectionName.value,
+                                collectionName = item.name,
                                 isExpanded = false,
                                 editCollection = {},
                                 deleteCollection = {},

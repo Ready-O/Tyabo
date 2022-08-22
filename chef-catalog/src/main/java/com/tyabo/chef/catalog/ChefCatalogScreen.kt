@@ -3,7 +3,6 @@ package com.tyabo.chef.catalog
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -31,18 +30,17 @@ fun ChefCatalogScreen(
 
     when (state){
         is ChefCatalogViewState.DisplayCatalog -> {
+            val displayCatalogState = state as ChefCatalogViewState.DisplayCatalog
             displayCatalog(
                 displayState = displayState,
+                updateCatalog = viewModel::updateCatalog,
+                updatedCatalog = displayCatalogState.updatedCatalog,
                 navigateToEditMenu = navigateToEditMenu,
                 hideMenu = viewModel::hideMenu,
                 unhideMenu = viewModel::unhideMenu,
-                deleteMenu = viewModel::deleteMenu
-            ) {
-                viewModel.editCollection(
-                    collectionId = it.id,
-                    collectionName = it.name
-                )
-            }
+                deleteMenu = viewModel::deleteMenu,
+                editCollection = viewModel::editCollection
+            )
         }
         is ChefCatalogViewState.AddCollection -> {
             Column() {
@@ -53,16 +51,14 @@ fun ChefCatalogScreen(
                 }
                 displayCatalog(
                     displayState = displayState,
+                    updateCatalog = {},
+                    updatedCatalog = listOf(),
                     navigateToEditMenu = navigateToEditMenu,
                     hideMenu = viewModel::hideMenu,
                     unhideMenu = viewModel::unhideMenu,
-                    deleteMenu = viewModel::deleteMenu
-                ) {
-                    viewModel.editCollection(
-                        collectionId = it.id,
-                        collectionName = it.name
-                    )
-                }
+                    deleteMenu = viewModel::deleteMenu,
+                    editCollection = viewModel::editCollection
+                )
             }
         }
     }
@@ -71,9 +67,11 @@ fun ChefCatalogScreen(
 @Composable
 private fun displayCatalog(
     displayState: ChefCatalogDisplayViewState,
+    updateCatalog: (List<CatalogItem>) -> Unit,
+    updatedCatalog: List<CatalogItem>,
     navigateToEditMenu: (String?) -> Unit,
-    hideMenu: (String) -> Unit,
-    unhideMenu: (String) -> Unit,
+    hideMenu: (CatalogItem.MenuItem) -> Unit,
+    unhideMenu: (CatalogItem.MenuItem) -> Unit,
     deleteMenu: (String) -> Unit,
     editCollection: (CatalogItem.CollectionItem) -> Unit
 ) {
@@ -85,11 +83,17 @@ private fun displayCatalog(
         }
         is ChefCatalogDisplayViewState.Catalog -> {
             val listToDisplay = mutableListOf<CatalogItem>()
-            displayState.order.forEach { catalogOrder ->
-                val item = displayState.catalog.find { it.id == catalogOrder.id }
-                if (item != null) {
-                    listToDisplay.add(item)
+            if (updatedCatalog.isNotEmpty()){
+                listToDisplay.addAll(updatedCatalog)
+            }
+            else{
+                displayState.order.forEach { catalogOrder ->
+                    val item = displayState.catalog.find { it.id == catalogOrder.id }
+                    if (item != null) {
+                        listToDisplay.add(item)
+                    }
                 }
+                updateCatalog(listToDisplay)
             }
             Column() {
                 Button(onClick = { navigateToEditMenu(null) }) {

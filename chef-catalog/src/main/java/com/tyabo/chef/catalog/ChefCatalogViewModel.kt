@@ -3,16 +3,12 @@ package com.tyabo.chef.catalog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
-import com.tyabo.data.CatalogItem
-import com.tyabo.data.CatalogItemType
-import com.tyabo.data.toCollectionItem
-import com.tyabo.data.toMenuItem
+import com.tyabo.data.*
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -68,27 +64,52 @@ class ChefCatalogViewModel @Inject constructor(
             initialValue = ChefCatalogDisplayViewState.Loading
         )
 
-    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(ChefCatalogViewState.DisplayCatalog)
+    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
+        ChefCatalogViewState.DisplayCatalog(mutableListOf())
+    )
 
     val catalogState = _catalogState.asStateFlow()
 
-    fun hideMenu(menuId: String){
+    fun updateCatalog(updatedCatalog: List<CatalogItem>){
+        _catalogState.value = ChefCatalogViewState.DisplayCatalog(updatedCatalog)
+    }
+
+    // Editing items does not change the order value, so new items are not fetched
+    // Must change MANUALLY
+    private fun editItemCatalog(newItem: CatalogItem) {
+        val state = catalogState.value as ChefCatalogViewState.DisplayCatalog
+        val index = state.updatedCatalog.indexOfFirst { it.id == newItem.id }
+        val updatedCatalog = state.updatedCatalog.toMutableList()
+        updatedCatalog[index] = newItem
+        _catalogState.value = ChefCatalogViewState.DisplayCatalog(updatedCatalog)
+    }
+
+    // Adding, Moving, Deleting cause order change so we force fetching
+    private fun fetchCatalog(){
+        _catalogState.value = ChefCatalogViewState.DisplayCatalog(listOf())
+    }
+
+    fun hideMenu(menu: CatalogItem.MenuItem){
         viewModelScope.launch{
             chefRepository.changeHideMenu(
-                menuId = menuId,
+                menuId = menu.id,
                 isHidden = true,
                 userId = userId
             )
+            val newItem = menu.copy(isHidden = true)
+            editItemCatalog(newItem)
         }
     }
 
-    fun unhideMenu(menuId: String){
+    fun unhideMenu(menu: CatalogItem.MenuItem){
         viewModelScope.launch {
             chefRepository.changeHideMenu(
-                menuId = menuId,
+                menuId = menu.id,
                 isHidden = false,
                 userId = userId
             )
+            val newItem = menu.copy(isHidden = false)
+            editItemCatalog(newItem)
         }
     }
 
@@ -98,6 +119,7 @@ class ChefCatalogViewModel @Inject constructor(
                 menuId = menuId,
                 userId = userId
             )
+            fetchCatalog()
         }
     }
 
@@ -120,14 +142,14 @@ class ChefCatalogViewModel @Inject constructor(
         }
     }
 
-    // Edit collection does not change the order value, so new collections are not fetched
-    fun editCollection(collectionId: String, collectionName: String){
+    fun editCollection(collection: CatalogItem.CollectionItem){
         viewModelScope.launch{
             chefRepository.editCollection(
-                collectionId = collectionId,
-                collectionName = collectionName,
+                collectionId = collection.id,
+                collectionName = collection.name,
                 userId = userId
             )
+            editItemCatalog(collection)
         }
     }
 }

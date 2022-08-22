@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -16,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tyabo.data.CatalogItem
-import com.tyabo.designsystem.MenuItem
+import com.tyabo.designsystem.components.MenuItem
 
 @ExperimentalMaterial3Api
 @Composable
@@ -25,13 +26,12 @@ fun ChefMenuItem(
     menuItem: CatalogItem.MenuItem,
     isExpanded: Boolean,
     editMenu: () -> Unit,
+    moveMenu: () -> Unit,
     deleteMenu: () -> Unit,
     hideMenu: () -> Unit,
     unhideMenu: () -> Unit,
     onClick: () -> Unit
 ){
-    val isHidden = remember { mutableStateOf(menuItem.isHidden) }
-
     Column(
         modifier = modifier.clickable { onClick() }
     ) {
@@ -39,7 +39,8 @@ fun ChefMenuItem(
         if (isExpanded){
             MenuOptions(
                 editMenu = editMenu,
-                isHidden = isHidden,
+                moveMenu = moveMenu,
+                isHidden = menuItem.isHidden,
                 hideMenu = hideMenu,
                 unhideMenu = unhideMenu,
                 deleteMenu = deleteMenu
@@ -52,7 +53,8 @@ fun ChefMenuItem(
 @Composable
 private fun MenuOptions(
     editMenu: () -> Unit,
-    isHidden: MutableState<Boolean>,
+    moveMenu: () -> Unit,
+    isHidden: Boolean,
     hideMenu: () -> Unit,
     unhideMenu: () -> Unit,
     deleteMenu: () -> Unit
@@ -71,23 +73,28 @@ private fun MenuOptions(
             label = { Text("Edit") }
         )
         Spacer(modifier = Modifier.width(8.dp))
-        if (isHidden.value) {
+        if (isHidden) {
             AssistChip(
-                onClick = {
-                    isHidden.value = false
-                    unhideMenu()
-                },
+                onClick = unhideMenu,
                 label = { Text("Unhide") }
             )
         } else {
             AssistChip(
-                onClick = {
-                    isHidden.value = true
-                    hideMenu()
-                },
+                onClick = hideMenu,
                 label = { Text("Hide") }
             )
         }
+        Spacer(modifier = Modifier.width(8.dp))
+        AssistChip(
+            onClick = moveMenu,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null
+                )
+            },
+            label = { Text("Move") }
+        )
         Spacer(modifier = Modifier.width(8.dp))
         AssistChip(
             onClick = deleteMenu,
