@@ -11,6 +11,5 @@ interface ChefCatalogDisplayViewState {
 
     data class Catalog(
         val catalog: List<CatalogItem>,
-        val order: MutableList<CatalogOrder>
     ): ChefCatalogDisplayViewState
 }

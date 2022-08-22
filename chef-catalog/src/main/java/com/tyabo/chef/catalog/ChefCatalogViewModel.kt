@@ -25,7 +25,7 @@ class ChefCatalogViewModel @Inject constructor(
         }
     }
 
-    val catalogDisplayState: StateFlow<ChefCatalogDisplayViewState> = chefRepository.catalogOrder.flatMapConcat { order ->
+    val fetchedCatalog: StateFlow<Unit> = chefRepository.catalogOrder.flatMapConcat { order ->
         val menusIds = mutableListOf<String>()
         val collectionsIds = mutableListOf<String>()
         order.forEach {
@@ -48,45 +48,46 @@ class ChefCatalogViewModel @Inject constructor(
                 collectionsResult.data.forEach {
                     catalog.add(it.toCollectionItem())
                 }
-                ChefCatalogDisplayViewState.Catalog(catalog = catalog, order = order.toMutableList())
+                val sortedCatalog = mutableListOf<CatalogItem>()
+                order.forEach { catalogOrder ->
+                    val item = catalog.find { it.id == catalogOrder.id }
+                    if (item != null) {
+                        sortedCatalog.add(item)
+                    }
+                }
+                _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(catalog = sortedCatalog)
             }
             else if (menusResult is UiResult.Failure || collectionsResult is UiResult.Failure){
-                ChefCatalogDisplayViewState.Loading
+                _catalogDisplayState.value = ChefCatalogDisplayViewState.Loading
             }
             else {
-                ChefCatalogDisplayViewState.Loading
+                _catalogDisplayState.value = ChefCatalogDisplayViewState.Loading
             }
         }
     }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(0),
-            initialValue = ChefCatalogDisplayViewState.Loading
+            initialValue = Unit
         )
 
-    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
-        ChefCatalogViewState.DisplayCatalog(mutableListOf())
+    private val _catalogDisplayState = MutableStateFlow<ChefCatalogDisplayViewState>(
+        ChefCatalogDisplayViewState.Loading
     )
+    val catalogDisplayState = _catalogDisplayState.asStateFlow()
+
+    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(ChefCatalogViewState.DisplayCatalog)
 
     val catalogState = _catalogState.asStateFlow()
-
-    fun updateCatalog(updatedCatalog: List<CatalogItem>){
-        _catalogState.value = ChefCatalogViewState.DisplayCatalog(updatedCatalog)
-    }
 
     // Editing items does not change the order value, so new items are not fetched
     // Must change MANUALLY
     private fun editItemCatalog(newItem: CatalogItem) {
-        val state = catalogState.value as ChefCatalogViewState.DisplayCatalog
-        val index = state.updatedCatalog.indexOfFirst { it.id == newItem.id }
-        val updatedCatalog = state.updatedCatalog.toMutableList()
+        val state = catalogDisplayState.value as ChefCatalogDisplayViewState.Catalog
+        val index = state.catalog.indexOfFirst { it.id == newItem.id }
+        val updatedCatalog = state.catalog.toMutableList()
         updatedCatalog[index] = newItem
-        _catalogState.value = ChefCatalogViewState.DisplayCatalog(updatedCatalog)
-    }
-
-    // Adding, Moving, Deleting cause order change so we force fetching
-    private fun fetchCatalog(){
-        _catalogState.value = ChefCatalogViewState.DisplayCatalog(listOf())
+        _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(updatedCatalog)
     }
 
     fun hideMenu(menu: CatalogItem.MenuItem){
@@ -119,7 +120,7 @@ class ChefCatalogViewModel @Inject constructor(
                 menuId = menuId,
                 userId = userId
             )
-            fetchCatalog()
+            //fetchCatalog()
         }
     }
 

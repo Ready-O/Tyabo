@@ -25,16 +25,15 @@ fun ChefCatalogScreen(
     LaunchedEffect(Unit){
         viewModel.fetchOrderFirstTime()
     }
+
     val state by viewModel.catalogState.collectAsState()
+    viewModel.fetchedCatalog.collectAsState()
     val displayState by viewModel.catalogDisplayState.collectAsState()
 
     when (state){
         is ChefCatalogViewState.DisplayCatalog -> {
-            val displayCatalogState = state as ChefCatalogViewState.DisplayCatalog
             displayCatalog(
-                displayState = displayState,
-                updateCatalog = viewModel::updateCatalog,
-                updatedCatalog = displayCatalogState.updatedCatalog,
+                catalogState = displayState,
                 navigateToEditMenu = navigateToEditMenu,
                 hideMenu = viewModel::hideMenu,
                 unhideMenu = viewModel::unhideMenu,
@@ -50,9 +49,7 @@ fun ChefCatalogScreen(
                     Text(text = "Validate Collection")
                 }
                 displayCatalog(
-                    displayState = displayState,
-                    updateCatalog = {},
-                    updatedCatalog = listOf(),
+                    catalogState = displayState,
                     navigateToEditMenu = navigateToEditMenu,
                     hideMenu = viewModel::hideMenu,
                     unhideMenu = viewModel::unhideMenu,
@@ -66,42 +63,27 @@ fun ChefCatalogScreen(
 
 @Composable
 private fun displayCatalog(
-    displayState: ChefCatalogDisplayViewState,
-    updateCatalog: (List<CatalogItem>) -> Unit,
-    updatedCatalog: List<CatalogItem>,
+    catalogState: ChefCatalogDisplayViewState,
     navigateToEditMenu: (String?) -> Unit,
     hideMenu: (CatalogItem.MenuItem) -> Unit,
     unhideMenu: (CatalogItem.MenuItem) -> Unit,
     deleteMenu: (String) -> Unit,
     editCollection: (CatalogItem.CollectionItem) -> Unit
 ) {
-    when (displayState) {
+    when (catalogState) {
         is ChefCatalogDisplayViewState.Loading -> {
             Button(onClick = { navigateToEditMenu(null) }) {
                 Text(text = "Add Menu")
             }
         }
         is ChefCatalogDisplayViewState.Catalog -> {
-            val listToDisplay = mutableListOf<CatalogItem>()
-            if (updatedCatalog.isNotEmpty()){
-                listToDisplay.addAll(updatedCatalog)
-            }
-            else{
-                displayState.order.forEach { catalogOrder ->
-                    val item = displayState.catalog.find { it.id == catalogOrder.id }
-                    if (item != null) {
-                        listToDisplay.add(item)
-                    }
-                }
-                updateCatalog(listToDisplay)
-            }
             Column() {
                 Button(onClick = { navigateToEditMenu(null) }) {
                     Text(text = "Add Menu")
                 }
                 Catalog(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    itemsList = listToDisplay,
+                    itemsList = catalogState.catalog,
                     editMenu = { navigateToEditMenu(it) },
                     hideMenu = hideMenu,
                     unhideMenu = unhideMenu,
@@ -109,6 +91,8 @@ private fun displayCatalog(
                     editCollection = editCollection
                 )
             }
+
         }
     }
+
 }
