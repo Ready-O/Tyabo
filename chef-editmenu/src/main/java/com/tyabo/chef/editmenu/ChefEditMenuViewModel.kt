@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
 import com.tyabo.data.Menu
 import com.tyabo.data.NumberPersons
+import com.tyabo.repository.interfaces.ChefCatalogRepository
+import com.tyabo.repository.interfaces.ChefMenuRepository
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class ChefEditMenuViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val userRepository: UserRepository,
-    private val chefRepository: ChefRepository
+    private val catalogRepository: ChefCatalogRepository,
+    private val menuRepository: ChefMenuRepository
 ) : ViewModel(){
 
     private val userId = userRepository.getUserId()
@@ -43,13 +46,12 @@ class ChefEditMenuViewModel @Inject constructor(
 
     val editMenuState = if (menuId != null) {
         combine(
-            chefRepository.getMenus(chefId = userId, menusIds = listOf(menuId)),
+            menuRepository.getMenus(userId = userId, menusIds = listOf(menuId)),
             _editMenuState
         ) { result, actualState ->
-            when (result){
-                is UiResult.Success -> {
+                if (result.isSuccess) {
                     if (actualState is EditMenuViewState.Loading){
-                        val menu = result.data.first { it.id == menuId }
+                        val menu = result.getOrThrow().first { it.id == menuId }
                         _editMenuState.value = EditMenuViewState.Edit(
                             name = menu.name,
                             numberPersons = menu.numberPersons,
@@ -61,7 +63,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
                         val url = menu.menuVideoUrl
                         if (url != null){
-                            chefRepository.getVideo(url).onSuccess {
+                            menuRepository.getVideo(url).onSuccess {
                                 _videoState.value = YoutubeVideoState.Video(
                                     title = it.title,
                                     thumbnailUrl = it.thumbnailUrl,
@@ -81,8 +83,7 @@ class ChefEditMenuViewModel @Inject constructor(
                         actualState
                     }
                 }
-                else -> EditMenuViewState.Loading
-            }
+                else EditMenuViewState.Loading
         }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -150,7 +151,7 @@ class ChefEditMenuViewModel @Inject constructor(
     fun exportVideoUrl(){
         viewModelScope.launch {
             val state = videoState.value as YoutubeVideoState.ExportUrl
-            chefRepository.getVideo(state.url).onSuccess {
+            menuRepository.getVideo(state.url).onSuccess {
                 _videoState.value = YoutubeVideoState.Video(
                     title = it.title,
                     thumbnailUrl = it.thumbnailUrl,
@@ -176,10 +177,18 @@ class ChefEditMenuViewModel @Inject constructor(
                 menuVideoUrl = editState.menuVideoUrl,
                 isHidden = false
             )
-            chefRepository.editMenu(
-                menu = menu,
-                userId = userId
-            )
+            if (menuId == null){
+                catalogRepository.addMenu(
+                    menu = menu,
+                    userId = userId
+                )
+            }
+            else{
+                menuRepository.editMenu(
+                    menu = menu,
+                    userId = userId
+                )
+            }
             navigateUp()
         }
     }

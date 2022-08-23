@@ -32,6 +32,21 @@ interface RepositoryModule {
     ): ChefRepository
 
     @Binds
+    fun bindsChefCatalogRepository(
+        chefCatalogRepository: ChefCatalogRepositoryImpl
+    ): ChefCatalogRepository
+
+    @Binds
+    fun bindsChefMenuRepository(
+        chefMenuRepository: ChefMenuRepositoryImpl
+    ): ChefMenuRepository
+
+    @Binds
+    fun bindsChefCollectionRepository(
+        chefCollectionRepository: ChefCollectionRepositoryImpl
+    ): ChefCollectionRepository
+
+    @Binds
     fun bindsRestaurantRepository(
         restaurantRepository: RestaurantRepositoryImpl
     ): RestaurantRepository

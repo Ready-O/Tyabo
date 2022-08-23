@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
 import com.tyabo.data.*
+import com.tyabo.repository.interfaces.ChefCatalogRepository
 import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,53 +15,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ChefCatalogViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val chefRepository: ChefRepository
+    private val chefRepository: ChefCatalogRepository
 ): ViewModel() {
 
     private val userId = userRepository.getUserId()
 
     fun fetchOrderFirstTime(){
         viewModelScope.launch {
-            chefRepository.updateStateCatalogOrder(userId)
+            chefRepository.updateStateCatalog(userId)
         }
     }
 
-    val fetchedCatalog: StateFlow<Unit> = chefRepository.catalogOrder.flatMapConcat { order ->
-        val menusIds = mutableListOf<String>()
-        val collectionsIds = mutableListOf<String>()
-        order.forEach {
-            if (it.catalogItemType == CatalogItemType.MENU){
-                menusIds.add(it.id)
+    val fetchedCatalog: StateFlow<Unit> = chefRepository.catalog.map { catalogResult ->
+        when(catalogResult){
+            is UiResult.Success -> {
+                _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(catalog = catalogResult.data)
             }
-            else {
-                collectionsIds.add(it.id)
-            }
-        }
-        combine(
-            chefRepository.getMenus(chefId = userId, menusIds = menusIds),
-            chefRepository.getCollections(chefId = userId, collectionsIds = collectionsIds)
-        ){ menusResult,collectionsResult ->
-            if (menusResult is UiResult.Success && collectionsResult is UiResult.Success){
-                val catalog = mutableListOf<CatalogItem>()
-                menusResult.data.forEach {
-                    catalog.add(it.toMenuItem())
-                }
-                collectionsResult.data.forEach {
-                    catalog.add(it.toCollectionItem())
-                }
-                val sortedCatalog = mutableListOf<CatalogItem>()
-                order.forEach { catalogOrder ->
-                    val item = catalog.find { it.id == catalogOrder.id }
-                    if (item != null) {
-                        sortedCatalog.add(item)
-                    }
-                }
-                _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(catalog = sortedCatalog)
-            }
-            else if (menusResult is UiResult.Failure || collectionsResult is UiResult.Failure){
-                _catalogDisplayState.value = ChefCatalogDisplayViewState.Loading
-            }
-            else {
+            else -> {
                 _catalogDisplayState.value = ChefCatalogDisplayViewState.Loading
             }
         }
@@ -80,16 +51,6 @@ class ChefCatalogViewModel @Inject constructor(
 
     val catalogState = _catalogState.asStateFlow()
 
-    // Editing items does not change the order value, so new items are not fetched
-    // Must change MANUALLY
-    private fun editItemCatalog(newItem: CatalogItem) {
-        val state = catalogDisplayState.value as ChefCatalogDisplayViewState.Catalog
-        val index = state.catalog.indexOfFirst { it.id == newItem.id }
-        val updatedCatalog = state.catalog.toMutableList()
-        updatedCatalog[index] = newItem
-        _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(updatedCatalog)
-    }
-
     fun hideMenu(menu: CatalogItem.MenuItem){
         viewModelScope.launch{
             chefRepository.changeHideMenu(
@@ -97,8 +58,6 @@ class ChefCatalogViewModel @Inject constructor(
                 isHidden = true,
                 userId = userId
             )
-            val newItem = menu.copy(isHidden = true)
-            editItemCatalog(newItem)
         }
     }
 
@@ -109,8 +68,6 @@ class ChefCatalogViewModel @Inject constructor(
                 isHidden = false,
                 userId = userId
             )
-            val newItem = menu.copy(isHidden = false)
-            editItemCatalog(newItem)
         }
     }
 
@@ -120,7 +77,6 @@ class ChefCatalogViewModel @Inject constructor(
                 menuId = menuId,
                 userId = userId
             )
-            //fetchCatalog()
         }
     }
 
@@ -150,7 +106,6 @@ class ChefCatalogViewModel @Inject constructor(
                 collectionName = collection.name,
                 userId = userId
             )
-            editItemCatalog(collection)
         }
     }
 }

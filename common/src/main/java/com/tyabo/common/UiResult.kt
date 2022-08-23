@@ -28,3 +28,10 @@ fun <T> Result<T>.asUiResult(): UiResult<T> {
     }
     return UiResult.Loading
 }
+
+inline fun <R, T> Result<T>.flatMap(transform: (T) -> Result<R>): Result<R> {
+    return fold(
+        onSuccess = { transform(it) },
+        onFailure = { Result.failure(it) }
+    )
+}
