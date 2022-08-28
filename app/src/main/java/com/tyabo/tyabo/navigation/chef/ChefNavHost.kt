@@ -5,10 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.tyabo.tyabo.navigation.chef.screens.ChefEditMenuDestination
-import com.tyabo.tyabo.navigation.chef.screens.ChefCatalogDestination
-import com.tyabo.tyabo.navigation.chef.screens.chefEditMenuComposable
-import com.tyabo.tyabo.navigation.chef.screens.chefCatalogComposable
+import com.tyabo.tyabo.navigation.chef.screens.*
 
 @Composable
 fun ChefNavHost(
@@ -21,9 +18,15 @@ fun ChefNavHost(
         startDestination = startDestination,
         modifier = modifier,
     ) {
-        chefCatalogComposable(navigateToEditMenu = {
-            navController.navigate("${ChefEditMenuDestination.route}?menuId=$it")
-        })
-        chefEditMenuComposable(navigateUp = navController::navigateUp)
+        ChefCatalogComposable(
+            navigateToEditMenu = {
+                navController.navigate("${ChefEditMenuDestination.route}?menuId=$it")
+            },
+            navigateToReorderCatalog = {
+                navController.navigate("${ChefReorderDestination.route}/$it")
+            }
+        )
+        ChefEditMenuComposable(navigateUp = navController::navigateUp)
+        ChefReorderComposable(navigateUp = navController::navigateUp)
     }
 }

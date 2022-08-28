@@ -3,7 +3,7 @@ package com.tyabo.chef.editmenu
 import com.tyabo.data.NumberPersons
 import kotlinx.coroutines.flow.StateFlow
 
-interface EditMenuViewState {
+sealed interface EditMenuViewState {
 
     object Loading: EditMenuViewState
 

@@ -17,9 +17,9 @@ import com.tyabo.chef.catalog.components.Catalog
 
 @Composable
 fun ChefCatalogScreen(
-    modifier: Modifier = Modifier,
     viewModel: ChefCatalogViewModel = hiltViewModel(),
-    navigateToEditMenu: (String?) -> Unit
+    navigateToEditMenu: (String?) -> Unit,
+    navigateToReorderCatalog: (String) -> Unit
 ) {
 
     LaunchedEffect(Unit){
@@ -35,6 +35,7 @@ fun ChefCatalogScreen(
             displayCatalog(
                 catalogState = displayState,
                 navigateToEditMenu = navigateToEditMenu,
+                reorderCatalog = navigateToReorderCatalog,
                 hideMenu = viewModel::hideMenu,
                 unhideMenu = viewModel::unhideMenu,
                 deleteMenu = viewModel::deleteMenu,
@@ -51,6 +52,7 @@ fun ChefCatalogScreen(
                 displayCatalog(
                     catalogState = displayState,
                     navigateToEditMenu = navigateToEditMenu,
+                    reorderCatalog = navigateToReorderCatalog,
                     hideMenu = viewModel::hideMenu,
                     unhideMenu = viewModel::unhideMenu,
                     deleteMenu = viewModel::deleteMenu,
@@ -65,6 +67,7 @@ fun ChefCatalogScreen(
 private fun displayCatalog(
     catalogState: ChefCatalogDisplayViewState,
     navigateToEditMenu: (String?) -> Unit,
+    reorderCatalog: (String) -> Unit,
     hideMenu: (CatalogItem.MenuItem) -> Unit,
     unhideMenu: (CatalogItem.MenuItem) -> Unit,
     deleteMenu: (String) -> Unit,
@@ -85,6 +88,7 @@ private fun displayCatalog(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     itemsList = catalogState.catalog,
                     editMenu = { navigateToEditMenu(it) },
+                    moveMenu = reorderCatalog,
                     hideMenu = hideMenu,
                     unhideMenu = unhideMenu,
                     deleteMenu = deleteMenu,

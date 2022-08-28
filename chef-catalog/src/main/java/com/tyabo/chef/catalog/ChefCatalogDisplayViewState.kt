@@ -5,7 +5,7 @@ import com.tyabo.data.CatalogOrder
 import com.tyabo.data.Collection
 import com.tyabo.data.Menu
 
-interface ChefCatalogDisplayViewState {
+sealed interface ChefCatalogDisplayViewState {
 
     object Loading: ChefCatalogDisplayViewState
 

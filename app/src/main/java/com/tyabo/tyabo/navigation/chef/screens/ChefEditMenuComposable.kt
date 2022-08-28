@@ -11,7 +11,7 @@ object ChefEditMenuDestination : ChefDestination {
     override val route = "chef_edit_menu_route"
 }
 
-fun NavGraphBuilder.chefEditMenuComposable(navigateUp: () -> Unit) = composable(
+fun NavGraphBuilder.ChefEditMenuComposable(navigateUp: () -> Unit) = composable(
     route = "${ChefEditMenuDestination.route}?menuId={menuId}",
     arguments = listOf(navArgument("menuId") {
         nullable = true

@@ -20,6 +20,7 @@ interface ChefCatalogRepository {
     // Catalog
     val catalog: StateFlow<UiResult<List<CatalogItem>>>
     suspend fun updateStateCatalog(userId: String)
+    suspend fun editCatalogOrder(userId: String, newCatalog: List<CatalogItem>)
 
 
 }

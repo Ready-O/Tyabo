@@ -1,6 +1,6 @@
 package com.tyabo.chef.editmenu
 
-interface YoutubeVideoState {
+sealed interface YoutubeVideoState {
 
     object Loading: YoutubeVideoState
 

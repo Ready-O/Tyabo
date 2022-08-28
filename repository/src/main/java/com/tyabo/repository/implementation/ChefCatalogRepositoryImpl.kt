@@ -153,6 +153,20 @@ class ChefCatalogRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun editCatalogOrder(userId: String, newCatalog: List<CatalogItem>) {
+        val newOrder = mutableListOf<CatalogOrder>()
+        newCatalog.forEach {
+            newOrder.add(it.toCatalogOrder())
+        }
+        chefCache.getChef(userId).onSuccess { chef ->
+            updateCatalogOrder(
+                catalogOrderId = chef.catalogOrderId,
+                catalogOrder = newOrder,
+                userId = chef.id
+            )
+        }
+    }
+
     private suspend fun addNewItemOrder(
         userId: String,
         itemId: String,

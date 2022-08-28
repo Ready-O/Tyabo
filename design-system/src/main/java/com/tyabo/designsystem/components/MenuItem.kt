@@ -24,19 +24,20 @@ fun MenuItem(
             Text(
                 modifier = Modifier,
                 text = menuItem.name,
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
             )
             Text(
                 modifier = Modifier,
                 text = menuItem.price,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Light
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Normal
             )
             if (menuItem.description.isNotEmpty()){
                 Text(
                     modifier = Modifier,
                     text = menuItem.description,
-                    color = Color.DarkGray,
+                    color = Color.Gray,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Light
                 )
