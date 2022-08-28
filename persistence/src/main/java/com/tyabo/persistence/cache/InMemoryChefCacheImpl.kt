@@ -48,6 +48,11 @@ class InMemoryChefCacheImpl @Inject constructor(
         chefMap[collection.id] = collection
     }
 
+    override fun deleteCollection(chefId: String, collectionId: String) {
+        val chefMap = collectionMap[chefId]
+        chefMap?.remove(collectionId)
+    }
+
     override fun getCollections(chefId: String): Result<List<Collection>> {
         val collectionMap = collectionMap[chefId]!!
         val collections = collectionMap.values.toList()

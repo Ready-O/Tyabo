@@ -108,4 +108,13 @@ class ChefCatalogViewModel @Inject constructor(
             )
         }
     }
+
+    fun deleteCollection(collectionId: String){
+        viewModelScope.launch{
+            chefRepository.deleteCollection(
+                collectionId = collectionId,
+                userId = userId
+            )
+        }
+    }
 }

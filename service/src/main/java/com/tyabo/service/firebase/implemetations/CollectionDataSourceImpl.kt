@@ -4,6 +4,7 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.tyabo.data.Collection
 import com.tyabo.data.UserType
+import com.tyabo.service.firebase.di.CollectionReferences
 import com.tyabo.service.firebase.di.CollectionReferences.CHEFS
 import com.tyabo.service.firebase.di.CollectionReferences.COLLECTIONS
 import com.tyabo.service.firebase.di.CollectionReferences.RESTAURANTS
@@ -61,6 +62,25 @@ class CollectionDataSourceImpl @Inject constructor(
         }
         catch (e: Exception){
             return Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteCollection(
+        collectionId: String,
+        userId: String,
+        userType: UserType
+    ): Result<Unit> {
+        return try {
+            val collectionRef: CollectionReference = when (userType){
+                UserType.Chef -> firestore.collection("$CHEFS/$userId/${CollectionReferences.COLLECTIONS}")
+                UserType.Restaurant -> firestore.collection("$RESTAURANTS/$userId/${CollectionReferences.COLLECTIONS}")
+                UserType.Client -> return Result.failure<Unit>(Exception())
+            }
+            collectionRef.document(collectionId).delete().await()
+            Result.success(Unit)
+        }
+        catch (e: Exception){
+            Result.failure(e)
         }
     }
 

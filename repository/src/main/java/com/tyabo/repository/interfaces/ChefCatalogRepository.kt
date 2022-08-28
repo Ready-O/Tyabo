@@ -16,6 +16,7 @@ interface ChefCatalogRepository {
     // Collections
     suspend fun addCollection(collectionName: String, userId: String)
     suspend fun editCollection(collectionId: String, collectionName: String, userId: String)
+    suspend fun deleteCollection(collectionId: String, userId: String)
 
     // Catalog
     val catalog: StateFlow<UiResult<List<CatalogItem>>>

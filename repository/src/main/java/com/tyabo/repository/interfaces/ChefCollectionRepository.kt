@@ -8,6 +8,7 @@ interface ChefCollectionRepository {
 
     suspend fun addCollection(collectionName: String, userId: String): Result<String>
     suspend fun editCollection(collectionId: String, collectionName: String, userId: String)
+    suspend fun deleteCollection(collectionId: String, userId: String): Result<Unit>
     fun getCollections(userId: String, collectionsIds: List<String>): Flow<Result<List<Collection>>>
 
 }

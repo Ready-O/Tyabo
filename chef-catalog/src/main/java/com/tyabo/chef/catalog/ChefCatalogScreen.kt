@@ -40,7 +40,8 @@ fun ChefCatalogScreen(
                 unhideMenu = viewModel::unhideMenu,
                 deleteMenu = viewModel::deleteMenu,
                 editCollection = viewModel::editCollection,
-                moveCollection = navigateToReorderCatalog
+                moveCollection = navigateToReorderCatalog,
+                deleteCollection = viewModel::deleteCollection
             )
         }
         is ChefCatalogViewState.AddCollection -> {
@@ -58,7 +59,8 @@ fun ChefCatalogScreen(
                     unhideMenu = viewModel::unhideMenu,
                     deleteMenu = viewModel::deleteMenu,
                     editCollection = viewModel::editCollection,
-                    moveCollection = navigateToReorderCatalog
+                    moveCollection = navigateToReorderCatalog,
+                    deleteCollection = viewModel::deleteCollection
                 )
             }
         }
@@ -74,7 +76,8 @@ private fun displayCatalog(
     unhideMenu: (CatalogItem.MenuItem) -> Unit,
     deleteMenu: (String) -> Unit,
     editCollection: (CatalogItem.CollectionItem) -> Unit,
-    moveCollection: (String) -> Unit
+    moveCollection: (String) -> Unit,
+    deleteCollection: (String) -> Unit
 ) {
     when (catalogState) {
         is ChefCatalogDisplayViewState.Loading -> {
@@ -96,7 +99,8 @@ private fun displayCatalog(
                     unhideMenu = unhideMenu,
                     deleteMenu = deleteMenu,
                     editCollection = editCollection,
-                    moveCollection = moveCollection
+                    moveCollection = moveCollection,
+                    deleteCollection = deleteCollection
                 )
             }
 

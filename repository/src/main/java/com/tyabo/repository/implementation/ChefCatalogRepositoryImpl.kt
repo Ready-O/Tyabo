@@ -82,6 +82,29 @@ class ChefCatalogRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Delete the collection and the menus that follow it
+     * We delete the menus then the collection
+     */
+    override suspend fun deleteCollection(collectionId: String, userId: String) {
+        withContext(ioDispatcher){
+            val order = chefCache.getOrder(userId)
+            val collectionIndex = order.indexOfFirst { it.id == collectionId }
+            order.extractMenusOfCollection(collectionIndex).onSuccess { menusList ->
+                menusList.forEach {
+                    deleteMenu(menuId = it.id, userId = userId)
+                }
+                collectionRepository.deleteCollection(collectionId = collectionId, userId = userId)
+                    .onSuccess {
+                        deleteItemOrder(
+                            userId = userId,
+                            itemId = collectionId
+                        )
+                    }
+            }
+        }
+    }
+
     // Catalog
 
     private val _catalog = MutableStateFlow<UiResult<List<CatalogItem>>>(UiResult.Loading)

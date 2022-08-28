@@ -28,7 +28,8 @@ fun Catalog(
     unhideMenu: (CatalogItem.MenuItem) -> Unit = {},
     deleteMenu: (String) -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {},
-    moveCollection: (String) -> Unit = {}
+    moveCollection: (String) -> Unit = {},
+    deleteCollection: (String) -> Unit = {},
     ){
         val itemToExpand: MutableState<String?> = remember { mutableStateOf(null) }
         val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
@@ -62,7 +63,7 @@ fun Catalog(
                                 isExpanded = itemToExpand.value == item.id,
                                 editCollection = { collectionToEdit.value = item.id },
                                 moveCollection = { moveCollection(item.id) },
-                                deleteCollection = {},
+                                deleteCollection = { deleteCollection(item.id) },
                                 onClick = { switchExpand(itemToExpand, item) }
                             )
                             item.id -> EditCollectionItem(
@@ -81,7 +82,7 @@ fun Catalog(
                                 isExpanded = false,
                                 editCollection = {},
                                 moveCollection = { moveCollection(item.id) },
-                                deleteCollection = {},
+                                deleteCollection = { deleteCollection(item.id) },
                                 onClick = {}
                             )
                         }

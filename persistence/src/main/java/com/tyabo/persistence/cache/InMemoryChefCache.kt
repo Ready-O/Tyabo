@@ -13,6 +13,7 @@ interface InMemoryChefCache {
     fun deleteMenu(chefId: String, menuId: String)
     fun getMenus(chefId: String): Result<List<Menu>>
     fun updateCollection(chefId: String, collection: Collection)
+    fun deleteCollection(chefId: String, collectionId: String)
     fun getCollections(chefId: String): Result<List<Collection>>
     fun updateOrder(chefId: String, order: List<CatalogOrder>)
     fun getOrder(chefId: String): List<CatalogOrder>

@@ -49,6 +49,20 @@ class ChefCollectionRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun deleteCollection(collectionId: String, userId: String): Result<Unit> {
+        return collectionDataSource.deleteCollection(
+            collectionId = collectionId,
+            userId = userId,
+            userType = UserType.Chef
+        ).flatMap {
+            chefCache.deleteCollection(
+                chefId = userId,
+                collectionId = collectionId
+            )
+            Result.success(Unit)
+        }
+    }
+
     override fun getCollections(
         userId: String,
         collectionsIds: List<String>
