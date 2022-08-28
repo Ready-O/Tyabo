@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface ChefCatalogRepository {
 
     // Menus
-    suspend fun addMenu(menu: Menu, userId: String)
+    suspend fun addMenu(menu: Menu, userId: String, posIndex: Int)
     suspend fun changeHideMenu(menuId: String, isHidden: Boolean, userId: String)
     suspend fun deleteMenu(menuId: String, userId: String)
 

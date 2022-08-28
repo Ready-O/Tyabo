@@ -12,11 +12,16 @@ object ChefEditMenuDestination : ChefDestination {
 }
 
 fun NavGraphBuilder.ChefEditMenuComposable(navigateUp: () -> Unit) = composable(
-    route = "${ChefEditMenuDestination.route}?menuId={menuId}",
-    arguments = listOf(navArgument("menuId") {
-        nullable = true
-        type = NavType.StringType
-    }
+    route = "${ChefEditMenuDestination.route}?menuId={menuId}&posIndex={posIndex}",
+    arguments = listOf(
+        navArgument("menuId") {
+            nullable = true
+            type = NavType.StringType
+        },
+        navArgument("posIndex") {
+            nullable = false
+            type = NavType.IntType
+        }
     )
 ){
     ChefEditMenuScreen(navigateUp = navigateUp)

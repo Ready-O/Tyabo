@@ -3,12 +3,10 @@ package com.tyabo.chef.editmenu
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tyabo.common.UiResult
 import com.tyabo.data.Menu
 import com.tyabo.data.NumberPersons
 import com.tyabo.repository.interfaces.ChefCatalogRepository
 import com.tyabo.repository.interfaces.ChefMenuRepository
-import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -37,6 +35,8 @@ class ChefEditMenuViewModel @Inject constructor(
             arg
         }
     }
+
+    private val positionIndex: Int? = savedStateHandle["posIndex"]
 
     private val _videoState = MutableStateFlow<YoutubeVideoState>(YoutubeVideoState.Loading)
 
@@ -180,7 +180,8 @@ class ChefEditMenuViewModel @Inject constructor(
             if (menuId == null){
                 catalogRepository.addMenu(
                     menu = menu,
-                    userId = userId
+                    userId = userId,
+                    posIndex = positionIndex!!
                 )
             }
             else{

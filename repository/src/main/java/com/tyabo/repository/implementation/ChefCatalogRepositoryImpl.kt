@@ -21,14 +21,15 @@ class ChefCatalogRepositoryImpl @Inject constructor(
 ) : ChefCatalogRepository {
 
     // Menus
-    override suspend fun addMenu(menu: Menu, userId: String) {
+    override suspend fun addMenu(menu: Menu, userId: String, posIndex: Int) {
         withContext(ioDispatcher){
             menuRepository.addMenu(menu = menu, userId = userId)
                 .onSuccess{
                     addNewItemOrder(
                         userId = userId,
                         itemId = menu.id,
-                        itemType = CatalogItemType.MENU
+                        itemType = CatalogItemType.MENU,
+                        index = posIndex
                     )
                 }
         }
@@ -61,7 +62,8 @@ class ChefCatalogRepositoryImpl @Inject constructor(
                     addNewItemOrder(
                         userId = userId,
                         itemId = collectionId,
-                        itemType = CatalogItemType.COLLECTION
+                        itemType = CatalogItemType.COLLECTION,
+                        index = 0
                     )
                 }
         }
@@ -193,12 +195,13 @@ class ChefCatalogRepositoryImpl @Inject constructor(
     private suspend fun addNewItemOrder(
         userId: String,
         itemId: String,
-        itemType: CatalogItemType
+        itemType: CatalogItemType,
+        index: Int
     ) {
         chefCache.getChef(userId).onSuccess { chef ->
             val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
             updatedOrder.add(
-                index = 0,
+                index = index,
                 element = CatalogOrder(
                     id = itemId,
                     catalogItemType = itemType

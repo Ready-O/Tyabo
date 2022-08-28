@@ -25,7 +25,6 @@ import com.tyabo.data.NumberPersons
 
 @Composable
 fun ChefEditMenuScreen(
-    modifier: Modifier = Modifier,
     navigateUp: () -> Unit,
     viewModel: ChefEditMenuViewModel = hiltViewModel(),
 ){

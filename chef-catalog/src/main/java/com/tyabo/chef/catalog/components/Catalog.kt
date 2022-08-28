@@ -21,7 +21,7 @@ import com.tyabo.designsystem.components.TextButton
 fun Catalog(
     modifier: Modifier = Modifier,
     itemsList: List<CatalogItem>,
-    addMenu: () -> Unit = {},
+    addMenu: (Int) -> Unit = {},
     editMenu: (String) -> Unit = {},
     moveMenu: (String) -> Unit = {},
     hideMenu: (CatalogItem.MenuItem) -> Unit = {},
@@ -54,7 +54,11 @@ fun Catalog(
                             }
                         )
                         Divider(color = MaterialTheme.colorScheme.surfaceVariant)
-                        AddMenu(index, itemsList)
+                        AddMenu(
+                            index = index,
+                            itemsList = itemsList,
+                            onClick = { addMenu(index+1) }
+                        )
                     }
                     is CatalogItem.CollectionItem -> {
                         when(collectionToEdit.value){
@@ -86,7 +90,11 @@ fun Catalog(
                                 onClick = {}
                             )
                         }
-                        AddMenu(index, itemsList)
+                        AddMenu(
+                            index = index,
+                            itemsList = itemsList,
+                            onClick = { addMenu(index+1) }
+                        )
                     }
                 }
             }
@@ -96,25 +104,29 @@ fun Catalog(
 @Composable
 private fun AddMenu(
     index: Int,
-    itemsList: List<CatalogItem>
+    itemsList: List<CatalogItem>,
+    onClick: () -> Unit
 ) {
     if (index == itemsList.size - 1 || itemsList[index + 1] is CatalogItem.CollectionItem) {
-        Row(
-            modifier = Modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            TextButton(
-                leadingIcon = Icons.Filled.Add,
-                onClick = {}
+        Column() {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 12.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = "Add Menu",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
+                TextButton(
+                    leadingIcon = Icons.Filled.Add,
+                    onClick = onClick
+                ) {
+                    Text(
+                        text = "Add Menu",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
+            Spacer(modifier = Modifier.size(8.dp))
         }
     }
 }

@@ -39,7 +39,7 @@ fun ChefCollectionItem(
         }
         Divider(
             modifier = Modifier.padding(top = 8.dp),
-            thickness = 3.dp
+            thickness = 2.dp
         )
     }
 }

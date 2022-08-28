@@ -19,8 +19,8 @@ fun ChefNavHost(
         modifier = modifier,
     ) {
         ChefCatalogComposable(
-            navigateToEditMenu = {
-                navController.navigate("${ChefEditMenuDestination.route}?menuId=$it")
+            navigateToEditMenu = { menuId, posIndex ->
+                navController.navigate("${ChefEditMenuDestination.route}?menuId=$menuId&posIndex=${posIndex?: 0}")
             },
             navigateToReorderCatalog = {
                 navController.navigate("${ChefReorderDestination.route}/$it")

@@ -18,7 +18,7 @@ import com.tyabo.chef.catalog.components.Catalog
 @Composable
 fun ChefCatalogScreen(
     viewModel: ChefCatalogViewModel = hiltViewModel(),
-    navigateToEditMenu: (String?) -> Unit,
+    navigateToEditMenu: (String?,Int?) -> Unit,
     navigateToReorderCatalog: (String) -> Unit
 ) {
 
@@ -70,7 +70,7 @@ fun ChefCatalogScreen(
 @Composable
 private fun displayCatalog(
     catalogState: ChefCatalogDisplayViewState,
-    navigateToEditMenu: (String?) -> Unit,
+    navigateToEditMenu: (String?,Int?) -> Unit,
     reorderCatalog: (String) -> Unit,
     hideMenu: (CatalogItem.MenuItem) -> Unit,
     unhideMenu: (CatalogItem.MenuItem) -> Unit,
@@ -80,30 +80,21 @@ private fun displayCatalog(
     deleteCollection: (String) -> Unit
 ) {
     when (catalogState) {
-        is ChefCatalogDisplayViewState.Loading -> {
-            Button(onClick = { navigateToEditMenu(null) }) {
-                Text(text = "Add Menu")
-            }
-        }
+        is ChefCatalogDisplayViewState.Loading -> {}
         is ChefCatalogDisplayViewState.Catalog -> {
-            Column() {
-                Button(onClick = { navigateToEditMenu(null) }) {
-                    Text(text = "Add Menu")
-                }
-                Catalog(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    itemsList = catalogState.catalog,
-                    editMenu = { navigateToEditMenu(it) },
-                    moveMenu = reorderCatalog,
-                    hideMenu = hideMenu,
-                    unhideMenu = unhideMenu,
-                    deleteMenu = deleteMenu,
-                    editCollection = editCollection,
-                    moveCollection = moveCollection,
-                    deleteCollection = deleteCollection
-                )
-            }
-
+            Catalog(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                itemsList = catalogState.catalog,
+                addMenu = { navigateToEditMenu(null,it) },
+                editMenu = { navigateToEditMenu(it,null) },
+                moveMenu = reorderCatalog,
+                hideMenu = hideMenu,
+                unhideMenu = unhideMenu,
+                deleteMenu = deleteMenu,
+                editCollection = editCollection,
+                moveCollection = moveCollection,
+                deleteCollection = deleteCollection
+            )
         }
     }
 
