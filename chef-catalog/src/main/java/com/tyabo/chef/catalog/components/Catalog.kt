@@ -27,7 +27,8 @@ fun Catalog(
     hideMenu: (CatalogItem.MenuItem) -> Unit = {},
     unhideMenu: (CatalogItem.MenuItem) -> Unit = {},
     deleteMenu: (String) -> Unit = {},
-    editCollection: (CatalogItem.CollectionItem) -> Unit = {}
+    editCollection: (CatalogItem.CollectionItem) -> Unit = {},
+    moveCollection: (String) -> Unit = {}
     ){
         val itemToExpand: MutableState<String?> = remember { mutableStateOf(null) }
         val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
@@ -52,25 +53,7 @@ fun Catalog(
                             }
                         )
                         Divider(color = MaterialTheme.colorScheme.surfaceVariant)
-                        if (itemsList[index+1] is CatalogItem.CollectionItem){
-                            Row(
-                                modifier = Modifier
-                                    .padding(vertical = 12.dp)
-                                    .fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                TextButton(
-                                    leadingIcon = Icons.Filled.Add,
-                                    onClick = {}
-                                ){
-                                    Text(
-                                        text = "Add Menu",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
-                            }
-                        }
+                        AddMenu(index, itemsList)
                     }
                     is CatalogItem.CollectionItem -> {
                         when(collectionToEdit.value){
@@ -78,6 +61,7 @@ fun Catalog(
                                 collectionName = item.name,
                                 isExpanded = itemToExpand.value == item.id,
                                 editCollection = { collectionToEdit.value = item.id },
+                                moveCollection = { moveCollection(item.id) },
                                 deleteCollection = {},
                                 onClick = { switchExpand(itemToExpand, item) }
                             )
@@ -96,14 +80,42 @@ fun Catalog(
                                 collectionName = item.name,
                                 isExpanded = false,
                                 editCollection = {},
+                                moveCollection = { moveCollection(item.id) },
                                 deleteCollection = {},
                                 onClick = {}
                             )
                         }
+                        AddMenu(index, itemsList)
                     }
                 }
             }
         }
+}
+
+@Composable
+private fun AddMenu(
+    index: Int,
+    itemsList: List<CatalogItem>
+) {
+    if (index == itemsList.size - 1 || itemsList[index + 1] is CatalogItem.CollectionItem) {
+        Row(
+            modifier = Modifier
+                .padding(vertical = 12.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            TextButton(
+                leadingIcon = Icons.Filled.Add,
+                onClick = {}
+            ) {
+                Text(
+                    text = "Add Menu",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+        }
+    }
 }
 
 private fun switchExpand(

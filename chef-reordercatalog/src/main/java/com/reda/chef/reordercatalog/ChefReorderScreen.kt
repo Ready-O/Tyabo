@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.reda.chef.reordercatalog.components.ReorderCollections
 import com.reda.chef.reordercatalog.components.ReorderMenus
 
 @Composable
@@ -25,7 +26,15 @@ fun ChefReorderScreen(
                 confirmNewOrder = { viewModel.confirmNewMenus(navigateUp) }
             )
         }
-        is ChefReorderViewState.ReorderCollections -> {}
+        is ChefReorderViewState.ReorderCollections -> {
+            val collectionsState = state as ChefReorderViewState.ReorderCollections
+            ReorderCollections(
+                collections = collectionsState.collections,
+                moveUp = viewModel::moveUpCollection,
+                moveDown = viewModel::moveDownCollection,
+                confirmNewOrder = { viewModel.confirmNewCollections(navigateUp) }
+            )
+        }
         is ChefReorderViewState.Error -> {}
     }
 }

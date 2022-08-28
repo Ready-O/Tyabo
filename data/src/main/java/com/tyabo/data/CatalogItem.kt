@@ -34,3 +34,29 @@ fun Collection.toCollectionItem() = CatalogItem.CollectionItem(
     id = this.id,
     name = this.name,
 )
+
+/**
+ * Extract menus that follow the collection with collectionIndex in the catalog
+ */
+fun List<CatalogItem>.extractMenusOfCollection(collectionIndex: Int): Result<List<CatalogItem.MenuItem>>{
+    if (collectionIndex == this.size - 1){
+        return Result.success(listOf())
+    } else{
+        var index = collectionIndex + 1
+        while (this[index] !is CatalogItem.CollectionItem && index != (this.size - 1)){
+            index ++
+        }
+        if ( this[index] is CatalogItem.MenuItem && index == (this.size - 1)){ index ++ }
+        val selectedList = this.subList((collectionIndex + 1),index)
+        val menuList: MutableList<CatalogItem.MenuItem> = mutableListOf()
+        selectedList.forEach{
+            if (it is CatalogItem.MenuItem){
+                menuList.add(it)
+            }
+            else {
+                return Result.failure(Exception())
+            }
+        }
+        return Result.success(menuList)
+    }
+}

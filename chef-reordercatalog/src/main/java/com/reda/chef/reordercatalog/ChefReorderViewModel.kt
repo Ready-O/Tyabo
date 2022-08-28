@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
 import com.tyabo.data.CatalogItem
+import com.tyabo.data.extractMenusOfCollection
 import com.tyabo.repository.interfaces.ChefCatalogRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,36 +57,23 @@ class ChefReorderViewModel @Inject constructor(
         val index = this.indexOfFirst { it.id == catalogItemId }
         return when (catalogItem){
             is CatalogItem.MenuItem -> this.reorderMenusSetup(index)
-            else -> ChefReorderViewState.Error
+            else -> this.reorderCollectionsSetup()
         }
     }
 
+    // Reorder Menus
+
     private fun List<CatalogItem>.reorderMenusSetup(menuIndex: Int): ChefReorderViewState{
-        var indexPreCollection = menuIndex
-        while (this[indexPreCollection] !is CatalogItem.CollectionItem){
-            indexPreCollection --
+        var indexParentCollection = menuIndex
+        while (this[indexParentCollection] !is CatalogItem.CollectionItem){
+            indexParentCollection --
         }
-        val parentCollection = this[indexPreCollection]
-        var indexPostCollection = menuIndex
-        while (this[indexPostCollection] !is CatalogItem.CollectionItem && indexPostCollection != (this.size - 1)){
-            indexPostCollection ++
-        }
-        if (indexPostCollection != (this.size - 1)){ indexPostCollection -- }
-        val selectedList = this.subList((indexPreCollection + 1),indexPostCollection)
-        val menuList: MutableList<CatalogItem.MenuItem> = mutableListOf()
-        var checkMenu = true
-        selectedList.forEach{
-            if (it is CatalogItem.MenuItem){
-                menuList.add(it)
-            }
-            else {
-                checkMenu = false
-            }
-        }
-        return if (parentCollection is CatalogItem.CollectionItem && checkMenu){
+        val parentCollection = this[indexParentCollection]
+        val menusResult = this.extractMenusOfCollection(indexParentCollection)
+        return if (parentCollection is CatalogItem.CollectionItem && menusResult.isSuccess){
             ChefReorderViewState.ReorderMenus(
                 parentCollection = parentCollection,
-                menus = menuList
+                menus = menusResult.getOrThrow()
             )
         }
         else{
@@ -120,6 +108,62 @@ class ChefReorderViewModel @Inject constructor(
             val newOrder = catalogItems.toMutableList()
             for (index in (0 until state.menus.size)){
                 newOrder[indexParentCollection+1+index] = state.menus[index]
+            }
+            chefRepository.editCatalogOrder(
+                userId = userId,
+                newCatalog = newOrder
+            )
+            navigateUp()
+        }
+    }
+
+    // Reorder Collections
+    private fun List<CatalogItem>.reorderCollectionsSetup(): ChefReorderViewState{
+        val collections = mutableListOf<CatalogItem.CollectionItem>()
+        this.forEach { item ->
+            if(item is CatalogItem.CollectionItem){
+                collections.add(item)
+            }
+        }
+        return ChefReorderViewState.ReorderCollections(collections = collections)
+    }
+
+    fun moveUpCollection(collectionIndex: Int){
+        viewModelScope.launch {
+            val collections = (viewState.value as ChefReorderViewState.ReorderCollections).collections
+            val newCollections = collections.toMutableList()
+            newCollections[collectionIndex-1] = collections[collectionIndex]
+            newCollections[collectionIndex] = collections[collectionIndex-1]
+            _viewState.value = (viewState.value as ChefReorderViewState.ReorderCollections).copy(collections = newCollections)
+
+        }
+    }
+
+    fun moveDownCollection(collectionIndex: Int){
+        viewModelScope.launch {
+            val collections = (viewState.value as ChefReorderViewState.ReorderCollections).collections
+            val newCollections = collections.toMutableList()
+            newCollections[collectionIndex+1] = collections[collectionIndex]
+            newCollections[collectionIndex] = collections[collectionIndex+1]
+            _viewState.value = (viewState.value as ChefReorderViewState.ReorderCollections).copy(collections = newCollections)
+
+        }
+    }
+
+    fun confirmNewCollections(navigateUp: () -> Unit){
+        viewModelScope.launch {
+            val newOrder = mutableListOf<CatalogItem>()
+            val collections = (viewState.value as ChefReorderViewState.ReorderCollections).collections.toMutableList()
+            collections.forEach{ collection ->
+                newOrder.add(collection)
+                val collectionIndex = catalogItems.indexOfFirst { it.id == collection.id }
+                val menusResult = catalogItems.extractMenusOfCollection(collectionIndex)
+                menusResult.onSuccess {
+                    newOrder.addAll(it)
+                }
+                    .onFailure {
+                        return@launch
+                    }
             }
             chefRepository.editCatalogOrder(
                 userId = userId,

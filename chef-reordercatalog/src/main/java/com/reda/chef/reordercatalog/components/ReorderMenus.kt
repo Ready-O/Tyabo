@@ -1,6 +1,5 @@
 package com.reda.chef.reordercatalog.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tyabo.data.CatalogItem
-import com.tyabo.data.Menu
 import com.tyabo.designsystem.components.CollectionItem
 import com.tyabo.designsystem.components.MenuItem
 
@@ -33,24 +31,12 @@ fun ReorderMenus(
             itemsIndexed(menus){index, item ->
                 Spacer(modifier = Modifier.size(8.dp))
                 MenuItem(menuItem = item)
-                Row() {
-                    if (index != 0){
-                        IconButton(onClick = { moveUp(index) }) {
-                            Icon(imageVector = Icons.Filled.KeyboardArrowUp, contentDescription = null)
-                        }
-                    }
-                    if (index != menus.size-1){
-                        IconButton(onClick = { moveDown(index) }) {
-                            Icon(imageVector = Icons.Filled.KeyboardArrowDown, contentDescription = null)
-                        }
-                    }
-                }
-                if (index != menus.size-1){
-                    Divider(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        thickness = 2.dp
-                    )
-                }
+                ReorderOptions(
+                    index = index,
+                    lastIndex = menus.size - 1,
+                    moveUp = moveUp,
+                    moveDown = moveDown
+                )
             }
         }
     }

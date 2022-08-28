@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,6 +19,7 @@ fun ChefCollectionItem(
     collectionName: String,
     isExpanded: Boolean,
     editCollection: () -> Unit,
+    moveCollection: () -> Unit,
     deleteCollection: () -> Unit,
     onClick: () -> Unit
 ){
@@ -31,6 +33,7 @@ fun ChefCollectionItem(
         if (isExpanded){
             CollectionOptions(
                 editCollection = editCollection,
+                moveCollection = moveCollection,
                 deleteCollection = deleteCollection
             )
         }
@@ -45,6 +48,7 @@ fun ChefCollectionItem(
 @Composable
 private fun CollectionOptions(
     editCollection: () -> Unit,
+    moveCollection: () -> Unit,
     deleteCollection: () -> Unit,
 ){
     Row {
@@ -57,6 +61,17 @@ private fun CollectionOptions(
                 )
             },
             label = { Text("Edit") }
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        AssistChip(
+            onClick = moveCollection,
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = null
+                )
+            },
+            label = { Text("Move") }
         )
         Spacer(modifier = Modifier.width(8.dp))
         AssistChip(
