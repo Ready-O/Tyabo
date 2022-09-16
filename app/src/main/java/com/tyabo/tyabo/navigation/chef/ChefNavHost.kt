@@ -22,11 +22,16 @@ fun ChefNavHost(
             navigateToEditMenu = { menuId, posIndex ->
                 navController.navigate("${ChefEditMenuDestination.route}?menuId=$menuId&posIndex=${posIndex?: 0}")
             },
-            navigateToReorderCatalog = {
-                navController.navigate("${ChefReorderDestination.route}/$it")
+            navigateToEditCollection = { collectionId, collectionName, isNew ->
+                navController.navigate(
+                    "${ChefEditCollectionDestination.route}?collectionId=$collectionId&collectionName=${collectionName?: ""}&isNew=$isNew"
+                )
             }
-        )
+        ) {
+            navController.navigate("${ChefReorderDestination.route}/$it")
+        }
         ChefEditMenuComposable(navigateUp = navController::navigateUp)
+        ChefEditCollectionComposable(navigateUp = navController::navigateUp)
         ChefReorderComposable(navigateUp = navController::navigateUp)
     }
 }

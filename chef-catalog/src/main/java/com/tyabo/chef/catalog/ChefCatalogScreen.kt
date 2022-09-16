@@ -1,10 +1,6 @@
 package com.tyabo.chef.catalog
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -19,6 +15,7 @@ import com.tyabo.chef.catalog.components.Catalog
 fun ChefCatalogScreen(
     viewModel: ChefCatalogViewModel = hiltViewModel(),
     navigateToEditMenu: (String?,Int?) -> Unit,
+    navigateToEditCollection: (String?,String?,Boolean) -> Unit,
     navigateToReorderCatalog: (String) -> Unit
 ) {
 
@@ -26,76 +23,27 @@ fun ChefCatalogScreen(
         viewModel.fetchOrderFirstTime()
     }
 
-    val state by viewModel.catalogState.collectAsState()
     viewModel.fetchedCatalog.collectAsState()
-    val displayState by viewModel.catalogDisplayState.collectAsState()
+    val catalogState by viewModel.catalogState.collectAsState()
 
-    when (state){
-        is ChefCatalogViewState.DisplayCatalog -> {
-            displayCatalog(
-                catalogState = displayState,
-                navigateToEditMenu = navigateToEditMenu,
-                reorderCatalog = navigateToReorderCatalog,
+    when (catalogState) {
+        is ChefCatalogViewState.Loading -> {}
+        is ChefCatalogViewState.Catalog -> {
+            val state = catalogState as ChefCatalogViewState.Catalog
+            Catalog(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                itemsList = state.catalog,
+                addMenu = { navigateToEditMenu(null,it) },
+                editMenu = { navigateToEditMenu(it,null) },
+                moveMenu = navigateToReorderCatalog,
                 hideMenu = viewModel::hideMenu,
                 unhideMenu = viewModel::unhideMenu,
                 deleteMenu = viewModel::deleteMenu,
-                editCollection = viewModel::editCollection,
+                addCollection = { navigateToEditCollection(null,null,true) },
+                editCollection = { navigateToEditCollection(it.id,it.name,false) },
                 moveCollection = navigateToReorderCatalog,
                 deleteCollection = viewModel::deleteCollection
             )
         }
-        is ChefCatalogViewState.AddCollection -> {
-            Column() {
-                val collectionState = state as ChefCatalogViewState.AddCollection
-                TextField(value = collectionState.collection, onValueChange = viewModel::onCollectionUpdate)
-                Button(onClick = { viewModel.addNewCollection(collectionState.collection) }) {
-                    Text(text = "Validate Collection")
-                }
-                displayCatalog(
-                    catalogState = displayState,
-                    navigateToEditMenu = navigateToEditMenu,
-                    reorderCatalog = navigateToReorderCatalog,
-                    hideMenu = viewModel::hideMenu,
-                    unhideMenu = viewModel::unhideMenu,
-                    deleteMenu = viewModel::deleteMenu,
-                    editCollection = viewModel::editCollection,
-                    moveCollection = navigateToReorderCatalog,
-                    deleteCollection = viewModel::deleteCollection
-                )
-            }
-        }
     }
-}
-
-@Composable
-private fun displayCatalog(
-    catalogState: ChefCatalogDisplayViewState,
-    navigateToEditMenu: (String?,Int?) -> Unit,
-    reorderCatalog: (String) -> Unit,
-    hideMenu: (CatalogItem.MenuItem) -> Unit,
-    unhideMenu: (CatalogItem.MenuItem) -> Unit,
-    deleteMenu: (String) -> Unit,
-    editCollection: (CatalogItem.CollectionItem) -> Unit,
-    moveCollection: (String) -> Unit,
-    deleteCollection: (String) -> Unit
-) {
-    when (catalogState) {
-        is ChefCatalogDisplayViewState.Loading -> {}
-        is ChefCatalogDisplayViewState.Catalog -> {
-            Catalog(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                itemsList = catalogState.catalog,
-                addMenu = { navigateToEditMenu(null,it) },
-                editMenu = { navigateToEditMenu(it,null) },
-                moveMenu = reorderCatalog,
-                hideMenu = hideMenu,
-                unhideMenu = unhideMenu,
-                deleteMenu = deleteMenu,
-                editCollection = editCollection,
-                moveCollection = moveCollection,
-                deleteCollection = deleteCollection
-            )
-        }
-    }
-
 }

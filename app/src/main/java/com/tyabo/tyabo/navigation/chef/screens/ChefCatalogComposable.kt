@@ -10,13 +10,15 @@ object ChefCatalogDestination : ChefDestination {
 }
 
 fun NavGraphBuilder.ChefCatalogComposable(
-    navigateToEditMenu: (String?,Int?) -> Unit ,
+    navigateToEditMenu: (String?,Int?) -> Unit,
+    navigateToEditCollection: (String?,String?,Boolean) -> Unit,
     navigateToReorderCatalog: (String) -> Unit,
 ) = composable(
     route = ChefCatalogDestination.route
 ){
     ChefCatalogScreen(
         navigateToEditMenu = navigateToEditMenu,
+        navigateToEditCollection = navigateToEditCollection,
         navigateToReorderCatalog = navigateToReorderCatalog
     )
 }

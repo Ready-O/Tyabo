@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="Tyabo.app" target="11" />
       <module name="Tyabo.chef-catalog" target="11" />
+      <module name="Tyabo.chef-editcollection" target="11" />
       <module name="Tyabo.chef-editmenu" target="11" />
       <module name="Tyabo.chef-reordercatalog" target="11" />
       <module name="Tyabo.common" target="11" />

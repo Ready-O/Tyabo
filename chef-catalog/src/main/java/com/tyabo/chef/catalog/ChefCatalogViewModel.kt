@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
 import com.tyabo.data.*
 import com.tyabo.repository.interfaces.ChefCatalogRepository
-import com.tyabo.repository.interfaces.ChefRepository
 import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -29,10 +28,10 @@ class ChefCatalogViewModel @Inject constructor(
     val fetchedCatalog: StateFlow<Unit> = chefRepository.catalog.map { catalogResult ->
         when(catalogResult){
             is UiResult.Success -> {
-                _catalogDisplayState.value = ChefCatalogDisplayViewState.Catalog(catalog = catalogResult.data)
+                _catalogState.value = ChefCatalogViewState.Catalog(catalog = catalogResult.data)
             }
             else -> {
-                _catalogDisplayState.value = ChefCatalogDisplayViewState.Loading
+                _catalogState.value = ChefCatalogViewState.Loading
             }
         }
     }
@@ -42,13 +41,9 @@ class ChefCatalogViewModel @Inject constructor(
             initialValue = Unit
         )
 
-    private val _catalogDisplayState = MutableStateFlow<ChefCatalogDisplayViewState>(
-        ChefCatalogDisplayViewState.Loading
+    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
+        ChefCatalogViewState.Loading
     )
-    val catalogDisplayState = _catalogDisplayState.asStateFlow()
-
-    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(ChefCatalogViewState.DisplayCatalog)
-
     val catalogState = _catalogState.asStateFlow()
 
     fun hideMenu(menu: CatalogItem.MenuItem){
@@ -75,35 +70,6 @@ class ChefCatalogViewModel @Inject constructor(
         viewModelScope.launch{
             chefRepository.deleteMenu(
                 menuId = menuId,
-                userId = userId
-            )
-        }
-    }
-
-    private fun addCollectionState() = catalogState.value as? ChefCatalogViewState.AddCollection ?: ChefCatalogViewState.AddCollection(
-        collection = ""
-    )
-
-    fun onCollectionUpdate(collectionName: String){
-        viewModelScope.launch{
-            _catalogState.value = addCollectionState().copy(collection = collectionName)
-        }
-    }
-
-    fun addNewCollection(collectionName: String){
-        viewModelScope.launch{
-            chefRepository.addCollection(
-                collectionName = collectionName,
-                userId = userId
-            )
-        }
-    }
-
-    fun editCollection(collection: CatalogItem.CollectionItem){
-        viewModelScope.launch{
-            chefRepository.editCollection(
-                collectionId = collection.id,
-                collectionName = collection.name,
                 userId = userId
             )
         }

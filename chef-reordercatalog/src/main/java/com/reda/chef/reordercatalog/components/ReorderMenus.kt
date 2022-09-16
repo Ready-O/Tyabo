@@ -51,7 +51,7 @@ private fun ParentCollection(parentCollection: CatalogItem.CollectionItem) {
         CollectionItem(collectionName = parentCollection.name)
         Divider(
             modifier = Modifier.padding(top = 8.dp),
-            thickness = 3.dp
+            thickness = 2.dp
         )
     }
 }

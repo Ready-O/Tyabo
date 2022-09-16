@@ -1,4 +1,4 @@
-package com.tyabo.designsystem.components
+package com.tyabo.designsystem.components.buttons
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -13,21 +13,25 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TextButton(
-    leadingIcon: ImageVector,
+    modifier: Modifier = Modifier,
+    leadingIcon: ImageVector?,
     onClick: () -> Unit,
     text: @Composable (() -> Unit),
 ){
     TextButton(
+        modifier = modifier,
         onClick = onClick
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ){
-            Icon(
-                imageVector = leadingIcon,
-                contentDescription = null
-            )
-            Spacer(modifier = Modifier.width(8.dp))
+            if (leadingIcon != null){
+                Icon(
+                    imageVector = leadingIcon,
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
             text()
         }
     }

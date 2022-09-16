@@ -63,7 +63,6 @@ class ChefCatalogRepositoryImpl @Inject constructor(
                         userId = userId,
                         itemId = collectionId,
                         itemType = CatalogItemType.COLLECTION,
-                        index = 0
                     )
                 }
         }
@@ -192,21 +191,27 @@ class ChefCatalogRepositoryImpl @Inject constructor(
         }
     }
 
+    // If index is null, add item at the end of list
     private suspend fun addNewItemOrder(
         userId: String,
         itemId: String,
         itemType: CatalogItemType,
-        index: Int
+        index: Int? = null
     ) {
         chefCache.getChef(userId).onSuccess { chef ->
             val updatedOrder = chefCache.getOrder(chef.id).toMutableList()
-            updatedOrder.add(
-                index = index,
-                element = CatalogOrder(
-                    id = itemId,
-                    catalogItemType = itemType
+            if (index != null){
+                updatedOrder.add(
+                    index = index,
+                    element = CatalogOrder(
+                        id = itemId,
+                        catalogItemType = itemType
+                    )
                 )
-            )
+            }
+            else{
+                updatedOrder.add(CatalogOrder(id = itemId, catalogItemType = itemType))
+            }
             updateCatalogOrder(
                 catalogOrderId = chef.catalogOrderId,
                 catalogOrder = updatedOrder,

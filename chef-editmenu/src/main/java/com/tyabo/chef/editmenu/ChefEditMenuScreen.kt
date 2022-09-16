@@ -35,7 +35,7 @@ fun ChefEditMenuScreen(
         is EditMenuViewState.Edit -> {
             val videoState by viewModel.videoState.collectAsState()
             val editState = state as EditMenuViewState.Edit
-            editMenuScreen(
+            EditMenuScreen(
                 name = editState.name,
                 numberPersons = editState.numberPersons,
                 description = editState.description,
@@ -56,7 +56,7 @@ fun ChefEditMenuScreen(
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun editMenuScreen(
+private fun EditMenuScreen(
     name: String,
     numberPersons: NumberPersons,
     description: String,

@@ -14,7 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tyabo.data.CatalogItem
-import com.tyabo.designsystem.components.TextButton
+import com.tyabo.designsystem.components.buttons.FilledTonalButton
+import com.tyabo.designsystem.components.buttons.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,12 +28,12 @@ fun Catalog(
     hideMenu: (CatalogItem.MenuItem) -> Unit = {},
     unhideMenu: (CatalogItem.MenuItem) -> Unit = {},
     deleteMenu: (String) -> Unit = {},
+    addCollection: () -> Unit = {},
     editCollection: (CatalogItem.CollectionItem) -> Unit = {},
     moveCollection: (String) -> Unit = {},
     deleteCollection: (String) -> Unit = {},
     ){
         val itemToExpand: MutableState<String?> = remember { mutableStateOf(null) }
-        val collectionToEdit: MutableState<String?> = remember { mutableStateOf(null) }
 
         LazyColumn(
             modifier = modifier
@@ -54,46 +55,27 @@ fun Catalog(
                             }
                         )
                         Divider(color = MaterialTheme.colorScheme.surfaceVariant)
-                        AddMenu(
+                        AddMenuOrCollection(
                             index = index,
                             itemsList = itemsList,
-                            onClick = { addMenu(index+1) }
+                            addMenuClick = { addMenu(index+1) },
+                            addCollectionClick = addCollection
                         )
                     }
                     is CatalogItem.CollectionItem -> {
-                        when(collectionToEdit.value){
-                            null -> ChefCollectionItem(
-                                collectionName = item.name,
-                                isExpanded = itemToExpand.value == item.id,
-                                editCollection = { collectionToEdit.value = item.id },
-                                moveCollection = { moveCollection(item.id) },
-                                deleteCollection = { deleteCollection(item.id) },
-                                onClick = { switchExpand(itemToExpand, item) }
-                            )
-                            item.id -> EditCollectionItem(
-                                collectionName = item.name,
-                                cancel = {
-                                    collectionToEdit.value = null
-                                },
-                                editCollection = {
-                                    collectionToEdit.value = null
-                                    itemToExpand.value = null
-                                    editCollection(item.copy(name = it))
-                                }
-                            )
-                            else -> ChefCollectionItem(
-                                collectionName = item.name,
-                                isExpanded = false,
-                                editCollection = {},
-                                moveCollection = { moveCollection(item.id) },
-                                deleteCollection = { deleteCollection(item.id) },
-                                onClick = {}
-                            )
-                        }
-                        AddMenu(
+                        ChefCollectionItem(
+                            collectionName = item.name,
+                            isExpanded = itemToExpand.value == item.id,
+                            editCollection = { editCollection(item) },
+                            moveCollection = { moveCollection(item.id) },
+                            deleteCollection = { deleteCollection(item.id) },
+                            onClick = { switchExpand(itemToExpand, item) }
+                        )
+                        AddMenuOrCollection(
                             index = index,
                             itemsList = itemsList,
-                            onClick = { addMenu(index+1) }
+                            addMenuClick = { addMenu(index+1) },
+                            addCollectionClick = addCollection
                         )
                     }
                 }
@@ -102,22 +84,22 @@ fun Catalog(
 }
 
 @Composable
-private fun AddMenu(
+private fun AddMenuOrCollection(
     index: Int,
     itemsList: List<CatalogItem>,
-    onClick: () -> Unit
+    addMenuClick: () -> Unit,
+    addCollectionClick: () -> Unit,
 ) {
     if (index == itemsList.size - 1 || itemsList[index + 1] is CatalogItem.CollectionItem) {
         Column() {
             Row(
                 modifier = Modifier
-                    .padding(vertical = 12.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                    .fillMaxWidth()
             ) {
                 TextButton(
+                    modifier = Modifier.fillMaxWidth(),
                     leadingIcon = Icons.Filled.Add,
-                    onClick = onClick
+                    onClick = addMenuClick
                 ) {
                     Text(
                         text = "Add Menu",
@@ -126,7 +108,26 @@ private fun AddMenu(
                     )
                 }
             }
-            Spacer(modifier = Modifier.size(8.dp))
+            if(index == itemsList.size - 1 ){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp,bottom = 16.dp)
+                ){
+                    FilledTonalButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = Icons.Filled.Add,
+                        onClick = addCollectionClick
+                    ){
+                        Text(
+                            modifier = Modifier.padding(vertical = 4.dp),
+                            text = "Add Collection",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
         }
     }
 }

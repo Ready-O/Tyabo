@@ -27,6 +27,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
     private val menuId: String? = extractArgId(savedStateHandle)
 
+    // The navhost takes the null value as "null", should solve this
     private fun extractArgId(savedStateHandle: SavedStateHandle): String? {
         val arg: String? = savedStateHandle["menuId"]
         return if (arg == "null") {
