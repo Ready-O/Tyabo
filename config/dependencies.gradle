@@ -1,7 +1,7 @@
 ext {
     // Android
-    tyaboCompileSdkVersion = 32
-    tyaboCompileSdkVersion = 32
+    tyaboCompileSdkVersion = 33
+    tyaboCompileSdkVersion = 33
     tyaboMinSdkVersion = 24
 
     // App versioning
@@ -12,7 +12,7 @@ ext {
 
     // Compose
     composeVersion = '1.2.0-alpha07'
-    composeMaterial3Version = "1.0.0-alpha13"
+    composeMaterial3Version = "1.0.0-beta02"
     activityComposeVersion = '1.4.0'
     navigationComposeVersion = '2.5.0-beta01'
     coilVersion = '1.4.0'

@@ -52,10 +52,13 @@ class MainActivity : ComponentActivity() {
                     is AuthViewModel.SessionState.UserSignedIn -> {
                         val state = sessionState as AuthViewModel.SessionState.UserSignedIn
                         Column() {
+                            /*
                             Text(text = "id ${state.userId} - type ${state.userType}")
                             Button(onClick = viewModel::signOut) {
                                 Text(text = "Logout")
                             }
+
+                             */
                             MainAppLayout(
                                 bannerViewState = bannerViewState,
                                 userType = state.userType

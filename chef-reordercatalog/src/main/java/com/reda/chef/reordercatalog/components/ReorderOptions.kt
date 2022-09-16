@@ -33,7 +33,7 @@ fun ReorderOptions(
     if (index != lastIndex) {
         Divider(
             color = MaterialTheme.colorScheme.surfaceVariant,
-            thickness = 2.dp
+            thickness = 1.dp
         )
     }
 }

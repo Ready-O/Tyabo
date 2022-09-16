@@ -1,7 +1,7 @@
 package com.tyabo.designsystem.components.buttons
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -10,13 +10,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FilledTonalButton(
+fun ElevatedButton(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector?,
     onClick: () -> Unit,
     text: @Composable (() -> Unit),
 ){
-    FilledTonalButton(
+    ElevatedButton(
         modifier = modifier,
         onClick = onClick
     ) {

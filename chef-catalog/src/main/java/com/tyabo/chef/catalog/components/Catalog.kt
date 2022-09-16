@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tyabo.data.CatalogItem
-import com.tyabo.designsystem.components.buttons.FilledTonalButton
+import com.tyabo.designsystem.components.buttons.ElevatedButton
 import com.tyabo.designsystem.components.buttons.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +114,7 @@ private fun AddMenuOrCollection(
                         .fillMaxWidth()
                         .padding(top = 8.dp,bottom = 16.dp)
                 ){
-                    FilledTonalButton(
+                    ElevatedButton(
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = Icons.Filled.Add,
                         onClick = addCollectionClick
