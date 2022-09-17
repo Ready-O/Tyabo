@@ -14,6 +14,5 @@ data class Menu(
 enum class NumberPersons {
     ONE,
     TWO,
-    THREE,
     MORE,
 }

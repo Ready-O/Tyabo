@@ -1,26 +1,18 @@
 package com.tyabo.chef.editmenu
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tyabo.designsystem.picture.EditablePicture
-import com.tyabo.chef.editmenu.components.SelectNumberPersons
-import com.tyabo.chef.editmenu.components.VideoScreen
+import com.tyabo.chef.editmenu.components.*
+import com.tyabo.chef.editmenu.components.TopBar
 import com.tyabo.data.NumberPersons
 
 @Composable
@@ -48,13 +40,14 @@ fun ChefEditMenuScreen(
                 onPriceUpdate = viewModel::onPriceUpdate,
                 videoState = videoState,
                 onVideoUrlUpdate = viewModel::onVideoUrlUpdate,
-                exportVideoUrl = viewModel::exportVideoUrl
+                exportVideoUrl = viewModel::exportVideoUrl,
+                navigateUp = navigateUp,
             ) { viewModel.onCtaClicked(navigateUp) }
         }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditMenuScreen(
     name: String,
@@ -70,61 +63,51 @@ private fun EditMenuScreen(
     videoState: YoutubeVideoState,
     onVideoUrlUpdate: (String) -> Unit,
     exportVideoUrl: () -> Unit,
+    navigateUp: () -> Unit,
     onCtaClicked: () -> Unit
 ) {
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     Column() {
-        Box(
-            modifier = Modifier.background(Color.DarkGray)
+        TopBar(
+            navigateUp = navigateUp, 
+            onCtaClicked = onCtaClicked
+        )
+        Column(
+            modifier = Modifier
+            .verticalScroll(rememberScrollState())
         ){
-            EditablePicture(
-                modifier = Modifier.size(150.dp),
-                pictureUrl = menuProfileUrl,
+            MenuPicture(menuProfileUrl, onPictureUpdate)
+            MenuName(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
                 name = name,
-                onClick = onPictureUpdate
+                onNameUpdate = onNameUpdate,
             )
-        }
-        Row() {
-            Text("Nom : ")
-            TextField(value = name, onValueChange = onNameUpdate)
-        }
-        Column() {
-            Text("Nombre de personnes : ")
+            MenuPrice(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                price = price,
+                onPriceUpdate = onPriceUpdate
+            )
             SelectNumberPersons(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 numberPersons = numberPersons,
                 onNumberPersonsUpdate = onNumberPersonsUpdate
             )
-        }
-        Row() {
-            Text("Description : ")
-            TextField(value = description, onValueChange = onDescriptionUpdate)
-        }
-        Row() {
-            Text("Prix : ")
-            TextField(
-                value = price,
-                onValueChange = onPriceUpdate,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
+            MenuDescription(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                description = description,
+                onDescriptionUpdate = onDescriptionUpdate
             )
-        }
-        VideoScreen(
-            videoState = videoState,
-            onUrlUpdate = onVideoUrlUpdate,
-            exportUrl = {
-                keyboardController?.hide()
-                exportVideoUrl()
-            },
-        )
-        Button(onClick = {
-            keyboardController?.hide()
-            onCtaClicked()
-        }) {
-            Text("Valider")
+            VideoScreen(
+                videoState = videoState,
+                onUrlUpdate = onVideoUrlUpdate,
+                exportUrl = exportVideoUrl,
+            )
         }
     }
 }
+
+

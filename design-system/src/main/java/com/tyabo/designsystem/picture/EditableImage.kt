@@ -12,7 +12,6 @@ import com.canhub.cropper.options
 fun EditableImage(
     modifier: Modifier,
     pictureUrl: String?,
-    name: String,
     onClick: (String) -> Unit
 ) {
 
