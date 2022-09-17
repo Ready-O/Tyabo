@@ -9,7 +9,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.options
 
 @Composable
-fun EditablePicture(
+fun EditableImage(
     modifier: Modifier,
     pictureUrl: String?,
     name: String,
@@ -23,9 +23,9 @@ fun EditablePicture(
     }
 
     //val confirmButton = stringResource(id = R.string.label_settings_crop_choose)
-    StandardPicture(
+    StandardImage(
         url = pictureUrl,
-        name = name,
+        fallback = null,
         modifier = modifier.clickable {
             cropImage.launch(
                 options {

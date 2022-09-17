@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tyabo.data.CatalogItem
-import com.tyabo.designsystem.picture.StandardPicture
+import com.tyabo.designsystem.picture.StandardImage
 
 @Composable
 fun MenuItem(
@@ -48,10 +48,10 @@ fun MenuItem(
             Box(
                 modifier = Modifier.background(Color.DarkGray)
             ){
-                StandardPicture(
+                StandardImage(
                     modifier = Modifier.size(102.dp),
                     url = menuItem.menuPictureUrl,
-                    name = menuItem.name
+                    fallback = null
                 )
             }
         }

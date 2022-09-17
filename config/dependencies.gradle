@@ -15,7 +15,7 @@ ext {
     composeMaterial3Version = "1.0.0-beta02"
     activityComposeVersion = '1.4.0'
     navigationComposeVersion = '2.5.0-beta01'
-    coilVersion = '1.4.0'
+    coilVersion = '2.2.1'
 
     // Material
     androidMaterialVersion = '1.5.0'
