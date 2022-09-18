@@ -66,16 +66,19 @@ private fun EditMenuScreen(
     navigateUp: () -> Unit,
     onCtaClicked: () -> Unit
 ) {
-
-    Column() {
-        TopBar(
-            navigateUp = navigateUp, 
-            onCtaClicked = onCtaClicked
-        )
+    Scaffold(
+        topBar = {
+            TopBar(
+                navigateUp = navigateUp,
+                onCtaClicked = onCtaClicked
+            )
+        }
+    ) { paddingForBars ->
         Column(
             modifier = Modifier
-            .verticalScroll(rememberScrollState())
-        ){
+                .padding(paddingForBars) // Careful! scafoldPadding should not be applied to scollable screen
+                .verticalScroll(rememberScrollState())
+        ) {
             MenuPicture(menuProfileUrl, onPictureUpdate)
             MenuName(
                 modifier = Modifier
@@ -84,16 +87,21 @@ private fun EditMenuScreen(
                 name = name,
                 onNameUpdate = onNameUpdate,
             )
-            MenuPrice(
+            Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                price = price,
-                onPriceUpdate = onPriceUpdate
-            )
-            SelectNumberPersons(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                numberPersons = numberPersons,
-                onNumberPersonsUpdate = onNumberPersonsUpdate
-            )
+                horizontalArrangement = Arrangement.Center
+            ) {
+                MenuPrice(
+                    modifier = Modifier.widthIn(max = 100.dp),
+                    price = price,
+                    onPriceUpdate = onPriceUpdate
+                )
+                SelectNumberPersons(
+                    modifier = Modifier.padding(start = 8.dp),
+                    numberPersons = numberPersons,
+                    onNumberPersonsUpdate = onNumberPersonsUpdate
+                )
+            }
             MenuDescription(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -14,29 +14,37 @@ import com.tyabo.data.CatalogItem
 import com.tyabo.designsystem.components.CollectionItem
 import com.tyabo.designsystem.components.MenuItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReorderMenus(
     parentCollection: CatalogItem.CollectionItem,
     menus: List<CatalogItem.MenuItem>,
     moveUp: (Int) -> Unit,
     moveDown: (Int) -> Unit,
+    navigateUp: () -> Unit,
     confirmNewOrder: () -> Unit
 ){
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        Button(onClick = confirmNewOrder) {
-            Text(text = "Confirm")
+    Scaffold(
+        topBar = {
+            TopBar(
+                navigateUp = navigateUp,
+                onCtaClicked = confirmNewOrder
+            )
         }
-        ParentCollection(parentCollection)
-        LazyColumn{
-            itemsIndexed(menus){index, item ->
-                Spacer(modifier = Modifier.size(8.dp))
-                MenuItem(menuItem = item)
-                ReorderOptions(
-                    index = index,
-                    lastIndex = menus.size - 1,
-                    moveUp = moveUp,
-                    moveDown = moveDown
-                )
+    ) { paddingForBars ->
+        Column(modifier = Modifier.padding(paddingForBars).padding(horizontal = 16.dp)) {
+            ParentCollection(parentCollection)
+            LazyColumn{
+                itemsIndexed(menus){index, item ->
+                    Spacer(modifier = Modifier.size(8.dp))
+                    MenuItem(menuItem = item)
+                    ReorderOptions(
+                        index = index,
+                        lastIndex = menus.size - 1,
+                        moveUp = moveUp,
+                        moveDown = moveDown
+                    )
+                }
             }
         }
     }

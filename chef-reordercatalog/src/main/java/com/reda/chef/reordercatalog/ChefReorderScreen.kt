@@ -23,8 +23,8 @@ fun ChefReorderScreen(
                 menus = menusState.menus,
                 moveUp = viewModel::moveUpMenu,
                 moveDown = viewModel::moveDownMenu,
-                confirmNewOrder = { viewModel.confirmNewMenus(navigateUp) }
-            )
+                navigateUp = navigateUp,
+            ) { viewModel.confirmNewMenus(navigateUp) }
         }
         is ChefReorderViewState.ReorderCollections -> {
             val collectionsState = state as ChefReorderViewState.ReorderCollections
@@ -32,6 +32,7 @@ fun ChefReorderScreen(
                 collections = collectionsState.collections,
                 moveUp = viewModel::moveUpCollection,
                 moveDown = viewModel::moveDownCollection,
+                navigateUp = navigateUp,
                 confirmNewOrder = { viewModel.confirmNewCollections(navigateUp) }
             )
         }
