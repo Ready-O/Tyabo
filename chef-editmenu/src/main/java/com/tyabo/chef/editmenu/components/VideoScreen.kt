@@ -1,56 +1,50 @@
 package com.tyabo.chef.editmenu.components
 
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.tyabo.chef.editmenu.YoutubeVideoState
 import com.tyabo.designsystem.components.YoutubeVideo
+import com.tyabo.designsystem.components.buttons.FilledTonalButton
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun VideoScreen(
     videoState: YoutubeVideoState,
-    onUrlUpdate: (String) -> Unit,
-    exportUrl: () -> Unit
+    addYoutubeVideo: () -> Unit
 ) {
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    when (videoState){
-        is YoutubeVideoState.Loading -> CircularProgressIndicator()
-        is YoutubeVideoState.ExportUrl -> {
-            ExportUrl(
-                url = videoState.url,
-                onUrlUpdate = onUrlUpdate,
-                exportUrl = {
-                    keyboardController?.hide()
-                    exportUrl()
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Text(
+            modifier = Modifier.padding(bottom = 8.dp),
+            text = "Social Media",
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold
+        )
+        when (videoState){
+            is YoutubeVideoState.Loading -> CircularProgressIndicator()
+            is YoutubeVideoState.Empty -> {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    FilledTonalButton(
+                        leadingIcon = null,
+                        onClick= addYoutubeVideo
+                    ){
+                        Text(text = "Add Youtube Link")
+                    }
                 }
-            )
-        }
-        is YoutubeVideoState.Video -> {
-            YoutubeVideo(
-                title = videoState.title,
-                thumbnailUrl = videoState.thumbnailUrl,
-                videoUrl = videoState.videoUrl
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ExportUrl(
-    url: String,
-    onUrlUpdate: (String) -> Unit,
-    exportUrl: () -> Unit
-) {
-    Row() {
-        TextField(value = url, onValueChange = onUrlUpdate)
-        Button(onClick = exportUrl) {
-            Text(text = "Valider")
+            }
+            is YoutubeVideoState.Video -> {
+                YoutubeVideo(
+                    title = videoState.title,
+                    thumbnailUrl = videoState.thumbnailUrl,
+                    videoUrl = videoState.videoUrl
+                )
+            }
         }
     }
 }

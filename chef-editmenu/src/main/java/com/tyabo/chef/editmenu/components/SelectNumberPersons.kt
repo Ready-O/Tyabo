@@ -23,7 +23,10 @@ fun SelectNumberPersons(
     onNumberPersonsUpdate: (NumberPersons) -> Unit
 ) {
     Column(modifier = modifier) {
-        Text(text = "Select number of persons :")
+        Text(
+            text = "Select number of persons :",
+            style = MaterialTheme.typography.bodySmall
+        )
         Row {
             FilterChip(
                 selected = numberPersons == NumberPersons.ONE,
@@ -75,12 +78,14 @@ private fun FilterChip(
     FilterChip(
         modifier = Modifier.padding(horizontal = 4.dp),
         leadingIcon = if (selected) {
-            {Icon(
-                imageVector = Icons.Filled.Check,
-                contentDescription = null
-            )
+                {
+                    Icon(
+                        imageVector = Icons.Filled.Check,
+                        contentDescription = null
+                    )
+                }
             }
-                                    }else{null},
+            else{null},
         label = label,
         selected = selected,
         onClick = onClick

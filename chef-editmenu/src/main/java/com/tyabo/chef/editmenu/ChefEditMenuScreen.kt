@@ -7,12 +7,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.chef.editmenu.components.*
-import com.tyabo.chef.editmenu.components.TopBar
 import com.tyabo.data.NumberPersons
 
 @Composable
@@ -21,11 +19,11 @@ fun ChefEditMenuScreen(
     viewModel: ChefEditMenuViewModel = hiltViewModel(),
 ){
     val state by viewModel.editMenuState.collectAsState()
+    val videoState by viewModel.videoState.collectAsState()
 
     when(state){
         EditMenuViewState.Loading -> CircularProgressIndicator()
         is EditMenuViewState.Edit -> {
-            val videoState by viewModel.videoState.collectAsState()
             val editState = state as EditMenuViewState.Edit
             EditMenuScreen(
                 name = editState.name,
@@ -39,10 +37,18 @@ fun ChefEditMenuScreen(
                 onDescriptionUpdate = viewModel::onDescriptionUpdate,
                 onPriceUpdate = viewModel::onPriceUpdate,
                 videoState = videoState,
-                onVideoUrlUpdate = viewModel::onVideoUrlUpdate,
-                exportVideoUrl = viewModel::exportVideoUrl,
+                addYoutubeVideo = viewModel::displayYoutubeScreen,
                 navigateUp = navigateUp,
             ) { viewModel.onCtaClicked(navigateUp) }
+        }
+        is EditMenuViewState.Youtube -> {
+            val inputYoutubeState = state as EditMenuViewState.Youtube
+            YoutubeScreen(
+                youtubeUrl = inputYoutubeState.url,
+                onUrlUpdate = viewModel::onVideoUrlUpdate,
+                backToMain = viewModel::backToMain,
+                exportUrl = viewModel::exportVideoUrl
+            )
         }
     }
 }
@@ -61,14 +67,13 @@ private fun EditMenuScreen(
     onDescriptionUpdate: (String) -> Unit,
     onPriceUpdate: (String) -> Unit,
     videoState: YoutubeVideoState,
-    onVideoUrlUpdate: (String) -> Unit,
-    exportVideoUrl: () -> Unit,
+    addYoutubeVideo: () -> Unit,
     navigateUp: () -> Unit,
     onCtaClicked: () -> Unit
 ) {
     Scaffold(
         topBar = {
-            TopBar(
+            MainTopBar(
                 navigateUp = navigateUp,
                 onCtaClicked = onCtaClicked
             )
@@ -109,10 +114,13 @@ private fun EditMenuScreen(
                 description = description,
                 onDescriptionUpdate = onDescriptionUpdate
             )
+            Divider(
+                modifier = Modifier.padding(vertical = 16.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
+            )
             VideoScreen(
                 videoState = videoState,
-                onUrlUpdate = onVideoUrlUpdate,
-                exportUrl = exportVideoUrl,
+                addYoutubeVideo = addYoutubeVideo
             )
         }
     }

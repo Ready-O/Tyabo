@@ -153,13 +153,15 @@ class ChefCatalogRepositoryImpl @Inject constructor(
                         sortedCatalog.add(item)
                     }
                 }
-                _catalog.value = UiResult.Success(sortedCatalog)
+                UiResult.Success(sortedCatalog)
             } else if (menusResult.isFailure || collectionsResult.isFailure) {
-                _catalog.value = UiResult.Failure()
+                UiResult.Failure()
             } else {
-                _catalog.value = UiResult.Loading
+                UiResult.Loading
             }
-        }.collectLatest {  }
+        }.collectLatest { uiResult ->
+            _catalog.value = uiResult
+        }
     }
 
     private suspend fun updateRemoteCatalogOrder(userId: String) {

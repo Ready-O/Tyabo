@@ -20,7 +20,7 @@ fun ChefNavHost(
     ) {
         ChefCatalogComposable(
             navigateToEditMenu = { menuId, posIndex ->
-                navController.navigate("${ChefEditMenuDestination.route}?menuId=$menuId&posIndex=${posIndex?: 0}")
+                navController.navigate("${ChefEditMenuDestination.route}?${if (menuId != null) "menuId=$menuId&posIndex=${posIndex?: 0}" else "posIndex=${posIndex?: 0}"}")
             },
             navigateToEditCollection = { collectionId, collectionName, isNew ->
                 navController.navigate(

@@ -25,17 +25,7 @@ class ChefEditMenuViewModel @Inject constructor(
 
     private val userId = userRepository.getUserId()
 
-    private val menuId: String? = extractArgId(savedStateHandle)
-
-    // The navhost takes the null value as "null", should solve this
-    private fun extractArgId(savedStateHandle: SavedStateHandle): String? {
-        val arg: String? = savedStateHandle["menuId"]
-        return if (arg == "null") {
-            null
-        } else {
-            arg
-        }
-    }
+    private val menuId: String? = savedStateHandle["menuId"]
 
     private val positionIndex: Int? = savedStateHandle["posIndex"]
 
@@ -43,15 +33,24 @@ class ChefEditMenuViewModel @Inject constructor(
 
     val videoState = _videoState.asStateFlow()
 
+    private val emptyEdit = EditMenuViewState.Edit(
+        name = "",
+        numberPersons = NumberPersons.ONE,
+        description = "",
+        price = "0.0",
+        menuPictureUrl = null,
+        null,
+    )
+
     private val _editMenuState = MutableStateFlow<EditMenuViewState>(EditMenuViewState.Loading)
 
-    val editMenuState = if (menuId != null) {
-        combine(
-            menuRepository.getMenus(userId = userId, menusIds = listOf(menuId)),
-            _editMenuState
-        ) { result, actualState ->
-                if (result.isSuccess) {
-                    if (actualState is EditMenuViewState.Loading){
+    val editMenuState = _editMenuState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            if (menuId != null) {
+                menuRepository.getMenus(userId = userId, menusIds = listOf(menuId)).collectLatest{ result ->
+                    if (result.isSuccess) {
                         val menu = result.getOrThrow().first { it.id == menuId }
                         _editMenuState.value = EditMenuViewState.Edit(
                             name = menu.name,
@@ -61,7 +60,6 @@ class ChefEditMenuViewModel @Inject constructor(
                             menuPictureUrl = menu.menuPictureUrl,
                             menuVideoUrl = menu.menuVideoUrl,
                         )
-
                         val url = menu.menuVideoUrl
                         if (url != null){
                             menuRepository.getVideo(url).onSuccess {
@@ -71,47 +69,24 @@ class ChefEditMenuViewModel @Inject constructor(
                                     videoUrl = it.videoUrl
                                 )
                             }
-                            .onFailure {
-                                _videoState.value = YoutubeVideoState.ExportUrl("")
-                            }
+                                .onFailure {
+                                    _videoState.value = YoutubeVideoState.Empty
+                                }
                         }
                         else {
-                            _videoState.value = YoutubeVideoState.ExportUrl("")
+                            _videoState.value = YoutubeVideoState.Empty
                         }
-                        actualState
-                    }
-                    else {
-                        actualState
                     }
                 }
-                else EditMenuViewState.Loading
-        }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = EditMenuViewState.Loading
-        )
-    }
-    else {
-        _editMenuState.value = EditMenuViewState.Edit(
-            "",
-            NumberPersons.ONE,
-            "",
-            "0.0",
-            null,
-            null,
-        )
-        _videoState.value = YoutubeVideoState.ExportUrl("")
-        _editMenuState.asStateFlow()
+            }
+            else {
+                _editMenuState.value = emptyEdit
+                _videoState.value = YoutubeVideoState.Empty
+            }
+        }
     }
 
-    private fun editState() = editMenuState.value as? EditMenuViewState.Edit ?: EditMenuViewState.Edit(
-        name = "",
-        numberPersons = NumberPersons.ONE,
-        description = "",
-        price = "0.0",
-        menuPictureUrl = null,
-        null,
-    )
+    private fun editState() = editMenuState.value as? EditMenuViewState.Edit ?: emptyEdit
 
     fun onNameUpdate(name: String){
         viewModelScope.launch{
@@ -140,26 +115,6 @@ class ChefEditMenuViewModel @Inject constructor(
     fun onPictureUpdate(url: String?){
         viewModelScope.launch{
             _editMenuState.value = editState().copy(menuPictureUrl = url)
-        }
-    }
-
-    fun onVideoUrlUpdate(url: String){
-        viewModelScope.launch {
-            _videoState.value = YoutubeVideoState.ExportUrl(url)
-        }
-    }
-
-    fun exportVideoUrl(){
-        viewModelScope.launch {
-            val state = videoState.value as YoutubeVideoState.ExportUrl
-            menuRepository.getVideo(state.url).onSuccess {
-                _videoState.value = YoutubeVideoState.Video(
-                    title = it.title,
-                    thumbnailUrl = it.thumbnailUrl,
-                    videoUrl = it.videoUrl
-                )
-                _editMenuState.value = editState().copy(menuVideoUrl = it.videoUrl)
-            }
         }
     }
 
@@ -192,6 +147,46 @@ class ChefEditMenuViewModel @Inject constructor(
                 )
             }
             navigateUp()
+        }
+    }
+
+    // Youtube
+    fun displayYoutubeScreen(){
+        viewModelScope.launch{
+            _editMenuState.value = EditMenuViewState.Youtube(
+                url = "",
+                savedState = editMenuState.value as EditMenuViewState.Edit
+            )
+        }
+    }
+
+    fun backToMain(){
+        viewModelScope.launch {
+            val state = editMenuState.value as EditMenuViewState.Youtube
+            _editMenuState.value = state.savedState
+        }
+    }
+
+    fun onVideoUrlUpdate(url: String){
+        viewModelScope.launch {
+            _editMenuState.value = EditMenuViewState.Youtube(
+                url = url,
+                savedState = (editMenuState.value as EditMenuViewState.Youtube).savedState
+            )
+        }
+    }
+
+    fun exportVideoUrl(){
+        viewModelScope.launch {
+            val state = editMenuState.value as EditMenuViewState.Youtube
+            menuRepository.getVideo(state.url).onSuccess {
+                _videoState.value = YoutubeVideoState.Video(
+                    title = it.title,
+                    thumbnailUrl = it.thumbnailUrl,
+                    videoUrl = it.videoUrl
+                )
+                _editMenuState.value = state.savedState.copy(menuVideoUrl = it.videoUrl)
+            }
         }
     }
 

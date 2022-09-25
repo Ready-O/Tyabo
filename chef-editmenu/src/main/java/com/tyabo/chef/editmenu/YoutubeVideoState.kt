@@ -4,9 +4,7 @@ sealed interface YoutubeVideoState {
 
     object Loading: YoutubeVideoState
 
-    data class ExportUrl(
-        val url: String
-    ) : YoutubeVideoState
+    object Empty: YoutubeVideoState
 
     data class Video(
         val title: String,
