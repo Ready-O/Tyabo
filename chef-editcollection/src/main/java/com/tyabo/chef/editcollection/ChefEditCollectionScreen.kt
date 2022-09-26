@@ -38,7 +38,7 @@ fun ChefEditCollectionScreen(
             navigationIcon = {
                 IconButton(onClick = navigateUp){
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = Icons.Filled.Close,
                         contentDescription = null
                     )
                 }

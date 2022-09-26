@@ -3,6 +3,7 @@ package com.reda.chef.reordercatalog.components
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -19,7 +20,7 @@ internal fun TopBar(
         navigationIcon = {
             IconButton(onClick = navigateUp) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBack,
+                    imageVector = Icons.Filled.Close,
                     contentDescription = null
                 )
             }

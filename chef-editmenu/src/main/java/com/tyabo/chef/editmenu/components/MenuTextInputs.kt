@@ -1,6 +1,7 @@
 package com.tyabo.chef.editmenu.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -53,7 +54,7 @@ fun MenuDescription(
     onDescriptionUpdate: (String) -> Unit
 ){
     OutlinedTextField(
-        modifier = modifier,
+        modifier = modifier.height(100.dp),
         value = description,
         onValueChange = onDescriptionUpdate,
         label = { Text("Description") },
