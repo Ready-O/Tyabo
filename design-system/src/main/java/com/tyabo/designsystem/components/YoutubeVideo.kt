@@ -25,7 +25,8 @@ import com.tyabo.designsystem.picture.StandardImage
 fun YoutubeVideo(
     title: String,
     thumbnailUrl: String,
-    videoUrl: String
+    videoUrl: String,
+    deleteContent: () -> Unit
 ){
     val context = LocalContext.current
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
@@ -33,7 +34,7 @@ fun YoutubeVideo(
         EditableImage(
             modifier = Modifier.fillMaxWidth().height(190.dp),
             imageUrl = thumbnailUrl,
-            close = {}
+            close = deleteContent
         ){ modifier ->
             IconButton(
                 modifier = modifier.size(50.dp),

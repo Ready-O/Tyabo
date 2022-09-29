@@ -14,7 +14,8 @@ import com.tyabo.designsystem.components.buttons.FilledTonalButton
 @Composable
 fun VideoScreen(
     videoState: YoutubeVideoState,
-    addYoutubeVideo: () -> Unit
+    addYoutubeVideo: () -> Unit,
+    deleteVideo: () -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         Text(
@@ -42,7 +43,8 @@ fun VideoScreen(
                 YoutubeVideo(
                     title = videoState.title,
                     thumbnailUrl = videoState.thumbnailUrl,
-                    videoUrl = videoState.videoUrl
+                    videoUrl = videoState.videoUrl,
+                    deleteContent = deleteVideo
                 )
             }
         }

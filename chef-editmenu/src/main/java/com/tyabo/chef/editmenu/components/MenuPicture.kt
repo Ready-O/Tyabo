@@ -46,7 +46,7 @@ fun MenuPicture(
                 .height(300.dp),
             backgroundModifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
             imageUrl = menuProfileUrl,
-            close = {}
+            close = { onPictureUpdate(null) }
         )
     }
 }

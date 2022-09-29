@@ -190,4 +190,10 @@ class ChefEditMenuViewModel @Inject constructor(
         }
     }
 
+    fun deleteVideo(){
+        viewModelScope.launch {
+            _editMenuState.value = editState().copy(menuVideoUrl = null)
+            _videoState.value = YoutubeVideoState.Empty
+        }
+    }
 }

@@ -38,6 +38,7 @@ fun ChefEditMenuScreen(
                 onPriceUpdate = viewModel::onPriceUpdate,
                 videoState = videoState,
                 addYoutubeVideo = viewModel::displayYoutubeScreen,
+                deleteVideo = viewModel::deleteVideo,
                 navigateUp = navigateUp,
             ) { viewModel.onCtaClicked(navigateUp) }
         }
@@ -68,6 +69,7 @@ private fun EditMenuScreen(
     onPriceUpdate: (String) -> Unit,
     videoState: YoutubeVideoState,
     addYoutubeVideo: () -> Unit,
+    deleteVideo: () -> Unit,
     navigateUp: () -> Unit,
     onCtaClicked: () -> Unit
 ) {
@@ -120,7 +122,8 @@ private fun EditMenuScreen(
             )
             VideoScreen(
                 videoState = videoState,
-                addYoutubeVideo = addYoutubeVideo
+                addYoutubeVideo = addYoutubeVideo,
+                deleteVideo = deleteVideo
             )
         }
     }
