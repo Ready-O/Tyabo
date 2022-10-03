@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.tyabo.data.UserType
+import com.tyabo.designsystem.components.LoadingBox
 import com.tyabo.tyabo.auth.AuthViewModel
 import com.tyabo.tyabo.navigation.chef.ChefNavHost
 import com.tyabo.tyabo.auth.AuthScreen
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     AuthViewModel.SessionState.Loading -> {
-                        CircularProgressIndicator()
+                        LoadingBox()
                     }
                     is AuthViewModel.SessionState.UserSignedIn -> {
                         val state = sessionState as AuthViewModel.SessionState.UserSignedIn

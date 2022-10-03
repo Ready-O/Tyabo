@@ -155,7 +155,7 @@ class ChefEditMenuViewModel @Inject constructor(
         viewModelScope.launch{
             _editMenuState.value = EditMenuViewState.Youtube(
                 url = "",
-                savedState = editMenuState.value as EditMenuViewState.Edit
+                savedEditState = editMenuState.value as EditMenuViewState.Edit
             )
         }
     }
@@ -163,7 +163,7 @@ class ChefEditMenuViewModel @Inject constructor(
     fun backToMain(){
         viewModelScope.launch {
             val state = editMenuState.value as EditMenuViewState.Youtube
-            _editMenuState.value = state.savedState
+            _editMenuState.value = state.savedEditState
         }
     }
 
@@ -171,7 +171,7 @@ class ChefEditMenuViewModel @Inject constructor(
         viewModelScope.launch {
             _editMenuState.value = EditMenuViewState.Youtube(
                 url = url,
-                savedState = (editMenuState.value as EditMenuViewState.Youtube).savedState
+                savedEditState = (editMenuState.value as EditMenuViewState.Youtube).savedEditState
             )
         }
     }
@@ -185,7 +185,7 @@ class ChefEditMenuViewModel @Inject constructor(
                     thumbnailUrl = it.thumbnailUrl,
                     videoUrl = it.videoUrl
                 )
-                _editMenuState.value = state.savedState.copy(menuVideoUrl = it.videoUrl)
+                _editMenuState.value = state.savedEditState.copy(menuVideoUrl = it.videoUrl)
             }
         }
     }

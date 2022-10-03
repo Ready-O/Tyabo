@@ -18,6 +18,6 @@ sealed interface EditMenuViewState {
 
     data class Youtube(
         val url: String,
-        val savedState: EditMenuViewState.Edit,
+        val savedEditState: EditMenuViewState.Edit,
     ): EditMenuViewState
 }

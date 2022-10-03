@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.chef.editmenu.components.*
 import com.tyabo.data.NumberPersons
+import com.tyabo.designsystem.components.LoadingBox
 
 @Composable
 fun ChefEditMenuScreen(
@@ -22,7 +23,7 @@ fun ChefEditMenuScreen(
     val videoState by viewModel.videoState.collectAsState()
 
     when(state){
-        EditMenuViewState.Loading -> CircularProgressIndicator()
+        EditMenuViewState.Loading -> LoadingBox()
         is EditMenuViewState.Edit -> {
             val editState = state as EditMenuViewState.Edit
             EditMenuScreen(

@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.reda.chef.reordercatalog.components.ReorderCollections
 import com.reda.chef.reordercatalog.components.ReorderMenus
+import com.tyabo.designsystem.components.LoadingBox
 
 @Composable
 fun ChefReorderScreen(
@@ -15,7 +16,7 @@ fun ChefReorderScreen(
 
     val state by viewModel.viewState.collectAsState()
     when(state){
-        is ChefReorderViewState.Loading -> {}
+        is ChefReorderViewState.Loading -> LoadingBox()
         is ChefReorderViewState.ReorderMenus -> {
             val menusState = state as ChefReorderViewState.ReorderMenus
             ReorderMenus(

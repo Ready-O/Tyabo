@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tyabo.chef.catalog.components.ChefCatalog
+import com.tyabo.designsystem.components.LoadingBox
 
 @Composable
 fun ChefCatalogScreen(
@@ -26,7 +27,7 @@ fun ChefCatalogScreen(
     val catalogState by viewModel.catalogState.collectAsState()
 
     when (catalogState) {
-        is ChefCatalogViewState.Loading -> {}
+        is ChefCatalogViewState.Loading -> LoadingBox()
         is ChefCatalogViewState.Catalog -> {
             val state = catalogState as ChefCatalogViewState.Catalog
             ChefCatalog(

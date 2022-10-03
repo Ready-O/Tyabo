@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tyabo.chef.editmenu.YoutubeVideoState
+import com.tyabo.designsystem.components.LoadingBox
 import com.tyabo.designsystem.components.YoutubeVideo
 import com.tyabo.designsystem.components.buttons.FilledTonalButton
 
@@ -25,7 +26,7 @@ fun VideoScreen(
             fontWeight = FontWeight.Bold
         )
         when (videoState){
-            is YoutubeVideoState.Loading -> CircularProgressIndicator()
+            is YoutubeVideoState.Loading -> LoadingBox()
             is YoutubeVideoState.Empty -> {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
