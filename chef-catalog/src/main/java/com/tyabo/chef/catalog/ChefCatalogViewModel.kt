@@ -37,7 +37,7 @@ class ChefCatalogViewModel @Inject constructor(
     }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(0),
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = Unit
         )
 

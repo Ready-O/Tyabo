@@ -8,8 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tyabo.data.CatalogItem
-import com.tyabo.chef.catalog.components.Catalog
+import com.tyabo.chef.catalog.components.ChefCatalog
 
 @Composable
 fun ChefCatalogScreen(
@@ -30,7 +29,7 @@ fun ChefCatalogScreen(
         is ChefCatalogViewState.Loading -> {}
         is ChefCatalogViewState.Catalog -> {
             val state = catalogState as ChefCatalogViewState.Catalog
-            Catalog(
+            ChefCatalog(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 itemsList = state.catalog,
                 addMenu = { navigateToEditMenu(null,it) },

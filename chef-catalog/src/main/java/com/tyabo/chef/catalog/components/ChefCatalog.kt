@@ -19,7 +19,7 @@ import com.tyabo.designsystem.components.buttons.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Catalog(
+fun ChefCatalog(
     modifier: Modifier = Modifier,
     itemsList: List<CatalogItem>,
     addMenu: (Int) -> Unit = {},
@@ -32,7 +32,8 @@ fun Catalog(
     editCollection: (CatalogItem.CollectionItem) -> Unit = {},
     moveCollection: (String) -> Unit = {},
     deleteCollection: (String) -> Unit = {},
-    ){
+){
+    if (itemsList.isNotEmpty()){
         val itemToExpand: MutableState<String?> = remember { mutableStateOf(null) }
 
         LazyColumn(
@@ -81,6 +82,10 @@ fun Catalog(
                 }
             }
         }
+    }
+    else{
+        AddCollectionButton(addCollection)
+    }
 }
 
 @Composable
@@ -92,42 +97,52 @@ private fun AddMenuOrCollection(
 ) {
     if (index == itemsList.size - 1 || itemsList[index + 1] is CatalogItem.CollectionItem) {
         Column() {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                TextButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = Icons.Filled.Add,
-                    onClick = addMenuClick
-                ) {
-                    Text(
-                        text = "Add Menu",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-            }
+            AddMenuButton(addMenuClick)
             if(index == itemsList.size - 1 ){
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp,bottom = 16.dp)
-                ){
-                    ElevatedButton(
-                        modifier = Modifier.fillMaxWidth(),
-                        leadingIcon = Icons.Filled.Add,
-                        onClick = addCollectionClick
-                    ){
-                        Text(
-                            modifier = Modifier.padding(vertical = 4.dp),
-                            text = "Add Collection",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
+                AddCollectionButton(addCollectionClick)
             }
+        }
+    }
+}
+
+@Composable
+private fun AddCollectionButton(addCollectionClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 16.dp)
+    ) {
+        ElevatedButton(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = Icons.Filled.Add,
+            onClick = addCollectionClick
+        ) {
+            Text(
+                modifier = Modifier.padding(vertical = 4.dp),
+                text = "Add Collection",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddMenuButton(addMenuClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        TextButton(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = Icons.Filled.Add,
+            onClick = addMenuClick
+        ) {
+            Text(
+                text = "Add Menu",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
         }
     }
 }
