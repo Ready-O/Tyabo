@@ -57,10 +57,10 @@ dependencies {
     implementation project(':design-system')
 
     // Features
-    implementation project(':chef-catalog')
-    implementation project(':chef-editmenu')
-    implementation project(':chef-editcollection')
-    implementation project(':chef-reordercatalog')
+    implementation project(':chef-feature:catalog')
+    implementation project(':chef-feature:editmenu')
+    implementation project(':chef-feature:editcollection')
+    implementation project(':chef-feature:reordercatalog')
 
     // Common
     implementation commonDependencies.androidKTX

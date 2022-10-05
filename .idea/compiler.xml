@@ -6,6 +6,10 @@
       <module name="Tyabo.chef-catalog" target="11" />
       <module name="Tyabo.chef-editcollection" target="11" />
       <module name="Tyabo.chef-editmenu" target="11" />
+      <module name="Tyabo.chef-feature.catalog" target="11" />
+      <module name="Tyabo.chef-feature.editcollection" target="11" />
+      <module name="Tyabo.chef-feature.editmenu" target="11" />
+      <module name="Tyabo.chef-feature.reordercatalog" target="11" />
       <module name="Tyabo.chef-reordercatalog" target="11" />
       <module name="Tyabo.common" target="11" />
       <module name="Tyabo.design-system" target="11" />
