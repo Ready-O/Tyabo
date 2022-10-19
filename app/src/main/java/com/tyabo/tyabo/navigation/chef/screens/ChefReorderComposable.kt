@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.tyabo.feature.chef.reordercatalog.ChefReorderScreen
+import com.tyabo.feature.chef.catalog.reordercatalog.ChefReorderScreen
 import com.tyabo.tyabo.navigation.chef.ChefDestination
 
 object ChefReorderDestination : ChefDestination {

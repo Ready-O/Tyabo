@@ -3,7 +3,7 @@ package com.tyabo.tyabo.navigation.chef.screens
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.tyabo.feature.chef.catalog.ChefCatalogScreen
+import com.tyabo.feature.chef.catalog.catalog.ChefCatalogScreen
 import com.tyabo.tyabo.navigation.chef.ChefDestination
 import com.tyabo.tyabo.navigation.chef.ChefNavScreen
 

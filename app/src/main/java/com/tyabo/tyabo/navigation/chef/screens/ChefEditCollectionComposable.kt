@@ -4,7 +4,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.tyabo.feature.chef.editcollection.ChefEditCollectionScreen
+import com.tyabo.feature.chef.catalog.editcollection.ChefEditCollectionScreen
 import com.tyabo.tyabo.navigation.chef.ChefDestination
 
 object ChefEditCollectionDestination : ChefDestination {

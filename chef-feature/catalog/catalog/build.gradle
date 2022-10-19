@@ -1,0 +1,83 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    namespace 'com.tyabo.feature.chef.catalog.catalog'
+    compileSdk tyaboCompileSdkVersion
+
+    defaultConfig {
+        minSdk tyaboMinSdkVersion
+        targetSdk tyaboCompileSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+    }
+}
+
+dependencies {
+
+    implementation project(':data')
+    implementation project(':common')
+    implementation project(':repository')
+    implementation project(':design-system')
+
+    // Common
+    implementation commonDependencies.androidKTX
+    implementation commonDependencies.timber
+
+    // Hilt
+    implementation commonDependencies.hilt
+    kapt commonDependencies.hiltCompiler
+
+    // Lifecycle
+    implementation archiDependencies.lifecycleScope
+
+    // Compose
+    implementation composeDependencies.activityCompose
+    implementation composeDependencies.composeMaterial3
+    implementation composeDependencies.composeUI
+    implementation composeDependencies.composeTooling
+    implementation composeDependencies.composeToolingPreview
+    implementation composeDependencies.navigationCompose
+    implementation composeDependencies.hiltNavigation
+
+    // Unit test
+    testImplementation testDependencies.junit
+    androidTestImplementation testDependencies.androidJunit
+    androidTestImplementation testDependencies.espresso
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
+}
+
+// Allow transitive types
+// https://github.com/google/dagger/issues/2123
+hilt {
+    enableAggregatingTask = true
+}
