@@ -1,4 +1,4 @@
-package com.tyabo.tyabo.navigation.chef.screens
+package com.tyabo.tyabo.navigation.chef.screens.catalog
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType

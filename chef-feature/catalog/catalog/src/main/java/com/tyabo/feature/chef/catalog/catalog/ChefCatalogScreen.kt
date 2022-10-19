@@ -14,6 +14,7 @@ import com.tyabo.feature.chef.catalog.catalog.components.ChefCatalog
 @Composable
 fun ChefCatalogScreen(
     viewModel: ChefCatalogViewModel = hiltViewModel(),
+    modifier: Modifier,
     navigateToEditMenu: (String?,Int?) -> Unit,
     navigateToEditCollection: (String?,String?,Boolean) -> Unit,
     navigateToReorderCatalog: (String) -> Unit

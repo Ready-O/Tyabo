@@ -1,25 +1,20 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
 }
 
 android {
+    namespace 'com.tyabo.feature.chef.profile.profile'
     compileSdk tyaboCompileSdkVersion
 
     defaultConfig {
-        applicationId "com.tyabo.tyabo"
         minSdk tyaboMinSdkVersion
         targetSdk tyaboCompileSdkVersion
-        versionCode tyaboVersionCode
-        versionName "${tyaboVersionNameYear}.${tyaboVersionNameMonth}.${tyaboVersionNameDay}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary true
-        }
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -33,7 +28,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = '1.8'
     }
     buildFeatures {
         compose true
@@ -41,27 +36,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
     }
-    packagingOptions {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
 }
 
 dependencies {
-
-    implementation project(':data')
-    implementation project(':common')
-    implementation project(':repository')
-    implementation project(':service')
-    implementation project(':design-system')
-
-    // Features
-    implementation project(':chef-feature:catalog:catalog')
-    implementation project(':chef-feature:catalog:editmenu')
-    implementation project(':chef-feature:catalog:editcollection')
-    implementation project(':chef-feature:catalog:reordercatalog')
-    implementation project(':chef-feature:profile:profile')
 
     // Common
     implementation commonDependencies.androidKTX
@@ -82,24 +59,6 @@ dependencies {
     implementation composeDependencies.composeToolingPreview
     implementation composeDependencies.navigationCompose
     implementation composeDependencies.hiltNavigation
-    implementation composeDependencies.coil
-
-    // Image Cropper
-    implementation imageCropperDependencies.imageCropper
-
-    // DataStore
-    implementation archiDependencies.dataStore
-
-    // Firebase
-    implementation serviceDependencies.firebase
-    implementation serviceDependencies.firebaseAuthUi
-    implementation serviceDependencies.firestore
-    implementation serviceDependencies.playServicesCoroutines
-    implementation serviceDependencies.firebaseStorage
-
-    // Retrofit
-    implementation serviceDependencies.retrofit
-    implementation serviceDependencies.moshi
 
     // Unit test
     testImplementation testDependencies.junit
