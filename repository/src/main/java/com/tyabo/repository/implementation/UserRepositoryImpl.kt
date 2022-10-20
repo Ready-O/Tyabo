@@ -31,6 +31,10 @@ class UserRepositoryImpl @Inject constructor(
         return userDataSource.getFirebaseUser()
     }
 
+    /**
+     * One benefit of getting the flows is that the user info are loaded and cached from the start
+     * making the UX more comfortable after splashscreen.
+     */
     override suspend fun checkUserType(userId: String): Flow<Result<UserType>> {
 
         val clientFlow = clientRepository.getClient(userId)

@@ -39,12 +39,20 @@ class ChefDataSourceImpl @Inject constructor(
     private data class RemoteChef(
         var id: String = "",
         var name: String = "",
-        var catalogOrderId: String = ""
+        var phoneNumber: String = "",
+        var chefPictureUrl: String? = null,
+        var bannerPictureUrl: String? = null,
+        var bio: String? = null,
+        val catalogOrderId: String = ""
     )
 
     private fun RemoteChef.toChef() = Chef(
         id = this.id,
         name = this.name,
+        phoneNumber = this.phoneNumber,
+        chefPictureUrl = this.chefPictureUrl,
+        bannerPictureUrl = this.bannerPictureUrl,
+        bio = this.bio,
         catalogOrderId = this.catalogOrderId
     )
 
