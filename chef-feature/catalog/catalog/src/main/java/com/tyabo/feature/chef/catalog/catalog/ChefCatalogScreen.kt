@@ -24,15 +24,14 @@ fun ChefCatalogScreen(
         viewModel.fetchOrderFirstTime()
     }
 
-    viewModel.fetchedCatalog.collectAsState()
-    val catalogState by viewModel.catalogState.collectAsState()
+    val catalogState by viewModel.fetchedCatalog.collectAsState()
 
     when (catalogState) {
         is ChefCatalogViewState.Loading -> LoadingBox()
         is ChefCatalogViewState.Catalog -> {
             val state = catalogState as ChefCatalogViewState.Catalog
             ChefCatalog(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = modifier.padding(horizontal = 16.dp),
                 itemsList = state.catalog,
                 addMenu = { navigateToEditMenu(null,it) },
                 editMenu = { navigateToEditMenu(it,null) },

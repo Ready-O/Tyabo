@@ -5,7 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.tyabo.feature.chef.profile.profile.ProfileScreen
+import com.tyabo.feature.chef.profile.profile.ChefProfileScreen
 import com.tyabo.tyabo.navigation.chef.ChefDestination
 import com.tyabo.tyabo.navigation.chef.ChefNavScreen
 
@@ -19,6 +19,6 @@ fun NavGraphBuilder.ChefProfileComposable(
     route = ChefProfileDestination.route
 ){
     ChefNavScreen(navController = navController) { padding ->
-        ProfileScreen(modifier = Modifier.padding(padding))
+        ChefProfileScreen(modifier = Modifier.padding(padding))
     }
 }

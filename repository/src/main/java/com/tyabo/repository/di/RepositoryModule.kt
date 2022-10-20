@@ -49,6 +49,12 @@ interface RepositoryModule {
     ): ChefCollectionRepository
 
     @Binds
+    @Singleton
+    fun bindsChefProfileRepository(
+        chefProfileRepository: ChefProfileRepositoryImpl
+    ): ChefProfileRepository
+
+    @Binds
     fun bindsRestaurantRepository(
         restaurantRepository: RestaurantRepositoryImpl
     ): RestaurantRepository

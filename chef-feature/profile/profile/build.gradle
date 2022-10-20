@@ -40,6 +40,11 @@ android {
 
 dependencies {
 
+    implementation project(':data')
+    implementation project(':common')
+    implementation project(':repository')
+    implementation project(':design-system')
+
     // Common
     implementation commonDependencies.androidKTX
     implementation commonDependencies.timber

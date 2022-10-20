@@ -1,5 +1,7 @@
 package com.tyabo.repository.implementation
 
+import com.tyabo.common.UiResult
+import com.tyabo.common.flatMap
 import com.tyabo.data.*
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
@@ -7,6 +9,7 @@ import com.tyabo.service.firebase.interfaces.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -17,7 +20,7 @@ class ChefRepositoryImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher
 ) : ChefRepository {
 
-    override suspend fun addChef(userId: String, name: String) {
+    override suspend fun addNewChef(userId: String, name: String) {
         withContext(ioDispatcher){
             val generatedId = UUID.randomUUID().toString()
             val chef = Chef(
@@ -58,4 +61,5 @@ class ChefRepositoryImpl @Inject constructor(
                     }
             }
     }.flowOn(ioDispatcher)
+
 }

@@ -25,26 +25,17 @@ class ChefCatalogViewModel @Inject constructor(
         }
     }
 
-    val fetchedCatalog: StateFlow<Unit> = chefRepository.catalog.map { catalogResult ->
+    val fetchedCatalog: StateFlow<ChefCatalogViewState> = chefRepository.catalog.map { catalogResult ->
         when(catalogResult){
-            is UiResult.Success -> {
-                _catalogState.value = ChefCatalogViewState.Catalog(catalog = catalogResult.data)
-            }
-            else -> {
-                _catalogState.value = ChefCatalogViewState.Loading
-            }
+            is UiResult.Success -> ChefCatalogViewState.Catalog(catalog = catalogResult.data)
+            else -> ChefCatalogViewState.Loading
         }
     }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Unit
+            initialValue = ChefCatalogViewState.Loading
         )
-
-    private val _catalogState = MutableStateFlow<ChefCatalogViewState>(
-        ChefCatalogViewState.Loading
-    )
-    val catalogState = _catalogState.asStateFlow()
 
     fun hideMenu(menu: CatalogItem.MenuItem){
         viewModelScope.launch{
