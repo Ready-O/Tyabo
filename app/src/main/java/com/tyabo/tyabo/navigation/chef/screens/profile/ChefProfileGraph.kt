@@ -16,6 +16,12 @@ fun NavGraphBuilder.ChefProfileGraph(
         route = ChefProfileGraphDestination.route,
         startDestination = ChefProfileDestination.route
     ){
-        ChefProfileComposable(navController = navController)
+        ChefProfileComposable(
+            navController = navController,
+            navigateToEditProfile = { navController.navigate(ChefEditProfileDestination.route) }
+        )
+        ChefEditProfileComposable(
+            navigateUp = { navController.navigateUp() }
+        )
     }
 }

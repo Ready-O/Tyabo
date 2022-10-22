@@ -7,17 +7,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.tyabo.designsystem.components.buttons.TextButton
 import com.tyabo.designsystem.picture.StandardImage
 
 @Composable
 fun ProfileHeader(
     name: String,
     chefPictureUrl: String?,
-    bannerPictureUrl: String?,
-    bio: String?,
+    businessPictureUrl: String?,
+    bio: String,
+    editProfile: () -> Unit
 ){
   Column {
-      ChefBanner(bannerUrl = bannerPictureUrl)
+      BusinessPicture(pictureUrl = businessPictureUrl)
       Row(modifier = Modifier.padding(16.dp)){
           ChefPicture(chefPictureUrl)
           Text(
@@ -25,22 +27,25 @@ fun ProfileHeader(
               text = name
           )
       }
-      if (bio != null){
+      if (bio.isNotEmpty()){
           Text(
               modifier = Modifier.padding(16.dp),
               text = bio
           )
       }
+      TextButton(leadingIcon = null, onClick = editProfile) {
+          Text("Edit profile")
+      }
   }
 }
 
 @Composable
-private fun ChefBanner(bannerUrl: String?){
+private fun BusinessPicture(pictureUrl: String?){
     StandardImage(
         modifier = Modifier
             .fillMaxWidth()
             .height(150.dp),
-        url = bannerUrl,
+        url = pictureUrl,
         fallback = null
     )
 }

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.tyabo.feature.chef.catalog.editcollection'
-    compileSdk 32
+    compileSdk tyaboCompileSdkVersion
 
     defaultConfig {
         minSdk tyaboMinSdkVersion

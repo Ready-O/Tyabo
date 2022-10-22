@@ -14,11 +14,15 @@ object ChefProfileDestination : ChefDestination {
 }
 
 fun NavGraphBuilder.ChefProfileComposable(
-    navController: NavController
+    navController: NavController,
+    navigateToEditProfile: () -> Unit
 ) = composable(
     route = ChefProfileDestination.route
 ){
     ChefNavScreen(navController = navController) { padding ->
-        ChefProfileScreen(modifier = Modifier.padding(padding))
+        ChefProfileScreen(
+            modifier = Modifier.padding(padding),
+            navigateToEditProfile = navigateToEditProfile
+        )
     }
 }

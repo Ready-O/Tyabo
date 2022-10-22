@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/chef-feature/catalog/editmenu" />
             <option value="$PROJECT_DIR$/chef-feature/catalog/reordercatalog" />
             <option value="$PROJECT_DIR$/chef-feature/profile" />
+            <option value="$PROJECT_DIR$/chef-feature/profile/editprofile" />
             <option value="$PROJECT_DIR$/chef-feature/profile/profile" />
             <option value="$PROJECT_DIR$/common" />
             <option value="$PROJECT_DIR$/data" />

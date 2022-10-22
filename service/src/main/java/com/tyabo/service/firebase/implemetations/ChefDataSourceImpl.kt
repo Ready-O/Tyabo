@@ -41,8 +41,8 @@ class ChefDataSourceImpl @Inject constructor(
         var name: String = "",
         var phoneNumber: String = "",
         var chefPictureUrl: String? = null,
-        var bannerPictureUrl: String? = null,
-        var bio: String? = null,
+        var businessPictureUrl: String? = null,
+        var bio: String = "",
         val catalogOrderId: String = ""
     )
 
@@ -51,7 +51,7 @@ class ChefDataSourceImpl @Inject constructor(
         name = this.name,
         phoneNumber = this.phoneNumber,
         chefPictureUrl = this.chefPictureUrl,
-        bannerPictureUrl = this.bannerPictureUrl,
+        businessPictureUrl = this.businessPictureUrl,
         bio = this.bio,
         catalogOrderId = this.catalogOrderId
     )

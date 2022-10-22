@@ -1,7 +1,6 @@
 package com.tyabo.feature.chef.profile.profile
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -14,7 +13,8 @@ import com.tyabo.feature.chef.profile.profile.components.ProfileHeader
 @Composable
 fun ChefProfileScreen(
     viewModel: ChefProfileViewModel = hiltViewModel(),
-    modifier: Modifier
+    modifier: Modifier,
+    navigateToEditProfile: () -> Unit
 ){
 
     LaunchedEffect(Unit){
@@ -31,8 +31,9 @@ fun ChefProfileScreen(
                 ProfileHeader(
                     name = chef.name,
                     chefPictureUrl = chef.chefPictureUrl,
-                    bannerPictureUrl = chef.bannerPictureUrl,
-                    bio = chef.bio
+                    businessPictureUrl = chef.businessPictureUrl,
+                    bio = chef.bio,
+                    editProfile = navigateToEditProfile
                 )
             }
         }

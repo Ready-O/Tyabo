@@ -5,7 +5,7 @@ data class Chef(
     val name: String,
     val phoneNumber: String,
     val chefPictureUrl: String?,
-    val bannerPictureUrl: String?,
-    val bio: String?,
+    val businessPictureUrl: String?,
+    val bio: String,
     val catalogOrderId: String
     )

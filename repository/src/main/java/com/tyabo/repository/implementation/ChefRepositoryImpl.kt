@@ -1,7 +1,5 @@
 package com.tyabo.repository.implementation
 
-import com.tyabo.common.UiResult
-import com.tyabo.common.flatMap
 import com.tyabo.data.*
 import com.tyabo.persistence.cache.InMemoryChefCache
 import com.tyabo.repository.interfaces.ChefRepository
@@ -9,7 +7,6 @@ import com.tyabo.service.firebase.interfaces.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -28,8 +25,8 @@ class ChefRepositoryImpl @Inject constructor(
                 name = name,
                 phoneNumber = "",
                 chefPictureUrl = null,
-                bannerPictureUrl = null,
-                bio = null,
+                businessPictureUrl = null,
+                bio = "",
                 catalogOrderId = generatedId
             )
             chefDataSource.updateChef(chef).onSuccess {
