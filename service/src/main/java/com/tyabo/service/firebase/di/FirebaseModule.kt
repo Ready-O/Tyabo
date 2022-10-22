@@ -47,6 +47,11 @@ interface FirebaseModule {
         catalogOrderDataSource: CatalogOrderDataSourceImpl
     ): CatalogOrderDataSource
 
+    @Binds
+    fun bindsChefUploadDataSource(
+        chefUploadDataSource: ChefUploadDataSourceImpl
+    ): ChefUploadDataSource
+
     companion object {
         @Provides
         @Singleton

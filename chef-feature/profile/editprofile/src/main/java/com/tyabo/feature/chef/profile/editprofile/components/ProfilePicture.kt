@@ -46,7 +46,7 @@ fun BusinessPicture(
         EditableImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp),
+                .height(200.dp),
             backgroundModifier = Modifier.background(MaterialTheme.colorScheme.surfaceVariant),
             imageUrl = businessProfileUrl,
             close = { onPictureUpdate(null) }

@@ -3,8 +3,8 @@ package com.tyabo.feature.chef.profile.editprofile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tyabo.common.UiResult
-import com.tyabo.data.NumberPersons
 import com.tyabo.repository.interfaces.ChefProfileRepository
+import com.tyabo.repository.interfaces.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,8 +15,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChefEditProfileViewModel @Inject constructor(
+    private val userRepository: UserRepository,
     private val chefRepository: ChefProfileRepository
 ) : ViewModel(){
+
+    private val userId = userRepository.getUserId()
 
     private val _editViewState = MutableStateFlow<EditProfileViewState>(EditProfileViewState.Loading)
     val editViewState : StateFlow<EditProfileViewState> = _editViewState.asStateFlow()
@@ -79,6 +82,21 @@ class ChefEditProfileViewModel @Inject constructor(
     fun onBioUpdate(bio: String){
         viewModelScope.launch {
             _editViewState.value = editState().copy(bio = bio)
+        }
+    }
+
+    fun onCtaClicked(navigateUp: () -> Unit) {
+        val editState = editViewState.value as EditProfileViewState.Edit
+        viewModelScope.launch{
+            chefRepository.editChef(
+                userId = userId,
+                name = editState.name,
+                phoneNumber = editState.phoneNumber,
+                chefPictureUrl = editState.chefPictureUrl,
+                businessPictureUrl = editState.businessPictureUrl,
+                bio = editState.bio
+            )
+            navigateUp()
         }
     }
 }

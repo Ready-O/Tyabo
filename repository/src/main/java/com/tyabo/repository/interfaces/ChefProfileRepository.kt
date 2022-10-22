@@ -8,4 +8,12 @@ interface ChefProfileRepository {
 
     val chefFlow: StateFlow<UiResult<Chef>>
     suspend fun updateStateChef(userId: String)
+    suspend fun editChef(
+        userId: String,
+        name: String,
+        phoneNumber: String,
+        chefPictureUrl: String?,
+        businessPictureUrl: String?,
+        bio: String
+    )
 }

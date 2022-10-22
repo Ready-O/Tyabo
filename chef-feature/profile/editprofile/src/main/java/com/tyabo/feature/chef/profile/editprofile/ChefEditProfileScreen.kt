@@ -39,7 +39,7 @@ fun ChefEditProfileScreen(
                 onBusinessPictureUpdate = viewModel::onBusinessPictureUpdate,
                 onBioUpdate = viewModel::onBioUpdate,
                 navigateUp = navigateUp
-            ) {}
+            ) { viewModel.onCtaClicked(navigateUp) }
         }
     }
 }

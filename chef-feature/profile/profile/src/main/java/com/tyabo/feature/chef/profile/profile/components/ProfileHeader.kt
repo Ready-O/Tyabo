@@ -44,7 +44,7 @@ private fun BusinessPicture(pictureUrl: String?){
     StandardImage(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp),
+            .height(200.dp),
         url = pictureUrl,
         fallback = null
     )
